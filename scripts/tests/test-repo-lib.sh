@@ -86,6 +86,27 @@ REGISTRY_FILE="${R}" bash -c '. scripts/repo-lib.sh; registry_upsert name=mi-api
 assert_eq "deploy_order autoincrementa" "2" "$(REGISTRY_FILE=${R} bash -c '. scripts/repo-lib.sh; registry_get mi-api deploy_order')"
 assert_eq "entrypoint no cambia al agregar" "mi-app" "$(REGISTRY_FILE=${R} bash -c '. scripts/repo-lib.sh; registry_system entrypoint')"
 
+echo "== campos nuevos: pack_prefix, vcs, pack =="
+R2="${TMP}/packs.yaml"
+REGISTRY_FILE="${R2}" bash -c '. scripts/repo-lib.sh; registry_upsert name=mi-app url=/tmp/mi-app provider=local vcs=none pack=xx-app system_name=demo pack_prefix=xx' >/dev/null
+assert_eq "pack_prefix persiste" "xx" "$(REGISTRY_FILE=${R2} bash -c '. scripts/repo-lib.sh; registry_system pack_prefix')"
+assert_eq "vcs persiste" "none" "$(REGISTRY_FILE=${R2} bash -c '. scripts/repo-lib.sh; registry_get mi-app vcs')"
+assert_eq "pack explicito" "xx-app" "$(REGISTRY_FILE=${R2} bash -c '. scripts/repo-lib.sh; pack_name_for_repo mi-app')"
+REGISTRY_FILE="${R2}" bash -c '. scripts/repo-lib.sh; registry_upsert name=otra url=/tmp/otra provider=local' >/dev/null
+assert_eq "pack derivado prefijo-repo" "xx-otra" "$(REGISTRY_FILE=${R2} bash -c '. scripts/repo-lib.sh; pack_name_for_repo otra')"
+OUT=$(REGISTRY_FILE="${R2}" bash -c '. scripts/repo-lib.sh; registry_upsert name=mala url=/tmp/x provider=local vcs=svn >/dev/null; registry_validate' 2>&1)
+assert_contains "vcs invalido detectado" "no soportado (git|none)" "${OUT}"
+
+echo "== sello de snapshot =="
+mkdir -p "${TMP}/snap/sub" && echo hola > "${TMP}/snap/a.txt" && echo mundo > "${TMP}/snap/sub/b.txt"
+H1=$(bash -c '. scripts/repo-lib.sh; huella_snapshot '"${TMP}/snap")
+H2=$(bash -c '. scripts/repo-lib.sh; huella_snapshot '"${TMP}/snap")
+assert_eq "huella estable" "${H1}" "${H2}"
+assert_eq "huella de 12 chars" "12" "${#H1}"
+echo cambio >> "${TMP}/snap/a.txt"
+H3=$(bash -c '. scripts/repo-lib.sh; huella_snapshot '"${TMP}/snap")
+if [ "${H1}" != "${H3}" ]; then ok "huella cambia al cambiar archivos"; else fail "huella cambia al cambiar archivos"; fi
+
 echo "== helpers de proveedor =="
 assert_eq "github por host" "github" "$(provider_for_url https://github.com/org/x.git)"
 assert_eq "bitbucket por host" "bitbucket" "$(provider_for_url git@bitbucket.org:ws/x.git)"

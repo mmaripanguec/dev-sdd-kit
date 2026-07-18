@@ -21,7 +21,9 @@ cmd = sys.argv[2] if len(sys.argv) > 2 else "json"
 args = sys.argv[3:]
 
 PROVIDERS = ("github", "gitlab", "bitbucket", "local")
-REPO_FIELDS = ("name", "url", "provider", "role", "deploy_order", "domain")
+REPO_FIELDS = ("name", "url", "provider", "role", "deploy_order", "domain",
+               "vcs", "pack")
+SYSTEM_FIELDS = ("name", "entrypoint", "pack_prefix")
 
 
 def parse_mini(text):
@@ -83,12 +85,13 @@ def dump(data):
         "system:",
         f"  name: {sysd.get('name', 'sistema')}",
     ]
-    if sysd.get("entrypoint"):
-        out.append(f"  entrypoint: {sysd['entrypoint']}")
+    for f in ("entrypoint", "pack_prefix"):
+        if sysd.get(f):
+            out.append(f"  {f}: {sysd[f]}")
     out.append("repos:")
     for r in repos:
         out.append(f"  - name: {r['name']}")
-        for f in ("url", "provider", "role", "deploy_order", "domain"):
+        for f in [f for f in REPO_FIELDS if f != "name"]:
             if r.get(f) not in (None, ""):
                 v = r[f]
                 if f == "role":
@@ -123,6 +126,8 @@ if cmd == "upsert":
         sysd["name"] = kv["system_name"]
     elif not sysd.get("name"):
         sysd["name"] = entry["name"]
+    if kv.get("pack_prefix"):
+        sysd["pack_prefix"] = kv["pack_prefix"]
     if kv.get("entrypoint") == "true" or not sysd.get("entrypoint"):
         sysd["entrypoint"] = entry["name"]
     dump(data)
@@ -154,6 +159,8 @@ elif cmd == "validate":
         if r.get("provider") and r["provider"] not in PROVIDERS:
             errors.append(
                 f"{label}: provider '{r['provider']}' no soportado ({'|'.join(PROVIDERS)})")
+        if r.get("vcs") and r["vcs"] not in ("git", "none"):
+            errors.append(f"{label}: vcs '{r['vcs']}' no soportado (git|none)")
     if not system.get("name"):
         errors.append("falta system.name")
     ep = system.get("entrypoint")
@@ -287,6 +294,37 @@ git_auth() {
       -c credential.helper='!f() { printf "username=%s\npassword=%s\n" "${GIT_AUTH_USER}" "${GIT_AUTH_TOKEN}"; }; f' \
       -c url."https://${_host}/".insteadOf="https://${_host}/" \
       "$@"
+}
+
+# Huella corta de un snapshot sin .git (rutas+tamano+mtime; suficiente para
+# detectar cambios sin hashear el contenido completo).
+huella_snapshot() {
+  find -L "$1" -type f -not -path "*/node_modules/*" -not -path "*/.git/*" 2>/dev/null \
+    | sort | while IFS= read -r _f; do
+        stat -f "%N %z %m" "${_f}" 2>/dev/null || stat -c "%n %s %Y" "${_f}" 2>/dev/null
+      done | shasum -a 256 | cut -c1-12
+}
+
+# Sello de procedencia de un repo registrado: commit git corto si hay .git,
+# huella de snapshot si no (repos exportados sin historia).
+stamp_of_repo() {
+  if git -C "repos/$1" rev-parse --short HEAD > /dev/null 2>&1; then
+    git -C "repos/$1" rev-parse --short HEAD
+  else
+    huella_snapshot "repos/$1"
+  fi
+}
+
+# Prefijo de packs de contexto del sistema (default: nombre del sistema)
+registry_pack_prefix() {
+  _pp="$(registry_system pack_prefix)"
+  if [ -n "${_pp}" ]; then printf '%s' "${_pp}"; else registry_system name; fi
+}
+
+# Nombre del pack de contexto de un repo: campo `pack` o "<prefijo>-<repo>"
+pack_name_for_repo() {
+  _pk="$(registry_get "$1" pack)"
+  if [ -n "${_pk}" ]; then printf '%s' "${_pk}"; else printf '%s-%s' "$(registry_pack_prefix)" "$1"; fi
 }
 
 # Siembra el CLAUDE.md de un repo desde la plantilla si no existe.
