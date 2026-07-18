@@ -10,6 +10,36 @@ listo para especificar e implementar requerimientos. Tiempo estimado:
 
 ---
 
+## Paso -1 · ¿Dónde comienza todo? Instanciar la fábrica (una vez por sistema)
+
+La fábrica se distribuye como **repo plantilla**: cada sistema trabaja en su
+propio CLON de la plantilla (su "workspace de sistema"). Mientras la
+plantilla esté local, la lógica es la misma — `git clone` acepta rutas:
+
+```bash
+# <plantilla> = URL del repo base cuando se publique, o su ruta local hoy
+$ git clone <plantilla> mi-sistema-workspace
+$ cd mi-sistema-workspace
+$ git remote rename origin upstream        # la plantilla queda como upstream
+$ git remote add origin <remoto-propio>    # (opcional) repo de contexto del sistema
+
+$ ./scripts/init-sistema.sh mi-sistema --pack-prefix ms
+```
+
+`init-sistema.sh` limpia los datos de ejemplo que trae la plantilla
+(registro, specs, as-is, packs), crea el `repos.yaml` esqueleto con el
+nombre del sistema y el prefijo de sus packs, el marcador `.instancia`
+(protege contra reseteos accidentales: repetirlo exige `--force`) y el
+commit inicial. El PRODUCTO (scripts, skills, reglas, agentes, plantillas)
+queda intacto.
+
+**Mejoras futuras de la fábrica** llegan a la instancia con git puro:
+`git pull upstream main` — producto e instancia viven en archivos
+distintos, así que el merge no toca tus specs ni tu conocimiento.
+
+> Si vas a trabajar sobre el workspace-plantilla mismo (como este), sáltate
+> este paso: ya estás dentro de una instancia.
+
 ## Paso 0 · Prerrequisitos (una sola vez por máquina)
 
 1. git ≥ 2.30, bash (el nativo de macOS sirve) y python3 (`xcode-select --install`).

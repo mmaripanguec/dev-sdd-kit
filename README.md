@@ -58,6 +58,23 @@ Sistema de ejemplo preconfigurado en `repos.yaml`: **homebanking**
 > **Guía paso a paso completa** (repo existente → contexto → primer
 > requerimiento): [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md)
 
+### Opción 0 — ¿Dónde comienza todo? Instanciar la plantilla
+
+Este repo es la **plantilla de la fábrica**. Cada sistema trabaja en su
+propio clon (funciona igual con URL remota o ruta local):
+
+```bash
+git clone <plantilla> mi-sistema-workspace && cd mi-sistema-workspace
+git remote rename origin upstream          # updates de la fábrica: git pull upstream main
+./scripts/init-sistema.sh mi-sistema --pack-prefix ms
+```
+
+`init-sistema.sh` deja la instancia limpia (sin los datos de ejemplo) con
+su `repos.yaml` esqueleto, el marcador `.instancia` y el commit inicial.
+Producto (scripts/skills/reglas) e instancia (registro/specs/knowledge/
+packs) viven en archivos distintos: las mejoras de la plantilla se traen
+con `git pull upstream main` sin tocar tu contexto.
+
 ### Opción A — Sistema nuevo: ingresar repos uno a uno (onboarding)
 
 ```bash
