@@ -1,0 +1,33 @@
+# Pipeline del workspace: sincroniza el mapa as-is del sistema.
+# Variables requeridas (Repository settings > Repository variables, marcar Secured):
+#   BITBUCKET_USER   (segun tipo de token: usuario | email | x-token-auth)
+#   BITBUCKET_TOKEN  (App Password / API token / Access token con Repositories:Read)
+image: atlassian/default-image:4
+
+definitions:
+  steps:
+    - step: &sync-as-is
+        name: Sincronizar mapa as-is del sistema
+        script:
+          # setup.sh detecta BITBUCKET_TOKEN en el entorno y usa modo token
+          - ./scripts/setup.sh
+          - ./scripts/generate-as-is.sh
+          - |
+            if ! git diff --quiet knowledge/as-is/; then
+              git add knowledge/as-is/
+              git -c user.email=factory-bot@example.com -c user.name=fabrica-bot \
+                commit -m "chore(as-is): sincroniza mapa del sistema [skip ci]"
+              git push origin HEAD
+            else
+              echo "as-is ya sincronizado"
+            fi
+
+pipelines:
+  custom:
+    as-is-sync:            # ejecucion manual desde la UI de Bitbucket
+      - step: *sync-as-is
+  branches:
+    main:
+      - step: *sync-as-is  # cada merge a main del workspace refresca el mapa
+# Recomendado: Schedule diario sobre `custom: as-is-sync`
+# (Repository > Pipelines > Schedules) para capturar cambios de los 3 repos.

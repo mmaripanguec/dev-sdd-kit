@@ -1,0 +1,15 @@
+{
+  "_reglas": "Derivado de la spec por /harness-init. Los agentes SOLO cambian el campo 'passes' (a true tras verificar end-to-end). Es inaceptable editar o borrar descripciones o pasos: eso oculta funcionalidad faltante o defectuosa.",
+  "features": [
+    {
+      "category": "functional",
+      "description": "EJEMPLO — reemplazar al correr /harness-init sobre una spec",
+      "steps": [
+        "Navegar a la interfaz",
+        "Ejecutar la acción principal",
+        "Verificar el resultado observable del criterio de aceptación"
+      ],
+      "passes": false
+    }
+  ]
+}

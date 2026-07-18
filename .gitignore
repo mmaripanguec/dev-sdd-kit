@@ -1,0 +1,7 @@
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/.as-is-dirty
+repos/*/
+node_modules/
+.env
+*.log
