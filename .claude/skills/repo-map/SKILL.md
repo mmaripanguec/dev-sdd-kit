@@ -1,65 +1,52 @@
 ---
 name: repo-map
-description: Genera el mapa profundo de un repositorio — arquitectura, dependencias y para qué se usan, tecnologías, integraciones, datos y flujos principales — en knowledge/mapas/<repo>.md con evidencia archivo:línea. Usar cuando pidan "mapear un repo", "entender la arquitectura/dependencias de un repo", "generar el contexto del repo", o después de /repo-add.
-argument-hint: "<nombre-repo-del-registro> [pregunta o foco opcional]"
-allowed-tools: Read Glob Grep Write Bash(./scripts/generate-as-is.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *)
+description: Genera o actualiza el PACK DE CONTEXTO de un repositorio (skill cargable .claude/skills/<prefijo>-<repo>) — arquitectura, mecanismos centrales, dependencias y trampas con evidencia archivo:línea — y siembra sus aserciones. Usar cuando pidan "mapear un repo", "generar el contexto del repo", cuando /spec-create detecte un repo sin pack o con pack caduco, o después de /repo-add.
+argument-hint: "<nombre-repo-del-registro> [foco opcional]"
+allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/frescura.sh *) Bash(./scripts/afirmaciones.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
-Genera (o actualiza) `knowledge/mapas/<repo>.md` para el repo $ARGUMENTS.
+Genera el pack de contexto del repo $ARGUMENTS como skill cargable:
+`.claude/skills/$(pack_name_for_repo <repo>)/SKILL.md` (nombre =
+`<pack_prefix>-<repo>`, o el campo `pack` del registro). El objetivo: que
+cualquier agente que reciba un requerimiento sobre este aplicativo cargue
+el pack y trabaje con el modelo mental correcto sin releer el repo.
 
-Distinción de capas — respétala siempre:
-- `knowledge/as-is/` = HECHOS deterministas (los escribe solo el script).
-- `knowledge/mapas/` = INTERPRETACIÓN de la arquitectura, escrita por esta
-  skill CON EVIDENCIA, sellada con el commit analizado y commiteada al
-  workspace. Sin evidencia citada, una afirmación no entra al mapa.
+## 1. Insumos (del más barato al más caro)
+1. Registro (repos.yaml): rol, dominio, vcs; sello actual con
+   `. scripts/repo-lib.sh && stamp_of_repo <repo>`.
+2. Hechos del as-is: `knowledge/as-is/<repo>/{modules,api-surface}.md`
+   (regenerar si el sello no coincide).
+3. Grafo MCP codebase-memory si está indexado (get_architecture,
+   search_graph, trace_path). Si no responde, sigue sin él y decláralo en
+   "Qué NO sé".
+4. Lectura dirigida del código: entrypoint, wiring, rutas, capa de datos,
+   clientes externos. Lee lo necesario para respaldar cada afirmación.
 
-## 1. Insumos (en este orden, del más barato al más caro)
-1. Registro: rol, dominio, entrypoint del repo en repos.yaml.
-2. Hechos del as-is: `knowledge/as-is/<repo>/modules.md` (estructura,
-   dependencias, servicios externos, datos, infra, comandos) y
-   `api-surface.md` (rutas). Si el sello no coincide con el HEAD del repo
-   (`git -C repos/<repo> rev-parse --short HEAD`), corre
-   `./scripts/generate-as-is.sh` primero.
-3. Grafo de código del MCP codebase-memory si el repo está indexado
-   (`get_architecture`, `search_graph`, `trace_path` para los flujos).
-   Si el MCP no responde, sigue sin él y decláralo en "Limitaciones".
-4. Lectura dirigida del código: entrypoint del proceso, wiring/DI, routers,
-   capa de datos, clientes de servicios externos. Lee lo necesario para
-   respaldar cada afirmación, no el repo entero.
+## 2. Escribir el pack
+- Plantilla: `templates/pack-repo.md` (reemplaza TODOS los placeholders
+  `{{...}}` y `<...>`; frontmatter con `generado_desde: <repo>: <sello>` y
+  `verificado:` con la fecha de hoy).
+- La DESCRIPCIÓN del frontmatter es el gatillo de carga: nómbrala con el
+  aplicativo, sus temas y preguntas típicas.
+- Reglas duras: sin evidencia `archivo:línea` una afirmación no entra al
+  cuerpo (va a "Qué NO sé"); las secciones "Trampas" y "Qué NO sé" nunca
+  quedan vacías (si no hay trampas aún, di qué error sería fácil cometer);
+  presupuesto ~150 líneas — el detalle desborda a `references/` dentro de
+  la carpeta del pack.
+- Secretos: PROHIBIDO copiar tokens, URLs con credenciales o datos de
+  clientes al pack.
 
-## 2. Contenido del mapa (plantilla)
-```markdown
-# <repo> — mapa de arquitectura
-> Interpretado desde <repo>@<commit> el <fecha> por /repo-map.
-> Hechos base: knowledge/as-is/<repo>/ (misma versión). Regenerable.
+## 3. Aserciones y verificación
+- Siembra/actualiza `scripts/afirmaciones.d/<sistema>.sh` con 3+ aserciones
+  de las afirmaciones más importantes del pack (formato del README de esa
+  carpeta) y corre `scripts/afirmaciones.sh <sistema>` — debe quedar en verde.
+- Corre `scripts/frescura.sh comprobar <pack>` — debe salir vigente.
+- Si al verificar detectas una INCONSISTENCIA (el código contradice el
+  registro, un ADR o un pack existente): DETENTE Y PREGUNTA al humano.
+  No la normalices en silencio.
 
-## Propósito y rol en el sistema
-## Arquitectura interna
-(capas/módulos reales y cómo se conectan + diagrama mermaid; cada flecha
-con su evidencia archivo:línea)
-## Dependencias clave y para qué se usan
-(las que definen la arquitectura — framework, DB driver, colas, HTTP —
-con el punto exacto donde se usan; no repetir la lista completa del as-is)
-## Integraciones y servicios externos
-(qué servicio, desde qué módulo, para qué; incluir otros repos del sistema)
-## Datos
-(esquema/migraciones: entidades principales y dónde se definen)
-## Flujos principales
-(2–4 flujos end-to-end: request → capas → persistencia/salida, con la
-cadena de archivos; usa trace_path si hay grafo)
-## Riesgos y deuda observada
-(acoplamientos, código sin dueño aparente, dependencias desactualizadas,
-rutas sin contrato OpenAPI)
-## Limitaciones de este mapa
-(qué no se pudo verificar: MCP caído, código generado, áreas no leídas)
-```
-
-## 3. Verificación y cierre
-- Toda flecha del diagrama y todo flujo tienen cita archivo:línea. Lo no
-  verificado va a "Limitaciones", no al cuerpo.
-- Si detectas contradicción con un ADR vigente o con el rol declarado en
-  repos.yaml, repórtala como drift y ESCALA al gate de Arquitectura
-  (igual que /as-is-sync); el mapa igual dice la verdad.
-- Commit en el workspace: `docs(mapas): mapa de <repo> @<commit>`.
-- Cierra con un resumen de 5 líneas + brechas detectadas; si el usuario dio
-  un foco en $ARGUMENTS, respóndelo explícitamente al final.
+## 4. Cierre
+- Actualiza el índice `mapa-sistemas` si cambió el estado del contexto
+  (o pide /system-map si el pack de sistema no existe).
+- Commit: `docs(packs): pack <pack> @<sello>`.
+- Resumen final: modelo mental en 3 líneas + trampas + qué quedó fuera.
