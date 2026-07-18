@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 . scripts/repo-lib.sh
 
 OUT="knowledge/as-is"
-GEN_VERSION="v7"
+GEN_VERSION="v8"
 FECHA=$(date -u +"%Y-%m-%d %H:%M UTC")
 
 registry_validate || exit 1
@@ -105,6 +105,96 @@ extract_routes() {
   rm -f /tmp/asis-routes.$$
 }
 
+# Dependencias directas declaradas en los manifiestos del repo (con version).
+extract_deps() {
+  r="$1"
+  if [ -f "${r}/package.json" ]; then
+    python3 - "${r}/package.json" <<'PY' 2>/dev/null || true
+import json, sys
+d = json.load(open(sys.argv[1]))
+for key, tag in (("dependencies", "runtime"), ("devDependencies", "dev")):
+    for name, ver in sorted((d.get(key) or {}).items()):
+        print(f"{name} {ver} [{tag}]")
+PY
+  fi
+  if [ -f "${r}/requirements.txt" ]; then
+    grep -vE '^[[:space:]]*(#|$)' "${r}/requirements.txt" | head -40
+  fi
+  if [ -f "${r}/pyproject.toml" ]; then
+    awk '/^\[.*dependencies.*\]/{f=1;next}/^\[/{f=0}f' "${r}/pyproject.toml" \
+      | grep -oE '"[^"]+"' | tr -d '"' | head -40
+  fi
+  if [ -f "${r}/go.mod" ]; then
+    awk '/^require \(/{f=1;next}/^\)/{f=0} f && $1!=""{print $1" "$2}' "${r}/go.mod" | head -40
+  fi
+  if [ -f "${r}/pom.xml" ]; then
+    grep -oE '<artifactId>[^<]+</artifactId>' "${r}/pom.xml" \
+      | sed 's/<[^>]*>//g' | sort -u | head -40
+  fi
+  if [ -f "${r}/Gemfile" ]; then
+    grep -E "^gem " "${r}/Gemfile" | sed "s/^gem //;s/[\"',]//g" | head -40
+  fi
+  if [ -f "${r}/composer.json" ]; then
+    python3 - "${r}/composer.json" <<'PY' 2>/dev/null || true
+import json, sys
+d = json.load(open(sys.argv[1]))
+for name, ver in sorted((d.get("require") or {}).items()):
+    print(f"{name} {ver}")
+PY
+  fi
+}
+
+# Servicios externos inferidos de dependencias y esquemas de conexion en
+# config (solo el TIPO de servicio; jamas se copian URLs/credenciales).
+detect_services() {
+  r="$1"; deps="$2"; svc=""
+  add_svc() { case " ${svc} " in *" $1 "*) : ;; *) svc="${svc}${svc:+ }$1" ;; esac; }
+  for pair in "pg:PostgreSQL" "postgres:PostgreSQL" "psycopg:PostgreSQL" \
+              "mysql:MySQL" "mariadb:MySQL" "mongoose:MongoDB" "mongodb:MongoDB" \
+              "pymongo:MongoDB" "redis:Redis" "ioredis:Redis" \
+              "kafkajs:Kafka" "kafka:Kafka" "amqplib:RabbitMQ" "pika:RabbitMQ" \
+              "elasticsearch:Elasticsearch" "sqlalchemy:SQL-DB" "sequelize:SQL-DB" \
+              "typeorm:SQL-DB" "prisma:SQL-DB" "knex:SQL-DB" \
+              "axios:HTTP-saliente" "node-fetch:HTTP-saliente" "got:HTTP-saliente" \
+              "requests:HTTP-saliente" "httpx:HTTP-saliente" \
+              "aws-sdk:AWS" "boto3:AWS" "@aws-sdk:AWS" "@google-cloud:GCP" \
+              "@azure:Azure" "firebase:Firebase" "stripe:Stripe" \
+              "nodemailer:Email" "celery:Cola-de-tareas" "bull:Cola-Redis"; do
+    dep="${pair%%:*}"; label="${pair##*:}"
+    if printf '%s\n' "${deps}" | grep -qiE "^${dep}([ @/]|$)"; then add_svc "${label}"; fi
+  done
+  # Esquemas de conexion en archivos de config (indican el servicio, no la URL)
+  SCHEMES=$(grep -rhoE --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
+      --include="*.yml" --include="*.yaml" --include="*.env.example" --include="*.properties" --include="*.toml" \
+      "(postgres|postgresql|mysql|mongodb|redis|amqp|kafka)://" "${r}" 2>/dev/null | sort -u || true)
+  for sch in ${SCHEMES}; do
+    case "${sch}" in
+      postgres*|postgresql*) add_svc "PostgreSQL" ;;
+      mysql*)   add_svc "MySQL" ;;
+      mongodb*) add_svc "MongoDB" ;;
+      redis*)   add_svc "Redis" ;;
+      amqp*)    add_svc "RabbitMQ" ;;
+      kafka*)   add_svc "Kafka" ;;
+    esac
+  done
+  printf '%s' "${svc}"
+}
+
+# Comandos del repo (scripts npm / targets de Makefile)
+extract_commands() {
+  r="$1"
+  if [ -f "${r}/package.json" ]; then
+    python3 - "${r}/package.json" <<'PY' 2>/dev/null || true
+import json, sys
+for name, cmd in sorted((json.load(open(sys.argv[1])).get("scripts") or {}).items()):
+    print(f"npm run {name}  ->  {cmd}")
+PY
+  fi
+  if [ -f "${r}/Makefile" ]; then
+    grep -oE '^[A-Za-z0-9_.-]+:' "${r}/Makefile" | sed 's/:$/  (make)/' | head -20
+  fi
+}
+
 detect_rpc() {
   # Señales de comunicacion NO-HTTP que el grafo de rutas no puede ver
   r="$1"; notes=""
@@ -129,21 +219,72 @@ for name in ${REPO_LIST}; do
   role=$(registry_get "${name}" role)
   files=$(find "${repo}" -path "*/node_modules" -prune -o -path "*/.git" -prune -o -path "*/dist" -prune -o -path "*/www" -prune -o -type f \( ${SRC_FIND} \) -print 2>/dev/null | wc -l | tr -d ' ')
   loc=$(find "${repo}" -path "*/node_modules" -prune -o -path "*/.git" -prune -o -path "*/dist" -prune -o -path "*/www" -prune -o -type f \( ${SRC_FIND} \) -print 2>/dev/null | xargs cat 2>/dev/null | wc -l | tr -d ' ')
-  SYSTEM_ROWS="${SYSTEM_ROWS}| [${name}](${name}/) | ${role:--} | ${stack} | \`${commit}\` | ${branch} | ${last} | ${files} | ${loc} |\n"
+  DEPS=$(extract_deps "${repo}")
+  SERVICES=$(detect_services "${repo}" "${DEPS}")
+  COMMANDS=$(extract_commands "${repo}")
+  SVC_CELL=$(printf '%s' "${SERVICES}" | tr ' ' ',')
+  SYSTEM_ROWS="${SYSTEM_ROWS}| [${name}](${name}/) | ${role:--} | ${stack} | ${SVC_CELL:--} | \`${commit}\` | ${branch} | ${last} | ${files} | ${loc} |\n"
   STAMP="> [GENERADO ${GEN_VERSION}] desde ${name}@\`${commit}\` el ${FECHA} - NO EDITAR A MANO."
 
   mkdir -p "${OUT}/${name}"
 
-  { echo "# ${name} - modulos (as-is)"; echo "${STAMP}"; echo
+  { echo "# ${name} - modulos y tecnologia (as-is)"; echo "${STAMP}"; echo
     echo "**Stack detectado:** ${stack}"
+    if [ -n "${role}" ]; then echo "**Rol declarado (repos.yaml):** ${role}"; fi
     if [ "${files}" = "0" ]; then
       echo ""
       echo "AVISO: 0 archivos fuente con los filtros actuales. Posibles causas:"
       echo "codigo en un lenguaje no listado, o solo configuracion/artefactos."
     fi
-    echo; echo '```'
+    echo; echo "## Estructura"; echo '```'
     find "${repo}" -maxdepth 3 -path "*/node_modules" -prune -o -path "*/.git" -prune -o -type d -print 2>/dev/null | sed "s|^${repo}||" | grep -v '^$' | sort | head -60
     echo '```'
+    echo; echo "## Servicios externos detectados"
+    if [ -n "${SERVICES}" ]; then
+      for s in ${SERVICES}; do echo "- ${s}"; done
+      echo
+      echo "_(inferidos de dependencias y esquemas de conexion en config;_"
+      echo "_indican con que habla el repo ademas de sus rutas HTTP)_"
+    else
+      echo "- (ninguno detectado)"
+    fi
+    echo; echo "## Dependencias directas"
+    if [ -n "${DEPS}" ]; then
+      printf '%s\n' "${DEPS}" | head -40 | sed 's/^/- `/;s/$/`/'
+      DEPS_TOTAL=$(printf '%s\n' "${DEPS}" | wc -l | tr -d ' ')
+      if [ "${DEPS_TOTAL}" -gt 40 ]; then echo "- ... (${DEPS_TOTAL} en total; ver manifiestos del repo)"; fi
+    else
+      echo "- (sin manifiesto de dependencias reconocido)"
+    fi
+    echo; echo "## Datos"
+    DATA_HITS=""
+    for d in migrations migration alembic prisma db/migrate; do
+      if [ -d "${repo}/${d}" ]; then
+        n_sql=$(find "${repo}/${d}" -type f 2>/dev/null | wc -l | tr -d ' ')
+        DATA_HITS="si"; echo "- \`${d}/\` (${n_sql} archivos de migracion/esquema)"
+      fi
+    done
+    for f in prisma/schema.prisma schema.sql; do
+      if [ -f "${repo}/${f}" ]; then DATA_HITS="si"; echo "- \`${f}\`"; fi
+    done
+    if [ -z "${DATA_HITS}" ]; then echo "- (sin migraciones/esquemas detectados)"; fi
+    echo; echo "## Infraestructura y CI"
+    INFRA_HITS=""
+    for f in Dockerfile docker-compose.yml docker-compose.yaml Jenkinsfile \
+             bitbucket-pipelines.yml .gitlab-ci.yml serverless.yml; do
+      if [ -f "${repo}/${f}" ]; then INFRA_HITS="si"; echo "- \`${f}\`"; fi
+    done
+    if [ -d "${repo}/.github/workflows" ]; then
+      INFRA_HITS="si"
+      echo "- \`.github/workflows/\` ($(ls "${repo}/.github/workflows" 2>/dev/null | wc -l | tr -d ' ') workflows)"
+    fi
+    if [ -z "${INFRA_HITS}" ]; then echo "- (sin Dockerfile/CI detectados)"; fi
+    echo; echo "## Comandos del repo"
+    if [ -n "${COMMANDS}" ]; then
+      printf '%s\n' "${COMMANDS}" | head -20 | sed 's/^/- `/;s/$/`/'
+    else
+      echo "- (sin scripts npm/Makefile detectados; ver CLAUDE.md del repo)"
+    fi
   } > "${OUT}/${name}/modules.md"
 
   { echo "# ${name} - superficie de API (as-is)"; echo "${STAMP}"; echo
@@ -170,8 +311,8 @@ done
   echo "> [GENERADO ${GEN_VERSION}] el ${FECHA} - NO EDITAR A MANO. Regenerar: \`./scripts/generate-as-is.sh\`"
   echo
   echo "## Repositorios"
-  echo "| Repo | Rol | Stack | Commit | Rama | Ultimo cambio | Archivos | Lineas |"
-  echo "|---|---|---|---|---|---|---|---|"
+  echo "| Repo | Rol | Stack | Servicios externos | Commit | Rama | Ultimo cambio | Archivos | Lineas |"
+  echo "|---|---|---|---|---|---|---|---|---|"
   printf '%b' "${SYSTEM_ROWS}"
   if [ -n "${MISSING_LIST}" ]; then
     echo

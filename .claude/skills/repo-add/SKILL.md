@@ -44,4 +44,5 @@ ESE repo, no en el workspace.
 ## 5. Reporte final (contrato de salida)
 Resume: nombre y rol registrado, stack detectado, estado de indexación MCP,
 estado del mapa as-is (con o sin grafo), y cierra con los siguientes pasos:
-"listo para `/spec-create <feature>`" (y `/as-is <pregunta>` para explorar).
+"listo para `/spec-create <feature>`", `/repo-map <repo>` para el mapa
+profundo de arquitectura, y `/as-is <pregunta>` para explorar.
