@@ -90,6 +90,21 @@ preflight() {
 for name in $(registry_repos); do
   url="$(registry_get "${name}" url)"
   prov="$(registry_get "${name}" provider)"
+  vcs="$(registry_get "${name}" vcs)"
+
+  # Snapshot sin historia: solo asegurar el enlace; no hay pull posible.
+  if [ "${vcs}" = "none" ]; then
+    if [ -L "repos/${name}" ] || [ -d "repos/${name}" ]; then
+      echo ">> ${name}: snapshot enlazado (sin actualizacion posible)"
+    elif [ -d "${url}" ]; then
+      echo ">> Enlazando snapshot ${name} -> ${url} ..."
+      ln -s "${url}" "repos/${name}"
+    else
+      echo "ERROR - ${name}: la ruta del snapshot '${url}' no existe."
+      exit 1
+    fi
+    continue
+  fi
 
   if [ -d "repos/${name}" ] && [ ! -d "repos/${name}/.git" ]; then
     echo "AVISO - repos/${name} existe pero no es un repo git (clone interrumpido?)."

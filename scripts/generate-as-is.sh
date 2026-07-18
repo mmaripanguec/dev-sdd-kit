@@ -22,7 +22,7 @@ ENTRYPOINT="$(registry_system entrypoint)"
 REPO_LIST=""
 MISSING_LIST=""
 for _name in $(registry_repos); do
-  if [ -d "repos/${_name}/.git" ]; then
+  if [ -d "repos/${_name}/.git" ] || { [ "$(registry_get "${_name}" vcs)" = "none" ] && [ -d "repos/${_name}/" ]; }; then
     REPO_LIST="${REPO_LIST} ${_name}"
   else
     MISSING_LIST="${MISSING_LIST} ${_name}"
@@ -212,9 +212,9 @@ detect_rpc() {
 SYSTEM_ROWS=""
 for name in ${REPO_LIST}; do
   repo="repos/${name}/"
-  commit=$(git -C "${repo}" rev-parse --short HEAD 2>/dev/null || echo "?")
-  branch=$(git -C "${repo}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
-  last=$(git -C "${repo}" log -1 --format=%cs 2>/dev/null || echo "?")
+  commit=$(stamp_of_repo "${name}")
+  branch=$(git -C "${repo}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "snapshot")
+  last=$(git -C "${repo}" log -1 --format=%cs 2>/dev/null || echo "-")
   stack=$(detect_stack "${repo}")
   role=$(registry_get "${name}" role)
   files=$(find "${repo}" -path "*/node_modules" -prune -o -path "*/.git" -prune -o -path "*/dist" -prune -o -path "*/www" -prune -o -type f \( ${SRC_FIND} \) -print 2>/dev/null | wc -l | tr -d ' ')
@@ -333,9 +333,9 @@ done
   echo "## Comunicacion entre repos (heuristica: rutas expuestas vs. consumidas)"
   echo '```mermaid'
   echo 'graph LR'
-  if [ -n "${ENTRYPOINT}" ] && [ -d "repos/${ENTRYPOINT}/.git" ]; then
-    echo "  usuario((Usuario)) --> ${ENTRYPOINT}"
-  fi
+  case " ${REPO_LIST} " in
+    *" ${ENTRYPOINT} "*) echo "  usuario((Usuario)) --> ${ENTRYPOINT}" ;;
+  esac
   # Precalcular rutas expuestas por repo (para el filtro anti-falsos-positivos)
   RDIR=$(mktemp -d)
   for name in ${REPO_LIST}; do

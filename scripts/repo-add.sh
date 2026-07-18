@@ -51,17 +51,20 @@ fi
 case "${SRC}" in
   "~/"*) SRC="${HOME}/${SRC#\~/}" ;;
 esac
+VCS="git"
 if [ -d "${SRC}" ]; then
   SRC="$(cd "${SRC}" && pwd)"
   PROVIDER="local"
-  if ! git -C "${SRC}" rev-parse --git-dir > /dev/null 2>&1; then
-    echo "ERROR - '${SRC}' existe pero no es un repositorio git."
-    echo "        Inicialicelo (git init) o verifique la ruta."
-    exit 1
-  fi
   if [ "${SRC}" = "$(pwd)" ]; then
     echo "ERROR - la ruta es este mismo workspace; registra repos de CODIGO."
     exit 1
+  fi
+  if ! git -C "${SRC}" rev-parse --git-dir > /dev/null 2>&1; then
+    # Export/snapshot sin historia (tipico de codigo exportado de otro VCS):
+    # se registra con vcs: none y se ENLAZA en repos/ en vez de clonar.
+    # Su sello de procedencia sera una huella de archivos (stamp_of_repo).
+    VCS="none"
+    echo "AVISO - '${SRC}' no tiene .git: se registra como SNAPSHOT (vcs: none)."
   fi
 else
   PROVIDER="$(provider_for_url "${SRC}")"
@@ -99,24 +102,38 @@ run_git() {
   fi
 }
 
-if [ -d "repos/${NAME}" ] && [ ! -d "repos/${NAME}/.git" ]; then
-  echo "ERROR - repos/${NAME} existe pero no es un repo git (clone interrumpido?)."
-  echo "        Limpia con:  rm -rf repos/${NAME}   y vuelve a correr el alta."
-  exit 1
-fi
-
-if [ -d "repos/${NAME}/.git" ]; then
-  echo ">> repos/${NAME} ya existe: actualizando (pull --ff-only) ..."
-  run_git -C "repos/${NAME}" pull --ff-only
-  NUEVO="no"
+if [ "${VCS}" = "none" ]; then
+  if [ -L "repos/${NAME}" ]; then
+    echo ">> repos/${NAME} ya esta enlazado al snapshot."
+    NUEVO="no"
+  elif [ -e "repos/${NAME}" ]; then
+    echo "ERROR - repos/${NAME} ya existe y no es el enlace al snapshot."
+    echo "        Limpia con:  rm -rf repos/${NAME}   y vuelve a correr el alta."
+    exit 1
+  else
+    echo ">> Enlazando snapshot ${NAME} -> ${SRC} ..."
+    ln -s "${SRC}" "repos/${NAME}"
+  fi
 else
-  echo ">> Clonando ${NAME} desde ${SRC} (${PROVIDER}) ..."
-  run_git clone "${SRC}" "repos/${NAME}"
+  if [ -d "repos/${NAME}" ] && [ ! -d "repos/${NAME}/.git" ]; then
+    echo "ERROR - repos/${NAME} existe pero no es un repo git (clone interrumpido?)."
+    echo "        Limpia con:  rm -rf repos/${NAME}   y vuelve a correr el alta."
+    exit 1
+  fi
+  if [ -d "repos/${NAME}/.git" ]; then
+    echo ">> repos/${NAME} ya existe: actualizando (pull --ff-only) ..."
+    run_git -C "repos/${NAME}" pull --ff-only
+    NUEVO="no"
+  else
+    echo ">> Clonando ${NAME} desde ${SRC} (${PROVIDER}) ..."
+    run_git clone "${SRC}" "repos/${NAME}"
+  fi
 fi
 
 # ---------- Registrar en repos.yaml (upsert, sin duplicar) ----------
 # role puede traer espacios: pasar los k=v como argumentos, sin re-split
 set -- name="${NAME}" url="${SRC}" provider="${PROVIDER}"
+[ "${VCS}" = "none" ] && set -- "$@" vcs=none
 [ -n "${ROLE}" ]         && set -- "$@" role="${ROLE}"
 [ -n "${DOMAIN}" ]       && set -- "$@" domain="${DOMAIN}"
 [ -n "${DEPLOY_ORDER}" ] && set -- "$@" deploy_order="${DEPLOY_ORDER}"
@@ -127,7 +144,12 @@ echo ">> Registro ${REGISTRY_FILE}: ${RES} (${NAME})"
 registry_validate || exit 1
 
 # ---------- Sembrar CLAUDE.md del repo ----------
-seed_repo_claude_md "${NAME}"
+if [ "${VCS}" = "none" ]; then
+  echo "   (snapshot enlazado: no se escribe CLAUDE.md en la carpeta origen;"
+  echo "    su contexto vive en el pack /repo-map del workspace)"
+else
+  seed_repo_claude_md "${NAME}"
+fi
 
 # ---------- Resumen ----------
 echo ""
