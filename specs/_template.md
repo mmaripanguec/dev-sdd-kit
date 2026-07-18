@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Estado | borrador → aprobada → implementada |
-| Service domain (BIAN) | <capacidad de negocio> |
+| Dominio de negocio | <capacidad de negocio; con el landscape del perfil del dominio si existe (p.ej. BIAN en banking)> |
 | Autor / Fecha | |
 | Gate PO/TL | aprobado por __ el __ (commit __) |
 | Gate DoR | aprobado por __ el __ (commit __) |
@@ -44,11 +44,13 @@ zonas horarias/monedas · permisos · volumen (cada uno con su CA en Gherkin)
 **NFRs / SLOs:** disponibilidad __%, latencia p99 __ms, volumen __.
 
 ## 8. Plan de tareas (F6)
-Formato multi-repo: cada tarea indica su repositorio destino.
-- [ ] T1 [backend] … (una tarea = un commit EN ESE repo; TDD; /implement-task)
-- [ ] T2 [proxy] …
-- [ ] T3 [pwa] …
-Orden de despliegue: backend → proxy → pwa (compatibilidad hacia atrás).
+Formato multi-repo: cada tarea se etiqueta con el nombre de su repositorio
+destino tal como aparece en repos.yaml (las etiquetas válidas son SOLO los
+repos registrados; `[workspace]` para cambios en este repo de contexto).
+- [ ] T1 [<repo-registrado>] … (una tarea = un commit EN ESE repo; TDD; /implement-task)
+- [ ] T2 [<repo-registrado>] …
+Orden de despliegue: según `deploy_order` del registro (proveedor antes que
+consumidor; compatibilidad hacia atrás).
 
 ## 9. Certificación (F7)
 Veredicto del agente de calidad + gate QA/PR: __

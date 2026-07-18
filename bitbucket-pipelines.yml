@@ -1,7 +1,9 @@
 # Pipeline del workspace: sincroniza el mapa as-is del sistema.
-# Variables requeridas (Repository settings > Repository variables, marcar Secured):
-#   BITBUCKET_USER   (segun tipo de token: usuario | email | x-token-auth)
-#   BITBUCKET_TOKEN  (App Password / API token / Access token con Repositories:Read)
+# Variables (Repository settings > Repository variables; tokens marcar Secured)
+# segun los proveedores declarados en repos.yaml:
+#   BITBUCKET_USER / BITBUCKET_TOKEN   (App Password / API token / Access token)
+#   GITHUB_TOKEN · GITLAB_TOKEN        (si el registro tiene repos de esos proveedores)
+#   FACTORY_BOT_EMAIL                  (opcional: email del bot para los commits)
 image: atlassian/default-image:4
 
 definitions:
@@ -15,7 +17,7 @@ definitions:
           - |
             if ! git diff --quiet knowledge/as-is/; then
               git add knowledge/as-is/
-              git -c user.email=factory-bot@example.com -c user.name=fabrica-bot \
+              git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" -c user.name=fabrica-bot \
                 commit -m "chore(as-is): sincroniza mapa del sistema [skip ci]"
               git push origin HEAD
             else

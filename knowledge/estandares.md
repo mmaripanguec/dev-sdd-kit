@@ -7,7 +7,7 @@
 | Desarrollo seguro | NIST SP 800-218 (SSDF: grupos PO/PS/PW/RV) + SP 800-218A (GenAI) | .claude/rules/security.md, agentes calidad y publicacion |
 | Riesgo de IA | NIST AI RMF (govern/map/measure/manage) | gates humanos + settings.json (enforcement) |
 | Seguridad de aplicaciones | OWASP Top 10 / ASVS; Microsoft SDL (threat modeling STRIDE) | rules/security.md, agente arquitectura (F5), agente calidad (F7) |
-| Arquitectura bancaria | BIAN Service Landscape (service domains, semantic APIs, ISO 20022) | rules/api-design.md, agente arquitectura, campo "service domain" de la spec |
+| Perfil de dominio bancario (OPCIONAL: repos con `domain: banking` en repos.yaml) | BIAN Service Landscape (service domains, semantic APIs, ISO 20022) | rules/domain-banking.md, agentes requisitos y arquitectura, campo "Dominio de negocio" de la spec |
 | Diseño de APIs | Google AIP / REST | rules/api-design.md |
 | Documentación de decisiones | ADR (Michael Nygard); C4 model (Simon Brown) | knowledge/decisiones/, agente arquitectura |
 | Historias y criterios | INVEST (Bill Wake); Gherkin/BDD | agente requisitos (F1), spec-review (DoR) |

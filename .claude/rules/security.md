@@ -6,13 +6,15 @@
 - Secretos solo vía gestor de secretos/variables de entorno; PROHIBIDO en código,
   logs, specs o commits. `.env` y llaves están vetados a los agentes (settings.json).
 - Autenticación y autorización en cada endpoint; denegar por defecto.
-- Cifrado en tránsito (TLS) y en reposo para datos personales/financieros.
+- Cifrado en tránsito (TLS) y en reposo para datos personales y sensibles
+  (los perfiles de dominio amplían la lista, p.ej. financieros en banking).
 - Dependencias: solo versiones fijadas; correr análisis de vulnerabilidades (SCA)
   antes de certificar; generar SBOM en el paso a producción (SSDF grupo PS).
 
 ## Ciclo (Microsoft SDL)
 - Threat modeling (STRIDE) obligatorio en fase de Diseño para features que tocan
-  auth, dinero o datos personales; el resultado va al ADR.
+  auth, datos personales o rutas críticas del perfil del dominio (p.ej. dinero
+  en banking); el resultado va al ADR.
 - Análisis estático (SAST) en CI; hallazgos critical/high bloquean el merge.
 
 ## Respuesta (SSDF grupo RV)

@@ -2,12 +2,12 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
+| Estado | aprobada (en construcción F6) |
 | Dominio de negocio | Plataforma interna (developer platform / fábrica digital) |
 | Autor / Fecha | Claude (investigación) + mmaripanguec / 2026-07-18 |
-| Gate PO/TL | pendiente |
-| Gate DoR | pendiente |
-| Gate Arquitectura | pendiente |
+| Gate PO/TL | aprobado por mmaripanguec el 2026-07-18 (aprobación del plan de implementación en sesión) |
+| Gate DoR | aprobado por mmaripanguec el 2026-07-18 (mismo acto) |
+| Gate Arquitectura | aprobado por mmaripanguec el 2026-07-18 (diseño §7 incluido en el plan aprobado) |
 
 ## 1. Problema
 

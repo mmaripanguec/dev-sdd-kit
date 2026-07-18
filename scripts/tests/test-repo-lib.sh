@@ -18,15 +18,39 @@ assert_contains() { # descripcion subcadena texto
 TMP=$(mktemp -d)
 trap 'rm -rf "${TMP}"' EXIT
 
-echo "== registro valido (repos.yaml del workspace) =="
+echo "== registro valido (fixture de 2 repos) =="
+cat > "${TMP}/valido.yaml" <<'EOF'
+system:
+  name: sistema-demo
+  entrypoint: repo-front
+repos:
+  - name: repo-back
+    url: https://bitbucket.org/mi-ws/repo-back.git
+    provider: bitbucket
+    role: "servicios de negocio"
+    deploy_order: 1
+  - name: repo-front
+    url: https://github.com/mi-org/repo-front.git
+    provider: github
+    role: "frontend"
+    deploy_order: 2
+    domain: banking
+EOF
+export REGISTRY_FILE="${TMP}/valido.yaml"
 . scripts/repo-lib.sh
 assert_eq "validate OK" "0" "$(registry_validate >/dev/null; echo $?)"
-assert_eq "system.name" "homebanking" "$(registry_system name)"
-assert_eq "entrypoint" "homebanking-pwa" "$(registry_system entrypoint)"
-assert_eq "3 repos" "3" "$(registry_repos | wc -l | tr -d ' ')"
-assert_eq "get provider" "bitbucket" "$(registry_get homebanking-pwa provider)"
-assert_eq "orden de despliegue: backend primero" "homebanking-pwa-backend" \
+assert_eq "system.name" "sistema-demo" "$(registry_system name)"
+assert_eq "entrypoint" "repo-front" "$(registry_system entrypoint)"
+assert_eq "2 repos" "2" "$(registry_repos | wc -l | tr -d ' ')"
+assert_eq "get provider" "github" "$(registry_get repo-front provider)"
+assert_eq "get domain" "banking" "$(registry_get repo-front domain)"
+assert_eq "orden de despliegue: back primero" "repo-back" \
   "$(registry_repos_by_deploy | head -1)"
+unset REGISTRY_FILE
+
+echo "== registro real del workspace (repos.yaml) valida =="
+assert_eq "repos.yaml del workspace valida" "0" \
+  "$(bash -c '. scripts/repo-lib.sh; registry_validate' >/dev/null 2>&1; echo $?)"
 
 echo "== registro ausente (CA2.4: error accionable) =="
 OUT=$(REGISTRY_FILE="${TMP}/no-existe.yaml" bash -c '. scripts/repo-lib.sh; registry_validate' 2>&1)

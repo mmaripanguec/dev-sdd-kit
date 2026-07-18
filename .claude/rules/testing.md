@@ -5,7 +5,8 @@
   → verde → refactor. NUNCA modificar el test para hacerlo pasar.
 - Pirámide: mayoría unit (rápidos, aislados), integración para contratos entre
   módulos, E2E solo para flujos críticos de usuario.
-- Cobertura mínima en código nuevo: 80% líneas / 100% en rutas de dinero y auth.
+- Cobertura mínima en código nuevo: 80% líneas / 100% en auth y en las rutas
+  críticas que declare el perfil del dominio (p.ej. dinero en domain-banking).
   La cobertura es piso, no meta: cada caso límite de la spec tiene su test.
 - Tests deterministas: sin sleeps, sin dependencia de red externa, sin orden implícito.
 - Datos de prueba sintéticos; PROHIBIDO usar datos reales de clientes en tests.

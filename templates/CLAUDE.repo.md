@@ -1,11 +1,12 @@
 # {{REPO}} · Contexto del repositorio
 
 > Este archivo carga cuando Claude trabaja con archivos de ESTE repo.
-> El contexto del sistema completo vive en el workspace (../../CLAUDE.md).
+> El contexto del sistema completo vive en el workspace (../../CLAUDE.md)
+> y su topología en el registro (../../repos.yaml).
 
 ## Rol en el sistema
-<completar: qué hace este repo dentro de homebanking — ej. PWA = frontend
-del cliente; backend = servicios de negocio; proxy = BFF/gateway>
+<completar: qué hace este repo dentro del sistema — debe coincidir con el
+campo `role` de su entrada en repos.yaml del workspace>
 
 ## Comandos de ESTE repo
 - Instalar: `<completar>`
