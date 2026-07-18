@@ -11,7 +11,9 @@ Implementa SOLO la tarea $1 de la spec $0. Protocolo:
    `git log --oneline -10`; ejecuta ./harness/init.sh y verifica con un smoke
    test que el entorno funciona ANTES de tocar nada.
 2. Lee la spec completa: la tarea se implementa contra sus criterios de
-   aceptación, no contra tu interpretación.
+   aceptación, no contra tu interpretación. Carga además el pack de
+   contexto del repo de la tarea (`<prefijo>-<repo>`; el de sistema si la
+   tarea cruza repos) — sus "Trampas" existen para que no las repitas.
 3. TDD: escribe los tests que codifican los criterios → verifica que FALLAN →
    commit de los tests → implementa hasta verde SIN tocar los tests → refactor.
 4. Verificación end-to-end de la funcionalidad como lo haría un usuario;

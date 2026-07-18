@@ -1,5 +1,5 @@
 # Mapa AS-IS del sistema homebanking
-> [GENERADO v8] el 2026-07-18 15:32 UTC - NO EDITAR A MANO.
+> [GENERADO v8] el 2026-07-18 17:12 UTC - NO EDITAR A MANO.
 
 - **[system.md](system.md)** - inventario + stack + grafo cross-repo
 

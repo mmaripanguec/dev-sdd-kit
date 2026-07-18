@@ -1,5 +1,5 @@
 # Sistema homebanking - vista cross-repo (as-is)
-> [GENERADO v8] el 2026-07-18 15:32 UTC - NO EDITAR A MANO. Regenerar: `./scripts/generate-as-is.sh`
+> [GENERADO v8] el 2026-07-18 17:12 UTC - NO EDITAR A MANO. Regenerar: `./scripts/generate-as-is.sh`
 
 ## Repositorios
 | Repo | Rol | Stack | Servicios externos | Commit | Rama | Ultimo cambio | Archivos | Lineas |

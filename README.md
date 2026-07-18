@@ -219,7 +219,8 @@ commitea **en este workspace**.
 | Comando | Qué hace | Quién invoca |
 |---|---|---|
 | `/repo-add <url-o-ruta>` | Ingresa un repo al sistema: clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el as-is. Deja el repo listo para `/spec-create` | Humano o Claude |
-| `/repo-map <repo>` | Mapa profundo del repo: arquitectura interna, dependencias clave y su uso, integraciones, datos y flujos, con evidencia archivo:línea → `knowledge/mapas/<repo>.md` | Humano o Claude |
+| `/repo-map <repo>` | Genera el **pack de contexto** del repo (skill cargable `<prefijo>-<repo>`): arquitectura, mecanismos, trampas — con evidencia archivo:línea, sello y aserciones. Es el contexto que los agentes cargan al especificar sobre ese aplicativo | Humano o Claude |
+| `/system-map` | Pack de sistema (`<prefijo>-sistema`: modelo mental y uniones entre repos) + índice `mapa-sistemas`. Verificación: `scripts/afirmaciones.sh` y `scripts/frescura.sh` | Humano o Claude |
 | `/as-is <pregunta>` | Responde sobre el estado real del sistema (módulos, quién llama a quién, endpoints) usando el grafo de código indexado + el mapa persistido; advierte si el mapa está desactualizado | Humano o Claude |
 | `/as-is-sync` | Regenera el mapa, resume el cambio en lenguaje de arquitectura y **escala si detecta drift arquitectónico** | Humano o Claude |
 | `/spec-create <nombre>` | Construye una spec por capas (F1–F5) con parada en cada gate | Humano o Claude |

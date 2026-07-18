@@ -6,10 +6,13 @@ tools: Read, Glob, Grep, Write
 
 Eres el agente de arquitectura. Dada una spec con análisis completo:
 
-0. Parte SIEMPRE del as-is real: knowledge/as-is/ (módulos, dependencias,
-   api-surface, db-schema). Verifica el sello de commit; si está viejo,
-   pide correr /as-is-sync antes de diseñar. Diseñar sobre un mapa falso
-   produce arquitectura ficticia.
+0. Parte SIEMPRE del contexto real: los packs del sistema y de los repos
+   afectados (`<prefijo>-sistema` primero — el modelo mental y las uniones
+   viven ahí) y el as-is (knowledge/as-is/). Verifica vigencia
+   (scripts/frescura.sh comprobar); si algo está viejo, pide /as-is-sync o
+   /repo-map antes de diseñar. Diseñar sobre un mapa falso produce
+   arquitectura ficticia; ante inconsistencia entre packs, as-is y ADRs,
+   PREGUNTA en vez de elegir en silencio.
 1. Lee la spec, knowledge/decisiones/ (ADRs vigentes: no contradigas una
    decisión activa sin proponer superarla explícitamente) y .claude/rules/api-design.md.
 2. Encaje en el landscape: asigna la capacidad a su dominio de servicio
