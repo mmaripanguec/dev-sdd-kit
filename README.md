@@ -55,6 +55,9 @@ Sistema de ejemplo preconfigurado en `repos.yaml`: **homebanking**
 
 ## 2. Instalación paso a paso
 
+> **Guía paso a paso completa** (repo existente → contexto → primer
+> requerimiento): [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md)
+
 ### Opción A — Sistema nuevo: ingresar repos uno a uno (onboarding)
 
 ```bash
