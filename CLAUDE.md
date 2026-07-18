@@ -1,18 +1,24 @@
-# Homebanking · Workspace del sistema (multi-repo)
+# Workspace de la fábrica · Sistema declarado en repos.yaml
 
 ## Qué es
-Workspace de la fábrica para el sistema homebanking, compuesto por 3 repositorios
-clonados en `repos/` (gitignoreados aquí; cada uno es su propio git):
-- `repos/homebanking-pwa` — frontend PWA del cliente
-- `repos/homebanking-pwa-proxy` — BFF/gateway entre PWA y backend
-- `repos/homebanking-pwa-backend` — servicios de negocio
+Workspace de la fábrica digital para desarrollar y mantener CUALQUIER sistema
+de uno o más repositorios de código. La topología (qué repos componen el
+sistema, su proveedor git, roles, entrypoint y orden de despliegue) vive en
+`repos.yaml` — la ÚNICA fuente de verdad; ningún script o skill nombra repos
+en duro. Los repos se clonan en `repos/` (gitignoreados aquí; cada uno es su
+propio git).
 
 Este repo (workspace) versiona el CONTEXTO COMPARTIDO del sistema: specs,
 knowledge (ADRs, incidentes, reglas, as-is), skills, agentes y harness.
 El código vive en los repos; el conocimiento del sistema vive aquí.
+Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 
 ## Comandos esenciales
-- Preparar workspace: `./scripts/setup.sh` (clona/actualiza los 3 repos)
+- Ingresar un repo al sistema: `/repo-add <url-o-ruta>` (clona, registra,
+  siembra CLAUDE.md, indexa en codebase-memory y genera el as-is) —
+  script equivalente: `./scripts/repo-add.sh <url-o-ruta>`
+- Preparar workspace en una máquina nueva: `./scripts/setup.sh`
+  (clona/actualiza TODOS los repos del registro; credenciales: .env.example)
 - Mapa as-is del sistema: `./scripts/generate-as-is.sh` (o /as-is-sync)
 - Cada repo tiene sus propios comandos en `repos/<repo>/CLAUDE.md`
 
@@ -21,12 +27,15 @@ El código vive en los repos; el conocimiento del sistema vive aquí.
    contexto, y los CLAUDE.md de cada repo cargan solos al trabajar con sus archivos.
 2. Los commits de código se hacen DENTRO del repo correspondiente
    (`git -C repos/<repo> …`); los commits de conocimiento, en este workspace.
-3. Una feature que cruza repos = UNA spec aquí, con tareas etiquetadas por repo
-   en el plan (`- [ ] T1 [pwa] …`, `T2 [proxy] …`, `T3 [backend] …`).
-4. El contrato entre repos es la frontera: cambiar una API del proxy o backend
-   exige actualizar el contrato (OpenAPI) y ADR si rompe compatibilidad.
-5. Orden de despliegue por defecto: backend → proxy → pwa (compatibilidad
-   hacia atrás; el consumidor nunca se despliega antes que su proveedor).
+3. Una feature que cruza repos = UNA spec aquí, con tareas etiquetadas por el
+   nombre del repo registrado (`- [ ] T1 [<repo>] …`; `[workspace]` para
+   cambios de contexto).
+4. El contrato entre repos es la frontera: cambiar una API que otro repo
+   consume exige actualizar el contrato (OpenAPI) y ADR si rompe compatibilidad.
+5. Orden de despliegue: el `deploy_order` del registro (menor primero;
+   el consumidor nunca se despliega antes que su proveedor).
+6. Perfiles de dominio: un repo con `domain: banking` en el registro activa
+   además `.claude/rules/domain-banking.md`.
 
 ## Flujo de trabajo obligatorio
 1. Todo cambio no trivial parte de una spec en `specs/` (/spec-create).
@@ -38,6 +47,8 @@ El código vive en los repos; el conocimiento del sistema vive aquí.
 ## Mapa AS-IS (estado real derivado del código — nunca editar a mano)
 - Índice: `knowledge/as-is/INDEX.md` · sistema completo: `knowledge/as-is/system.md`
 - Por repo: `knowledge/as-is/<repo>/` · consultar /as-is; sincronizar /as-is-sync
+- Estructura fina (funciones, llamadas, impacto): grafo del MCP
+  codebase-memory (repos indexados por /repo-add)
 - El as-is dice QUÉ HAY; los ADRs POR QUÉ; las specs QUÉ DEBERÍA HABER.
 
 ## Memoria compartida (leer bajo demanda)
@@ -47,5 +58,5 @@ El código vive en los repos; el conocimiento del sistema vive aquí.
 
 ## Convenciones
 - Artefactos en español; identificadores de código en inglés.
-- Conventional Commits + referencia a la spec en los 4 repos.
+- Conventional Commits + referencia a la spec, en el workspace y en cada repo.
 - Toda decisión de arquitectura → ADR. Todo incidente → postmortem sin culpables.

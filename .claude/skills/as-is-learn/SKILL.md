@@ -7,15 +7,24 @@ allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bas
 Objetivo: que el grafo de knowledge/as-is/system.md refleje la comunicacion
 REAL entre repos, con evidencia del codigo — cero suposiciones.
 
+## 0. Topologia declarada
+Lee el registro (`. scripts/repo-lib.sh && registry_repos` y los campos
+`role`/`entrypoint` de repos.yaml): que repos existen y que rol declara cada
+uno. El analisis del paso 1 se hace POR CADA repo registrado y clonado.
+
 ## 1. Investigar con el codigo enfrente (citar archivo:linea en cada hallazgo)
-- repos/homebanking-pwa-proxy: ¿donde se registran/definen sus endpoints HTTP?
-  (framework, tabla struct, archivo de config, reverse-proxy por prefijo).
-  ¿Como llama al backend? (HTTP con URL base + literal, gRPC via el .proto
-  que ya se detecto, cola de mensajes).
-- repos/homebanking-pwa-backend: ¿que expone y por que el generico no lo vio?
-  (gRPC, serverless.yml, handlers registrados dinamicamente, worker sin API).
-- repos/homebanking-pwa: ¿como construye las URLs hacia el proxy?
-  (constantes de entorno + literales, servicio HTTP central, endpoints en json).
+Por cada repo del registro, segun su rol:
+- Si EXPONE una API (backend, servicio): ¿donde se registran/definen sus
+  endpoints? (framework, tabla struct, archivo de config, serverless.yml,
+  handlers dinamicos, gRPC via .proto, worker sin API — y por que el
+  extractor generico no lo vio).
+- Si INTERMEDIA (proxy/BFF/gateway): ¿como define lo que expone y como llama
+  a sus proveedores? (HTTP con URL base + literal, reverse-proxy por
+  prefijo/config, gRPC, cola de mensajes — la config es mas fiel que
+  cualquier grep del codigo).
+- Si CONSUME (frontend, cliente): ¿como construye las URLs hacia sus
+  proveedores? (constantes de entorno + literales, servicio HTTP central,
+  endpoints en json).
 
 ## 2. Escribir el extractor exacto por repo que lo necesite
 - Crear scripts/as-is.d/<repo>.sh (ejecutable) segun el contrato del README

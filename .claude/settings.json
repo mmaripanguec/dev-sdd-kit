@@ -5,6 +5,8 @@
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(./scripts/generate-as-is.sh *)",
+      "Bash(./scripts/repo-add.sh *)",
+      "Bash(./scripts/tests/test-repo-lib.sh)",
       "Read(**)"
     ],
     "deny": [

@@ -4,8 +4,28 @@
 # Compatible con bash 3.2 (macOS).
 set -uo pipefail
 cd "$(dirname "$0")/.."
+. scripts/repo-lib.sh
 
 echo "=== Diagnostico Bitbucket ==="
+
+# Objetivo de las pruebas: el PRIMER repo con provider bitbucket del registro
+BB_URL=""
+for _n in $(registry_repos 2>/dev/null); do
+  if [ "$(registry_get "${_n}" provider)" = "bitbucket" ]; then
+    BB_URL="$(registry_get "${_n}" url)"
+    break
+  fi
+done
+if [ -z "${BB_URL}" ]; then
+  echo "No hay repos con provider: bitbucket en repos.yaml - nada que diagnosticar."
+  echo "(este script aplica SOLO a Bitbucket; github/gitlab usan token simple en .env)"
+  exit 0
+fi
+# workspace/slug del repo, p.ej. mi-workspace/mi-repo
+BB_SLUG="${BB_URL#*bitbucket.org}"
+BB_SLUG="${BB_SLUG#[:/]}"
+BB_SLUG="${BB_SLUG%.git}"
+BB_WS="${BB_SLUG%%/*}"
 
 # ---------- 1. .env ----------
 if [ ! -f .env ]; then
@@ -68,10 +88,10 @@ case "${PREFIX}" in
 esac
 
 # ---------- 3. Red y autenticacion contra la API ----------
-echo "[3] Prueba de red + auth (repo homebanking-pwa):"
+echo "[3] Prueba de red + auth (repo ${BB_SLUG}):"
 HTTP=$(curl -sS -o /tmp/bb-diag.json -w "%{http_code}" --connect-timeout 10 \
   --user "${USER_VAL}:${TOKEN_VAL}" \
-  "https://api.bitbucket.org/2.0/repositories/example-bank/homebanking-pwa" 2>/tmp/bb-diag.err || echo "000")
+  "https://api.bitbucket.org/2.0/repositories/${BB_SLUG}" 2>/tmp/bb-diag.err || echo "000")
 
 case "${HTTP}" in
   200)
@@ -83,11 +103,11 @@ case "${HTTP}" in
   403)
     echo "    HTTP 403 - el token ES valido pero SIN PERMISO sobre este repo."
     echo "    Falta scope 'Repositories: Read' o tu cuenta no tiene acceso al"
-    echo "    workspace example-bank / a este repo. Pide acceso al admin." ;;
+    echo "    workspace ${BB_WS} / a este repo. Pide acceso al admin." ;;
   404)
     echo "    HTTP 404 - autenticado pero el repo no es visible con esas credenciales"
     echo "    (Bitbucket devuelve 404 para repos privados sin acceso)."
-    echo "    Pide al admin acceso de lectura a example-bank/homebanking-pwa." ;;
+    echo "    Pide al admin acceso de lectura a ${BB_SLUG}." ;;
   000)
     echo "    SIN CONEXION a api.bitbucket.org - problema de red/VPN/proxy:"
     sed 's/^/      /' /tmp/bb-diag.err 2>/dev/null | head -3
@@ -120,8 +140,8 @@ if [ "${HTTP}" = "200" ]; then
   GIT_ERR=$(GIT_TERMINAL_PROMPT=0 git \
       -c credential.helper= \
       -c credential.helper='!f() { printf "username=%s\npassword=%s\n" "${BITBUCKET_USER}" "${BITBUCKET_TOKEN}"; }; f' \
-      -c url."https://bitbucket.org/example-bank/".insteadOf="https://bitbucket.org/example-bank/" \
-      ls-remote --heads "https://bitbucket.org/example-bank/homebanking-pwa.git" 2>&1 > /dev/null) || true
+      -c url."https://bitbucket.org/${BB_WS}/".insteadOf="https://bitbucket.org/${BB_WS}/" \
+      ls-remote --heads "https://bitbucket.org/${BB_SLUG}.git" 2>&1 > /dev/null) || true
   if [ -z "${GIT_ERR}" ]; then
     echo "    OK - git autentica. Ya puedes correr ./scripts/setup.sh"
   else
@@ -133,8 +153,8 @@ if [ "${HTTP}" = "200" ]; then
       GIT_ERR2=$(GIT_TERMINAL_PROMPT=0 git \
           -c credential.helper= \
           -c credential.helper='!f() { printf "username=%s\npassword=%s\n" "x-bitbucket-api-token-auth" "${BITBUCKET_TOKEN}"; }; f' \
-          -c url."https://bitbucket.org/example-bank/".insteadOf="https://bitbucket.org/example-bank/" \
-          ls-remote --heads "https://bitbucket.org/example-bank/homebanking-pwa.git" 2>&1 > /dev/null) || true
+          -c url."https://bitbucket.org/${BB_WS}/".insteadOf="https://bitbucket.org/${BB_WS}/" \
+          ls-remote --heads "https://bitbucket.org/${BB_SLUG}.git" 2>&1 > /dev/null) || true
       if [ -z "${GIT_ERR2}" ]; then
         echo ""
         echo "    RESUELTO: git autentica con el usuario especial."

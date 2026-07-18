@@ -1,135 +1,95 @@
 #!/usr/bin/env bash
-# setup.sh - Clona o actualiza los repositorios del sistema homebanking en repos/.
+# setup.sh - Clona o actualiza en repos/ TODOS los repositorios declarados en
+# repos.yaml (la unica fuente de verdad de la topologia; ver repo-lib.sh).
 # Compatible con bash 3.2 (macOS).
 #
-# Modos de autenticacion (en este orden de preferencia):
-#   1) TOKEN via .env  -> cp .env.example .env, completar BITBUCKET_USER y
-#      BITBUCKET_TOKEN. Clona por HTTPS inyectando el token con un credential
-#      helper efimero: el token NUNCA queda escrito en .git/config ni en las URLs.
-#   2) SSH             -> sin .env; requiere llave cargada en Bitbucket.
-#   3) HTTPS manual    -> GIT_PROTOCOL=https BITBUCKET_USER=usuario ./scripts/setup.sh
+# Autenticacion por proveedor (token via .env; ver .env.example):
+#   bitbucket -> BITBUCKET_USER + BITBUCKET_TOKEN (App Password / API token /
+#                Access token; los ATATT con scopes usan solos el usuario
+#                x-bitbucket-api-token-auth para git)
+#   github    -> GITHUB_TOKEN   (PAT; usuario opcional GITHUB_USER)
+#   gitlab    -> GITLAB_TOKEN   (PAT; usuario opcional GITLAB_USER)
+#   local     -> sin credenciales (clona desde la ruta declarada)
+# URLs ssh (git@host:...) usan la llave SSH cargada; URLs https sin token
+# piden credenciales interactivamente.
+# Los tokens se inyectan con credential helper EFIMERO: nunca quedan en
+# .git/config, URLs ni historial de shell.
 set -euo pipefail
-SETUP_VERSION="v5-token"
-echo "setup.sh ${SETUP_VERSION}"
+SETUP_VERSION="v6-registry"
 cd "$(dirname "$0")/.."
+. scripts/repo-lib.sh
+
+echo "setup.sh ${SETUP_VERSION}"
+load_env
+registry_validate || exit 1
 mkdir -p repos
 
-if [ ! -f .env ] && [ -z "${BITBUCKET_TOKEN:-}" ]; then
-  echo "AVISO - no existe .env en $(pwd) y no hay BITBUCKET_TOKEN en el entorno."
-  echo "        Para modo token:  cp .env.example .env && chmod 600 .env  (y completar)"
-fi
+SYSTEM_NAME="$(registry_system name)"
+echo ">> Sistema: ${SYSTEM_NAME} ($(registry_repos | wc -l | tr -d ' ') repos en ${REGISTRY_FILE})"
 
-# ---------- Cargar .env si existe ----------
-if [ -f .env ]; then
-  set -a
-  . ./.env
-  set +a
-fi
+# ---------- Pre-flight: una verificacion por proveedor/modo ----------
+CHECKED=""   # lista "provider:modo" ya verificados
 
-# Usuario para GIT: los API tokens de Atlassian CON scopes (ATATT largos)
-# exigen el usuario especial x-bitbucket-api-token-auth en git, aunque la API
-# REST use el email. Se resuelve automaticamente aqui; BITBUCKET_GIT_USER en
-# .env permite forzarlo si hiciera falta.
-GIT_USER="${BITBUCKET_GIT_USER:-${BITBUCKET_USER:-}}"
-case "${BITBUCKET_TOKEN:-}" in
-  ATATT*)
-    if [ ${#BITBUCKET_TOKEN} -gt 100 ] && [ -z "${BITBUCKET_GIT_USER:-}" ]; then
-      GIT_USER="x-bitbucket-api-token-auth"
-    fi ;;
-esac
-export GIT_USER
-CRED_HELPER='!f() { printf "username=%s\npassword=%s\n" "${GIT_USER}" "${BITBUCKET_TOKEN}"; }; f'
+preflight() {
+  prov="$1"; url="$2"
+  host="$(host_of_url "${url}")"
+  case "${url}" in
+    git@*|ssh://*) mode="ssh" ;;
+    *) if [ -n "$(token_for "${prov}")" ]; then mode="token"; else mode="https-manual"; fi ;;
+  esac
+  case " ${CHECKED} " in *" ${prov}:${mode} "*) return 0 ;; esac
+  CHECKED="${CHECKED} ${prov}:${mode}"
 
-# git con credenciales efimeras (limpia helpers del sistema como osxkeychain
-# para que no interfieran con credenciales viejas cacheadas)
-git_auth() {
-  # credential.helper= limpia helpers globales (osxkeychain con creds viejas);
-  # el insteadOf identidad (prefijo mas largo gana) anula reescrituras
-  # corporativas HTTPS->SSH que harian fallar el modo token.
-  git -c credential.helper= \
-      -c credential.helper="${CRED_HELPER}" \
-      -c url."https://bitbucket.org/example-bank/".insteadOf="https://bitbucket.org/example-bank/" \
-      "$@"
+  if [ "${mode}" = "ssh" ]; then
+    echo ">> Verificando acceso SSH a ${host} ..."
+    SSH_OUT="$(ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T "git@${host}" 2>&1 || true)"
+    if printf '%s' "${SSH_OUT}" | grep -qiE "authenticated|welcome|successful"; then
+      echo "   OK - llave SSH aceptada"
+    else
+      echo ""
+      echo "ERROR - sin acceso SSH a ${host}. Respuesta:"
+      printf '   %s\n' "${SSH_OUT}"
+      echo ""
+      echo "Opcion recomendada: usar TOKEN en .env ->  cp .env.example .env  (y completar)"
+      echo "O diagnosticar SSH:"
+      echo "  a) 'Permission denied' -> ssh-add ~/.ssh/id_ed25519 y registrar la llave en ${host}"
+      echo "  b) Timeout (VPN/puerto 22 bloqueado) -> en ~/.ssh/config usar el host"
+      echo "     SSH alternativo por 443 del proveedor (bitbucket: altssh.bitbucket.org)"
+      return 1
+    fi
+  elif [ "${mode}" = "token" ]; then
+    if [ "${prov}" = "bitbucket" ] && [ -z "${BITBUCKET_USER:-}" ]; then
+      echo "ERROR - hay BITBUCKET_TOKEN pero falta BITBUCKET_USER en .env."
+      echo "        Ver .env.example: el usuario depende del tipo de token."
+      return 1
+    fi
+    echo ">> Verificando token de ${prov} contra ${host} ..."
+    if GIT_TERMINAL_PROMPT=0 git_auth "${prov}" "${host}" ls-remote --heads "${url}" > /dev/null 2>&1; then
+      echo "   OK - token aceptado"
+    else
+      echo ""
+      echo "ERROR - ${prov} rechazo el token (o no hay red). Revisa:"
+      echo "  1) $(token_var_for "${prov}") en .env es valido, no vencido/revocado."
+      echo "  2) El token tiene permiso de lectura de repositorios y acceso al proyecto."
+      if [ "${prov}" = "bitbucket" ]; then
+        echo "  3) El par usuario/token es del tipo correcto (ver .env.example):"
+        echo "     App Password -> usuario Bitbucket | API token -> email | Access token -> x-token-auth"
+        echo ""
+        echo "  Diagnostico automatico (identifica la causa exacta, no expone el token):"
+        echo "     ./scripts/diag-bitbucket.sh"
+      fi
+      return 1
+    fi
+  else
+    echo "AVISO - sin $(token_var_for "${prov}") en .env: git pedira credenciales"
+    echo "        interactivamente para los repos https de ${prov}."
+  fi
 }
-
-# ---------- Elegir modo ----------
-if [ -n "${BITBUCKET_TOKEN:-}" ]; then
-  MODE="token"
-  export GIT_TERMINAL_PROMPT=0   # con token invalido: fallar rapido, no colgarse
-elif [ "${GIT_PROTOCOL:-ssh}" = "https" ]; then
-  MODE="https"
-  export GIT_TERMINAL_PROMPT=1
-else
-  MODE="ssh"
-fi
-echo ">> Modo de autenticacion: ${MODE}"
-
-USER_PREFIX=""
-if [ "${MODE}" = "https" ] && [ -n "${BITBUCKET_USER:-}" ]; then
-  USER_PREFIX="${BITBUCKET_USER}@"
-fi
-
-build_url() {
-  if [ "${MODE}" = "ssh" ]; then
-    echo "git@bitbucket.org:example-bank/$1.git"
-  else
-    echo "https://${USER_PREFIX}bitbucket.org/example-bank/$1.git"
-  fi
-}
-
-# ---------- Pre-flight ----------
-if [ "${MODE}" = "token" ]; then
-  if [ -z "${BITBUCKET_USER:-}" ]; then
-    echo "ERROR - .env tiene BITBUCKET_TOKEN pero falta BITBUCKET_USER."
-    echo "        Ver .env.example: el usuario depende del tipo de token."
-    exit 1
-  fi
-  echo ">> Verificando token contra Bitbucket ..."
-  if git_auth ls-remote --heads "$(build_url homebanking-pwa)" > /dev/null 2>&1; then
-    echo "   OK - token aceptado"
-  else
-    echo ""
-    echo "ERROR - Bitbucket rechazo el token (o no hay red). Revisa:"
-    echo "  1) El par usuario/token es del tipo correcto (ver .env.example):"
-    echo "     App Password -> usuario Bitbucket | API token -> email | Access token -> x-token-auth"
-    echo "  2) El token tiene permiso 'Repositories: Read' y acceso al workspace example-bank."
-    echo "  3) El token no esta vencido/revocado."
-    echo ""
-    echo "  Diagnostico automatico (identifica la causa exacta, no expone el token):"
-    echo "     ./scripts/diag-bitbucket.sh"
-    echo "  Prueba manual:"
-    echo "     git -c credential.helper= -c credential.helper='!f() { printf \"username=%s\\npassword=%s\\n\" \"\$BITBUCKET_USER\" \"\$BITBUCKET_TOKEN\"; }; f' ls-remote https://bitbucket.org/example-bank/homebanking-pwa.git"
-    exit 1
-  fi
-elif [ "${MODE}" = "ssh" ]; then
-  echo ">> Verificando acceso SSH a bitbucket.org ..."
-  SSH_OUT="$(ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@bitbucket.org 2>&1 || true)"
-  if printf '%s' "${SSH_OUT}" | grep -qi "authenticated"; then
-    echo "   OK - llave SSH aceptada"
-  else
-    echo ""
-    echo "ERROR - sin acceso SSH. Respuesta:"
-    printf '   %s\n' "${SSH_OUT}"
-    echo ""
-    echo "Opcion recomendada: usar TOKEN en .env ->  cp .env.example .env  (y completar)"
-    echo "O diagnosticar SSH:"
-    echo "  a) 'Permission denied' -> ssh-add ~/.ssh/id_ed25519 y registrar la llave en Bitbucket"
-    echo "  b) Timeout (VPN/puerto 22 bloqueado) -> en ~/.ssh/config:"
-    echo "       Host bitbucket.org"
-    echo "         HostName altssh.bitbucket.org"
-    echo "         Port 443"
-    exit 1
-  fi
-fi
 
 # ---------- Clonar / actualizar ----------
-REPO_NAMES="homebanking-pwa
-homebanking-pwa-backend
-homebanking-pwa-proxy"
-
-printf '%s\n' "${REPO_NAMES}" | while IFS= read -r name; do
-  if [ -z "${name}" ]; then continue; fi
-  url="$(build_url "${name}")"
+for name in $(registry_repos); do
+  url="$(registry_get "${name}" url)"
+  prov="$(registry_get "${name}" provider)"
 
   if [ -d "repos/${name}" ] && [ ! -d "repos/${name}/.git" ]; then
     echo "AVISO - repos/${name} existe pero no es un repo git (clone interrumpido?)."
@@ -137,26 +97,44 @@ printf '%s\n' "${REPO_NAMES}" | while IFS= read -r name; do
     continue
   fi
 
-  if [ -d "repos/${name}/.git" ]; then
-    echo ">> Actualizando ${name} ..."
-    if [ "${MODE}" = "token" ]; then
-      git_auth -C "repos/${name}" pull --ff-only
-    else
-      git -C "repos/${name}" pull --ff-only
+  # Modo de git para ESTE repo
+  if [ "${prov}" = "local" ]; then
+    if [ ! -d "${url}/.git" ] && ! git -C "${url}" rev-parse --git-dir >/dev/null 2>&1; then
+      echo "ERROR - ${name}: la ruta local '${url}' no es un repo git."
+      exit 1
     fi
+    GIT="git"
   else
-    echo ">> Clonando ${name} (${MODE}) ..."
-    if [ "${MODE}" = "token" ]; then
-      git_auth clone "${url}" "repos/${name}"
-    else
-      git clone "${url}" "repos/${name}"
-    fi
+    preflight "${prov}" "${url}" || exit 1
+    case "${url}" in
+      git@*|ssh://*) GIT="git" ;;
+      *) if [ -n "$(token_for "${prov}")" ]; then
+           GIT="token"; export GIT_TERMINAL_PROMPT=0   # token invalido: fallar rapido
+         else
+           GIT="git"; export GIT_TERMINAL_PROMPT=1
+         fi ;;
+    esac
   fi
 
-  if [ ! -f "repos/${name}/CLAUDE.md" ]; then
-    sed "s/{{REPO}}/${name}/g" templates/CLAUDE.repo.md > "repos/${name}/CLAUDE.md"
-    echo "   -> CLAUDE.md sembrado en ${name} (completar y commitear en ESE repo)"
+  run_git() {
+    if [ "${GIT}" = "token" ]; then
+      git_auth "${prov}" "$(host_of_url "${url}")" "$@"
+    else
+      git "$@"
+    fi
+  }
+
+  if [ -d "repos/${name}/.git" ]; then
+    echo ">> Actualizando ${name} ..."
+    run_git -C "repos/${name}" pull --ff-only
+  else
+    echo ">> Clonando ${name} (${prov}) ..."
+    run_git clone "${url}" "repos/${name}"
   fi
+
+  # Respaldo: /repo-add siembra y completa el CLAUDE.md; esto cubre repos
+  # clonados directamente por setup.sh en maquinas nuevas.
+  seed_repo_claude_md "${name}"
 done
 
 echo "OK - Workspace listo. Siguiente: ./scripts/generate-as-is.sh && claude"

@@ -12,7 +12,8 @@ Eres el agente de arquitectura. Dada una spec con análisis completo:
    produce arquitectura ficticia.
 1. Lee la spec, knowledge/decisiones/ (ADRs vigentes: no contradigas una
    decisión activa sin proponer superarla explícitamente) y .claude/rules/api-design.md.
-2. Encaje en el landscape: asigna la capacidad a su service domain (BIAN);
+2. Encaje en el landscape: asigna la capacidad a su dominio de servicio
+   (con el landscape del perfil del dominio si existe, p.ej. BIAN en banking);
    un dominio = un módulo con API propia y datos propios. Si la feature cruza
    dominios, define la interacción por eventos o API, nunca por base de datos
    compartida.

@@ -1,18 +1,23 @@
-# Homebanking Workspace · Fábrica Digital Multi-Repo
+# Workspace · Fábrica Digital Multi-Repo
 
-Workspace de la fábrica para el sistema **homebanking** de Example Bank, compuesto por
-tres repositorios de código más este repo de contexto:
+Workspace de la fábrica digital para **desarrollar y mantener cualquier
+sistema** de uno o más repositorios de código. El usuario ingresa un repo
+(URL git o ruta local) y la fábrica configura sola su clonado, registro,
+contexto, indexación y análisis, dejándolo listo para especificar
+requerimientos vía specs.
 
-| Repo | Rol en el sistema |
+| Pieza | Rol |
 |---|---|
-| `homebanking-pwa` | Frontend PWA del cliente |
-| `homebanking-pwa-proxy` | BFF / gateway entre la PWA y el backend |
-| `homebanking-pwa-backend` | Servicios de negocio |
-| `homebanking-workspace` **(este)** | **Contexto compartido del sistema**: specs, conocimiento (ADRs, incidentes, reglas, mapa as-is), skills, agentes y harness para Claude Code |
+| `repos.yaml` | **Registro del sistema**: qué repos lo componen, proveedor git, rol, entrypoint, orden de despliegue y perfil de dominio. Única fuente de verdad de la topología |
+| `repos/<nombre>/` | Los repos de código del sistema (gitignoreados aquí; cada uno es su propio git) |
+| este workspace | **Contexto compartido del sistema**: specs, conocimiento (ADRs, incidentes, reglas, mapa as-is), skills, agentes y harness para Claude Code |
 
-**Principio multi-repo:** el código vive en cada repo; el conocimiento del sistema vive
-aquí. Ninguno de los tres repos puede contener el contexto del conjunto — la
-arquitectura real (PWA → proxy → backend) solo es visible desde arriba.
+**Principio multi-repo:** el código vive en cada repo; el conocimiento del
+sistema vive aquí. Ningún repo individual puede contener el contexto del
+conjunto — la arquitectura real solo es visible desde arriba.
+
+Sistema de ejemplo preconfigurado en `repos.yaml`: **homebanking**
+(PWA → proxy/BFF → backend, en Bitbucket).
 
 ---
 
@@ -43,43 +48,69 @@ arquitectura real (PWA → proxy → backend) solo es visible desde arriba.
   sincronización del as-is
 - **Claude Code** — `npm install -g @anthropic-ai/claude-code` (ver
   https://code.claude.com/docs)
-- Acceso al workspace `example-bank` de Bitbucket (token o llave SSH; ver §3)
+- Para repos privados: token o llave SSH del proveedor git correspondiente
+  (GitHub / GitLab / Bitbucket; ver §3)
 
 ---
 
 ## 2. Instalación paso a paso
 
+### Opción A — Sistema nuevo: ingresar repos uno a uno (onboarding)
+
 ```bash
-# 1. Clonar el workspace
-git clone git@bitbucket.org:example-bank/homebanking-workspace.git
-cd homebanking-workspace
+# 1. Clonar (o crear) el workspace y entrar
+cd <workspace>
 
-# 2. Configurar credenciales (modo recomendado: token en .env)
+# 2. Si el repo es privado: credenciales del proveedor en .env (ver §3)
 cp .env.example .env && chmod 600 .env
-#    → editar .env: BITBUCKET_USER y BITBUCKET_TOKEN (ver §3 para el tipo correcto)
 
-# 3. Traer los 3 repos del sistema (clona en repos/, gitignorados aquí)
-./scripts/setup.sh
-#    El script valida las credenciales ANTES de clonar y diagnostica si fallan.
-#    Además siembra un CLAUDE.md base en cada repo que no lo tenga.
+# 3. Ingresar cada repo del sistema (URL git o ruta local)
+./scripts/repo-add.sh https://github.com/mi-org/mi-frontend.git --role "frontend web" --entrypoint
+./scripts/repo-add.sh git@gitlab.com:mi-org/mi-api.git --role "API de negocio" --deploy-order 1
+#    Clona en repos/, registra en repos.yaml y siembra CLAUDE.md en el repo.
+#    Desde Claude Code es aún mejor: `/repo-add <url>` además completa el
+#    CLAUDE.md con datos reales e indexa el repo en codebase-memory.
 
-# 4. Generar el contexto persistente as-is (indexa los 3 repos)
+# 4. Generar el mapa as-is y commitear
 ./scripts/generate-as-is.sh
-git add knowledge/as-is && git commit -m "chore(as-is): mapa inicial del sistema"
+git add repos.yaml knowledge/as-is && git commit -m "chore(repos): sistema inicial"
 
 # 5. Abrir Claude Code SIEMPRE desde la raíz del workspace
+claude          # verificar contexto cargado con /context
+```
+
+### Opción B — Sistema ya registrado: preparar una máquina nueva
+
+```bash
+cp .env.example .env && chmod 600 .env    # credenciales según proveedores del registro
+./scripts/setup.sh                        # clona/actualiza TODOS los repos de repos.yaml
+./scripts/generate-as-is.sh
 claude
-#    → carga CLAUDE.md del sistema + reglas + skills + agentes
-#    → el CLAUDE.md de cada repo carga solo al trabajar con sus archivos
-#    Verificar con:  /context
 ```
 
 Segunda vez y siguientes: `./scripts/setup.sh` actualiza los repos con
-`pull --ff-only`; no re-clona.
+`pull --ff-only`; no re-clona. Ambos scripts validan credenciales ANTES de
+clonar y diagnostican si fallan.
 
 ---
 
-## 3. Autenticación con Bitbucket
+## 3. Autenticación por proveedor git
+
+Cada repo declara su `provider` en `repos.yaml` (`github | gitlab |
+bitbucket | local`) y los scripts resuelven las credenciales desde `.env`:
+
+| Proveedor | Variables en `.env` | Notas |
+|---|---|---|
+| GitHub | `GITHUB_TOKEN` (+ `GITHUB_USER` opcional) | PAT con lectura de contenidos; usuario default `x-access-token` |
+| GitLab | `GITLAB_TOKEN` (+ `GITLAB_USER` opcional) | PAT con scope `read_repository`; usuario default `oauth2` |
+| Bitbucket | `BITBUCKET_USER` + `BITBUCKET_TOKEN` | El usuario depende del tipo de token — detalle abajo |
+| local | — | Clona desde la ruta declarada, sin credenciales |
+
+En todos los casos el token se inyecta con *credential helper* efímero:
+**nunca queda escrito** en `.git/config`, en URLs ni en el historial. Las
+URLs `git@…` usan la llave SSH cargada (pre-flight con diagnóstico).
+
+### Bitbucket en detalle
 
 `setup.sh` elige el modo automáticamente, en este orden:
 
@@ -109,7 +140,7 @@ Verificación manual del token (mismo mecanismo que usa el script):
 set -a; . ./.env; set +a
 git -c credential.helper= \
     -c credential.helper='!f() { printf "username=%s\npassword=%s\n" "$BITBUCKET_USER" "$BITBUCKET_TOKEN"; }; f' \
-    ls-remote https://bitbucket.org/example-bank/homebanking-pwa.git | head -3
+    ls-remote https://bitbucket.org/<workspace-bitbucket>/<repo>.git | head -3
 ```
 
 ---
@@ -117,11 +148,14 @@ git -c credential.helper= \
 ## 4. Estructura completa del proyecto
 
 ```text
-homebanking-workspace/                # ══ Repo del CONTEXTO (este) ══
+<workspace>/                         # ══ Repo del CONTEXTO (este) ══
 │
 ├── README.md                        # Este documento
 ├── CLAUDE.md                        # Contexto del SISTEMA (carga en toda sesión)
 ├── CLAUDE.local.md                  # (opcional, gitignoreado) notas personales
+├── repos.yaml                       # ══ REGISTRO del sistema: única fuente de
+│                                    #    verdad de la topología (repos, roles,
+│                                    #    entrypoint, deploy_order, dominio)
 ├── .env.example                     # Plantilla de credenciales → copiar a .env
 ├── .gitignore                       # ignora .env, repos/*/, flags temporales
 ├── bitbucket-pipelines.yml          # CI: sincronización del mapa as-is (§9)
@@ -132,18 +166,20 @@ homebanking-workspace/                # ══ Repo del CONTEXTO (este) ══
 │   │   ├── code-style.md            #   Google Style Guides · eng-practices
 │   │   ├── testing.md               #   TDD · pirámide de tests · ISO 25010
 │   │   ├── security.md              #   NIST SSDF/800-218A · Microsoft SDL · OWASP
-│   │   ├── api-design.md            #   BIAN service domains · Google AIP
+│   │   ├── api-design.md            #   Service domains · Google AIP
+│   │   ├── domain-banking.md        #   Perfil OPCIONAL (repos con domain: banking)
 │   │   └── observability.md         #   Google SRE: señales doradas, SLOs
 │   ├── skills/                      # Workflows invocables con /comando (§5)
+│   │   ├── repo-add/                #   Onboarding de un repo al sistema
 │   │   ├── spec-create/  spec-review/  implement-task/
 │   │   ├── harness-init/ orquestar/
-│   │   └── as-is/  as-is-sync/
+│   │   └── as-is/  as-is-sync/  as-is-learn/
 │   └── agents/                      # Subagentes por fase del ciclo E2E (§6)
 │       ├── requisitos.md  estimacion.md  analisis.md  arquitectura.md
 │       ├── calidad.md  publicacion.md  operacion.md
 │
 ├── specs/                           # ══ Fuente de verdad del QUÉ ══
-│   └── _template.md                 # Plantilla (tareas etiquetadas [pwa|proxy|backend])
+│   └── _template.md                 # Plantilla (tareas etiquetadas [<repo-registrado>])
 │
 ├── knowledge/                       # ══ Memoria compartida del sistema ══
 │   ├── estandares.md                # Mapa estándar → archivo donde se aplica
@@ -159,16 +195,17 @@ homebanking-workspace/                # ══ Repo del CONTEXTO (este) ══
 ├── harness/                         # Soporte multi-sesión (init.sh, feature_list, bitácora)
 │
 ├── scripts/
-│   ├── setup.sh                     # Clona/actualiza los 3 repos (token/SSH/HTTPS)
-│   └── generate-as-is.sh            # Indexa los 3 repos + vista sistema · --check
+│   ├── repo-lib.sh                  # Librería del registro (parseo, validación, auth)
+│   ├── repo-add.sh                  # Alta idempotente de un repo en el sistema
+│   ├── setup.sh                     # Clona/actualiza TODOS los repos del registro
+│   ├── generate-as-is.sh            # Mapa as-is del sistema · --check
+│   └── tests/test-repo-lib.sh       # Asserts de la librería (bash 3.2)
 │
 ├── templates/
-│   └── CLAUDE.repo.md               # Plantilla que setup.sh siembra en cada repo
+│   └── CLAUDE.repo.md               # Plantilla que repo-add/setup siembran por repo
 │
-└── repos/                           # ══ Los 3 repos del sistema (gitignorados) ══
-    ├── homebanking-pwa/             #    su propio git · su propio CLAUDE.md
-    ├── homebanking-pwa-proxy/       #    su propio git · su propio CLAUDE.md
-    └── homebanking-pwa-backend/     #    su propio git · su propio CLAUDE.md
+└── repos/                           # ══ Los repos del sistema (gitignorados) ══
+    └── <nombre>/                    #    su propio git · su propio CLAUDE.md
 ```
 
 **Regla de commits:** el código se commitea **dentro del repo correspondiente**
@@ -181,7 +218,8 @@ commitea **en este workspace**.
 
 | Comando | Qué hace | Quién invoca |
 |---|---|---|
-| `/as-is <pregunta>` | Responde sobre el estado real del sistema (módulos, quién llama a quién, endpoints); advierte si el mapa está desactualizado | Humano o Claude |
+| `/repo-add <url-o-ruta>` | Ingresa un repo al sistema: clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el as-is. Deja el repo listo para `/spec-create` | Humano o Claude |
+| `/as-is <pregunta>` | Responde sobre el estado real del sistema (módulos, quién llama a quién, endpoints) usando el grafo de código indexado + el mapa persistido; advierte si el mapa está desactualizado | Humano o Claude |
 | `/as-is-sync` | Regenera el mapa, resume el cambio en lenguaje de arquitectura y **escala si detecta drift arquitectónico** | Humano o Claude |
 | `/spec-create <nombre>` | Construye una spec por capas (F1–F5) con parada en cada gate | Humano o Claude |
 | `/spec-review <ruta>` | Audita la spec contra la Definition of Ready (10 puntos) | Humano o Claude |
@@ -282,15 +320,17 @@ postmortem → de vuelta a la spec. **Si no está en git, no existe.**
 
 ## 9. CI/CD: Bitbucket Pipelines
 
-`bitbucket-pipelines.yml` define el paso `sync-as-is`: clona los 3 repos con
-`setup.sh` (modo token), regenera el mapa y commitea si cambió.
+`bitbucket-pipelines.yml` define el paso `sync-as-is`: clona los repos del
+registro con `setup.sh` (modo token), regenera el mapa y commitea si cambió.
+Si el workspace vive en GitHub, `templates/github-actions-as-is.yml` es el
+workflow equivalente (copiarlo a `.github/workflows/`).
 
 Configuración (una vez):
 
 1. Repository settings → **Repository variables**: crear `BITBUCKET_USER` y
    `BITBUCKET_TOKEN` (marcar **Secured**). Mismos valores que el `.env` local.
 2. Repository → Pipelines → **Schedules**: programar `custom: as-is-sync`
-   diario, para capturar cambios de los 3 repos aunque nadie toque el workspace.
+   diario, para capturar cambios de los repos aunque nadie toque el workspace.
 
 Disparadores: manual (`custom: as-is-sync`), cada merge a `main` del workspace,
 y el schedule.
@@ -321,7 +361,7 @@ prueba ambas variantes automáticamente.
 
 **`ERROR - Bitbucket rechazo el token`**
 Casi siempre es mismatch tipo de token ↔ usuario (ver tabla en §3). Revisa
-también: permiso `Repositories: Read`, acceso al workspace `example-bank`,
+también: permiso `Repositories: Read`, acceso al workspace Bitbucket del repo,
 token no vencido. El mensaje de error incluye el comando de prueba manual.
 
 **SSH: `Permission denied (publickey)`**
