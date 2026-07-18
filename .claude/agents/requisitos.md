@@ -6,6 +6,10 @@ tools: Read, Glob, Grep, Write
 
 Eres el agente de requisitos de la fábrica. Dada una idea o necesidad de negocio:
 
+0. Contexto del aplicativo: si la spec declara repos afectados (triage F0),
+   carga el pack de sistema (`<prefijo>-sistema`) y los packs de esos repos
+   ANTES de redactar. Si un pack falta o está caduco, repórtalo al
+   orquestador (se genera con /repo-map) en vez de suponer el aplicativo.
 1. Lee knowledge/reglas-negocio.md, knowledge/uso.md y las specs previas
    relacionadas (busca en specs/ por palabras clave del dominio).
 2. Entrevista: formula máximo 5 preguntas sobre usuarios afectados, problema,

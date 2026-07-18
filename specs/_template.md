@@ -3,6 +3,8 @@
 | Campo | Valor |
 |---|---|
 | Estado | borrador → aprobada → implementada |
+| Tipo de requerimiento | existente `[repos afectados]` · nueva aplicación · mixto (triage F0) |
+| Contexto cargado | packs usados y su `verificado:` (p.ej. `xx-sistema@2026-07-19`) |
 | Dominio de negocio | <capacidad de negocio; con el landscape del perfil del dominio si existe (p.ej. BIAN en banking)> |
 | Autor / Fecha | |
 | Gate PO/TL | aprobado por __ el __ (commit __) |
@@ -31,7 +33,10 @@ Prioridad WSJF: <orden y justificación>
 
 ## 6. Análisis (F4)
 **Reglas de negocio:** RN-01 … (sincronizadas con knowledge/reglas-negocio.md)
-**Dependencias:** <dominios, sistemas, equipos; bloqueantes marcados>
+**Dependencias:** <dominios, sistemas, equipos; bloqueantes marcados.
+Toda dependencia sin contexto en la fábrica: preguntar su repositorio,
+darla de alta (/repo-add + /repo-map) o marcarla explícitamente fuera de
+alcance — nunca asumir su comportamiento>
 **Casos límite:** nulos/extremos · concurrencia · fallos de terceros ·
 zonas horarias/monedas · permisos · volumen (cada uno con su CA en Gherkin)
 **Regulatorio:** <requisitos de datos personales/transaccionales aplicables>
@@ -47,6 +52,8 @@ zonas horarias/monedas · permisos · volumen (cada uno con su CA en Gherkin)
 Formato multi-repo: cada tarea se etiqueta con el nombre de su repositorio
 destino tal como aparece en repos.yaml (las etiquetas válidas son SOLO los
 repos registrados; `[workspace]` para cambios en este repo de contexto).
+Si el triage fue "nueva aplicación", la T0 crea el aplicativo:
+- [ ] T0 [workspace] crear repo + /repo-add + scaffolding según diseño F5 + as-is y pack iniciales
 - [ ] T1 [<repo-registrado>] … (una tarea = un commit EN ESE repo; TDD; /implement-task)
 - [ ] T2 [<repo-registrado>] …
 Orden de despliegue: según `deploy_order` del registro (proveedor antes que

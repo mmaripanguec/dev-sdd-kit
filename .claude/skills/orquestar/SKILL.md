@@ -17,6 +17,10 @@ Ejecuta el ciclo E2E para: $ARGUMENTS
   cuándo y sobre qué versión (commit).
 
 ## Secuencia
+F0 Triage          → PASO 0 de /spec-create: ¿aplicativo existente o
+                     aplicación nueva? · cargar packs de contexto vigentes ·
+                     dependencias sin contexto => PREGUNTAR (repo, alta,
+                     pack), nunca asumir · inconsistencia => PREGUNTAR
 F1 Requerimiento   → subagente requisitos   → historias INVEST      → GATE PO/TL
 F2 Estimación      → subagente estimacion   → puntos + WSJF
 F3 Refinamiento    → loop /spec-review + correcciones hasta DoR     → GATE DoR
