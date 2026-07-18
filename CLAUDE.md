@@ -17,8 +17,10 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Ingresar un repo al sistema: `/repo-add <url-o-ruta>` (clona, registra,
   siembra CLAUDE.md, indexa en codebase-memory y genera el as-is) —
   script equivalente: `./scripts/repo-add.sh <url-o-ruta>`
-- Mapa profundo de un repo: `/repo-map <repo>` (arquitectura, dependencias
-  clave, integraciones y flujos con evidencia → `knowledge/mapas/<repo>.md`)
+- Contexto profundo (packs cargables): `/repo-map <repo>` genera el pack
+  del repo (`.claude/skills/<prefijo>-<repo>`) y `/system-map` el pack de
+  sistema + índice `mapa-sistemas`. Verificación: `scripts/afirmaciones.sh`
+  y `scripts/frescura.sh comprobar`
 - Preparar workspace en una máquina nueva: `./scripts/setup.sh`
   (clona/actualiza TODOS los repos del registro; credenciales: .env.example)
 - Mapa as-is del sistema: `./scripts/generate-as-is.sh` (o /as-is-sync)
@@ -40,6 +42,10 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
    además `.claude/rules/domain-banking.md`.
 
 ## Flujo de trabajo obligatorio
+0. Todo requerimiento arranca con el TRIAGE (F0 de /spec-create):
+   ¿aplicativo existente o aplicación nueva? Se cargan los packs de
+   contexto vigentes de los repos afectados; dependencias sin contexto →
+   PREGUNTAR su repositorio (nunca asumir); inconsistencias → PREGUNTAR.
 1. Todo cambio no trivial parte de una spec en `specs/` (/spec-create).
 2. Fases y gates con /orquestar; NUNCA saltar un gate.
 3. Construcción con /implement-task: TDD, un commit por tarea EN SU repo.
@@ -51,9 +57,10 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Por repo: `knowledge/as-is/<repo>/` · consultar /as-is; sincronizar /as-is-sync
 - Estructura fina (funciones, llamadas, impacto): grafo del MCP
   codebase-memory (repos indexados por /repo-add)
-- Interpretación de arquitectura por repo: `knowledge/mapas/<repo>.md`
-  (/repo-map; con evidencia archivo:línea y sello de commit)
-- El as-is dice QUÉ HAY; los mapas CÓMO ESTÁ ARMADO; los ADRs POR QUÉ;
+- Interpretación de arquitectura: packs de contexto (skills
+  `mapa-sistemas` → `<prefijo>-sistema` → `<prefijo>-<repo>`), con
+  evidencia archivo:línea, sello `generado_desde` y aserciones ejecutables
+- El as-is dice QUÉ HAY; los packs CÓMO ESTÁ ARMADO; los ADRs POR QUÉ;
   las specs QUÉ DEBERÍA HABER.
 
 ## Memoria compartida (leer bajo demanda)
