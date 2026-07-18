@@ -17,6 +17,8 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Ingresar un repo al sistema: `/repo-add <url-o-ruta>` (clona, registra,
   siembra CLAUDE.md, indexa en codebase-memory y genera el as-is) —
   script equivalente: `./scripts/repo-add.sh <url-o-ruta>`
+- Mapa profundo de un repo: `/repo-map <repo>` (arquitectura, dependencias
+  clave, integraciones y flujos con evidencia → `knowledge/mapas/<repo>.md`)
 - Preparar workspace en una máquina nueva: `./scripts/setup.sh`
   (clona/actualiza TODOS los repos del registro; credenciales: .env.example)
 - Mapa as-is del sistema: `./scripts/generate-as-is.sh` (o /as-is-sync)
@@ -49,7 +51,10 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Por repo: `knowledge/as-is/<repo>/` · consultar /as-is; sincronizar /as-is-sync
 - Estructura fina (funciones, llamadas, impacto): grafo del MCP
   codebase-memory (repos indexados por /repo-add)
-- El as-is dice QUÉ HAY; los ADRs POR QUÉ; las specs QUÉ DEBERÍA HABER.
+- Interpretación de arquitectura por repo: `knowledge/mapas/<repo>.md`
+  (/repo-map; con evidencia archivo:línea y sello de commit)
+- El as-is dice QUÉ HAY; los mapas CÓMO ESTÁ ARMADO; los ADRs POR QUÉ;
+  las specs QUÉ DEBERÍA HABER.
 
 ## Memoria compartida (leer bajo demanda)
 - Specs: `specs/` · ADRs: `knowledge/decisiones/` · Incidentes: `knowledge/incidentes/`
