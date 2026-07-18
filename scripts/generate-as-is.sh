@@ -1,15 +1,35 @@
 #!/usr/bin/env bash
-# generate-as-is.sh v2 - Mapa AS-IS real del SISTEMA homebanking (multi-repo).
+# generate-as-is.sh - Mapa AS-IS real del sistema declarado en repos.yaml.
 # Detecta stack por repo, extrae endpoints (Express/Nest/Spring/JAX-RS/.NET) y
 # deriva el grafo cross-repo. Compatible con bash 3.2 (macOS).
+# La topologia (nombre del sistema, repos, entrypoint, orden de despliegue)
+# sale SIEMPRE del registro repos.yaml (ver scripts/repo-lib.sh).
 # Uso:  ./scripts/generate-as-is.sh          -> regenera knowledge/as-is/
 #       ./scripts/generate-as-is.sh --check  -> exit 1 si hay drift
 set -euo pipefail
 cd "$(dirname "$0")/.."
+. scripts/repo-lib.sh
 
 OUT="knowledge/as-is"
-GEN_VERSION="v6"
+GEN_VERSION="v7"
 FECHA=$(date -u +"%Y-%m-%d %H:%M UTC")
+
+registry_validate || exit 1
+SYSTEM_NAME="$(registry_system name)"
+ENTRYPOINT="$(registry_system entrypoint)"
+
+# Repos del registro presentes en disco (los ausentes se reportan, no rompen)
+REPO_LIST=""
+MISSING_LIST=""
+for _name in $(registry_repos); do
+  if [ -d "repos/${_name}/.git" ]; then
+    REPO_LIST="${REPO_LIST} ${_name}"
+  else
+    MISSING_LIST="${MISSING_LIST} ${_name}"
+    echo "AVISO - repos/${_name} no esta clonado (./scripts/setup.sh); se omite del mapa."
+  fi
+done
+REPO_COUNT=$(echo ${REPO_LIST} | wc -w | tr -d ' ')
 
 if [ "${1:-}" = "--check" ]; then
   TMP=$(mktemp -d); cp -r "${OUT}" "${TMP}/before" 2>/dev/null || true
@@ -100,16 +120,16 @@ detect_rpc() {
 }
 
 SYSTEM_ROWS=""
-for repo in repos/*/; do
-  if [ ! -d "${repo}/.git" ]; then continue; fi
-  name=$(basename "${repo}")
+for name in ${REPO_LIST}; do
+  repo="repos/${name}/"
   commit=$(git -C "${repo}" rev-parse --short HEAD 2>/dev/null || echo "?")
   branch=$(git -C "${repo}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
   last=$(git -C "${repo}" log -1 --format=%cs 2>/dev/null || echo "?")
   stack=$(detect_stack "${repo}")
+  role=$(registry_get "${name}" role)
   files=$(find "${repo}" -path "*/node_modules" -prune -o -path "*/.git" -prune -o -path "*/dist" -prune -o -path "*/www" -prune -o -type f \( ${SRC_FIND} \) -print 2>/dev/null | wc -l | tr -d ' ')
   loc=$(find "${repo}" -path "*/node_modules" -prune -o -path "*/.git" -prune -o -path "*/dist" -prune -o -path "*/www" -prune -o -type f \( ${SRC_FIND} \) -print 2>/dev/null | xargs cat 2>/dev/null | wc -l | tr -d ' ')
-  SYSTEM_ROWS="${SYSTEM_ROWS}| [${name}](${name}/) | ${stack} | \`${commit}\` | ${branch} | ${last} | ${files} | ${loc} |\n"
+  SYSTEM_ROWS="${SYSTEM_ROWS}| [${name}](${name}/) | ${role:--} | ${stack} | \`${commit}\` | ${branch} | ${last} | ${files} | ${loc} |\n"
   STAMP="> [GENERADO ${GEN_VERSION}] desde ${name}@\`${commit}\` el ${FECHA} - NO EDITAR A MANO."
 
   mkdir -p "${OUT}/${name}"
@@ -146,31 +166,44 @@ done
 
 # ---------- Vista de SISTEMA ----------
 {
-  echo "# Sistema homebanking - vista cross-repo (as-is)"
+  echo "# Sistema ${SYSTEM_NAME} - vista cross-repo (as-is)"
   echo "> [GENERADO ${GEN_VERSION}] el ${FECHA} - NO EDITAR A MANO. Regenerar: \`./scripts/generate-as-is.sh\`"
   echo
   echo "## Repositorios"
-  echo "| Repo | Stack | Commit | Rama | Ultimo cambio | Archivos | Lineas |"
-  echo "|---|---|---|---|---|---|---|"
+  echo "| Repo | Rol | Stack | Commit | Rama | Ultimo cambio | Archivos | Lineas |"
+  echo "|---|---|---|---|---|---|---|---|"
   printf '%b' "${SYSTEM_ROWS}"
+  if [ -n "${MISSING_LIST}" ]; then
+    echo
+    echo "AVISO: repos registrados sin clonar (correr ./scripts/setup.sh):${MISSING_LIST}"
+  fi
   echo
+  # Orden de despliegue declarado en el registro (proveedor antes que consumidor)
+  DEPLOY_LINE=""
+  for n in $(registry_repos_by_deploy); do
+    DEPLOY_LINE="${DEPLOY_LINE:+${DEPLOY_LINE} -> }${n}"
+  done
+  echo "**Orden de despliegue declarado (repos.yaml):** ${DEPLOY_LINE}"
+  echo
+  if [ "${REPO_COUNT}" -lt 2 ]; then
+    echo "## Comunicacion entre repos"
+    echo "_(sistema de un solo repositorio: no aplica grafo cross-repo)_"
+  else
   echo "## Comunicacion entre repos (heuristica: rutas expuestas vs. consumidas)"
   echo '```mermaid'
   echo 'graph LR'
-  echo '  usuario((Usuario)) --> homebanking-pwa'
+  if [ -n "${ENTRYPOINT}" ] && [ -d "repos/${ENTRYPOINT}/.git" ]; then
+    echo "  usuario((Usuario)) --> ${ENTRYPOINT}"
+  fi
   # Precalcular rutas expuestas por repo (para el filtro anti-falsos-positivos)
   RDIR=$(mktemp -d)
-  for repo in repos/*/; do
-    if [ ! -d "${repo}/.git" ]; then continue; fi
-    extract_routes "${repo}" > "${RDIR}/$(basename "${repo}")"
+  for name in ${REPO_LIST}; do
+    extract_routes "repos/${name}/" > "${RDIR}/${name}"
   done
-  for provider in repos/*/; do
-    if [ ! -d "${provider}/.git" ]; then continue; fi
-    pname=$(basename "${provider}")
+  for pname in ${REPO_LIST}; do
     routes=$(cat "${RDIR}/${pname}")
     if [ -z "${routes}" ]; then continue; fi
-    for consumer in repos/*/; do
-      cname=$(basename "${consumer}")
+    for cname in ${REPO_LIST}; do
       if [ "${cname}" = "${pname}" ]; then continue; fi
       hits=""; n=0
       for rt in ${routes}; do
@@ -178,7 +211,7 @@ done
         # Anti-falso-positivo: si rt es subcadena de una ruta EXPUESTA por el
         # consumidor, la coincidencia es su propia definicion, no consumo.
         if grep -qF -- "${rt}" "${RDIR}/${cname}" 2>/dev/null; then continue; fi
-        if grep -rq --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www -F "${rt}" "${consumer}" 2>/dev/null; then
+        if grep -rq --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www -F "${rt}" "repos/${cname}/" 2>/dev/null; then
           hits="${hits:+${hits},}${rt}"
           n=$((n+1)); if [ "${n}" -ge 3 ]; then break; fi
         fi
@@ -188,25 +221,23 @@ done
   done
   rm -rf "${RDIR}"
   echo '```'
-  for repo in repos/*/; do
-    if [ ! -d "${repo}/.git" ]; then continue; fi
-    rn=$(basename "${repo}"); rr=$(detect_rpc "${repo}")
+  for rn in ${REPO_LIST}; do
+    rr=$(detect_rpc "repos/${rn}/")
     if [ -n "${rr}" ]; then echo "- ${rn}: ${rr} (comunicacion no visible en el grafo de rutas HTTP)"; fi
   done
   echo
   echo "_Heuristica por coincidencia de rutas. El detalle por repo esta en_"
   echo "_<repo>/api-surface.md. Para precision total: contratos OpenAPI por repo._"
+  fi
 } > "${OUT}/system.md"
 
 # ---------- Indice ----------
 {
-  echo "# Mapa AS-IS del sistema homebanking"
+  echo "# Mapa AS-IS del sistema ${SYSTEM_NAME}"
   echo "> [GENERADO ${GEN_VERSION}] el ${FECHA} - NO EDITAR A MANO."
   echo
   echo "- **[system.md](system.md)** - inventario + stack + grafo cross-repo"
-  for repo in repos/*/; do
-    if [ ! -d "${repo}/.git" ]; then continue; fi
-    n=$(basename "${repo}")
+  for n in ${REPO_LIST}; do
     echo "- **${n}/** - [modules](./${n}/modules.md) - [api-surface](./${n}/api-surface.md)"
   done
   echo

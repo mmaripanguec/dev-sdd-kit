@@ -1,15 +1,13 @@
 # Sistema homebanking - vista cross-repo (as-is)
-> [GENERADO v6] el 2026-07-17 23:51 UTC - NO EDITAR A MANO. Regenerar: `./scripts/generate-as-is.sh`
+> [GENERADO v7] el 2026-07-18 13:33 UTC - NO EDITAR A MANO. Regenerar: `./scripts/generate-as-is.sh`
 
 ## Repositorios
-| Repo | Stack | Commit | Rama | Ultimo cambio | Archivos | Lineas |
-|---|---|---|---|---|---|---|
+| Repo | Rol | Stack | Commit | Rama | Ultimo cambio | Archivos | Lineas |
+|---|---|---|---|---|---|---|---|
 
-## Comunicacion entre repos (heuristica: rutas expuestas vs. consumidas)
-```mermaid
-graph LR
-  usuario((Usuario)) --> homebanking-pwa
-```
+AVISO: repos registrados sin clonar (correr ./scripts/setup.sh): homebanking-pwa-backend homebanking-pwa-proxy homebanking-pwa
 
-_Heuristica por coincidencia de rutas. El detalle por repo esta en_
-_<repo>/api-surface.md. Para precision total: contratos OpenAPI por repo._
+**Orden de despliegue declarado (repos.yaml):** homebanking-pwa-backend -> homebanking-pwa-proxy -> homebanking-pwa
+
+## Comunicacion entre repos
+_(sistema de un solo repositorio: no aplica grafo cross-repo)_
