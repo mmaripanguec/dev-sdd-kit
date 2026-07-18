@@ -117,6 +117,14 @@ assert_eq "host de ssh" "bitbucket.org" "$(host_of_url git@bitbucket.org:ws/x.gi
 assert_eq "usuario git github default" "x-access-token" "$(git_user_for github)"
 assert_eq "usuario git gitlab default" "oauth2" "$(git_user_for gitlab)"
 
+
+echo "== regresion: upsert sobre registro esqueleto (repos: vacio) =="
+R3="${TMP}/esqueleto.yaml"
+printf 'system:\n  name: nuevo\n  pack_prefix: nv\nrepos:\n' > "${R3}"
+OUT=$(REGISTRY_FILE="${R3}" bash -c '. scripts/repo-lib.sh; registry_upsert name=uno url=/tmp/uno provider=local')
+assert_eq "alta sobre esqueleto" "added" "${OUT}"
+assert_eq "conserva pack_prefix" "nv" "$(REGISTRY_FILE=${R3} bash -c '. scripts/repo-lib.sh; registry_system pack_prefix')"
+assert_eq "conserva nombre del sistema" "nuevo" "$(REGISTRY_FILE=${R3} bash -c '. scripts/repo-lib.sh; registry_system name')"
 echo
 echo "Resultado: ${PASS} ok, ${FAIL} fallos"
 [ "${FAIL}" -eq 0 ]

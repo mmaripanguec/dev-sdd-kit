@@ -108,8 +108,10 @@ if cmd == "upsert":
     kv = dict(a.split("=", 1) for a in args)
     if data is None:
         data = {"system": {}, "repos": []}
-    sysd = data.setdefault("system", {})
-    repos = data.setdefault("repos", [])
+    # un YAML con "repos:" (o "system:") vacio parsea como None: normalizar
+    sysd = data.get("system") or {}
+    repos = data.get("repos") or []
+    data["system"], data["repos"] = sysd, repos
     entry = {f: kv[f] for f in REPO_FIELDS if kv.get(f)}
     existing = next((r for r in repos if r.get("name") == entry["name"]), None)
     if existing:
