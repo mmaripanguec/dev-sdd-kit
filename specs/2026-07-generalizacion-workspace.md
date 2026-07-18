@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | aprobada (en construcción F6) |
+| Estado | implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales) |
 | Dominio de negocio | Plataforma interna (developer platform / fábrica digital) |
 | Autor / Fecha | Claude (investigación) + mmaripanguec / 2026-07-18 |
 | Gate PO/TL | aprobado por mmaripanguec el 2026-07-18 (aprobación del plan de implementación en sesión) |
@@ -177,15 +177,15 @@ dependencias nuevas.
 ## 8. Plan de tareas (F6)
 
 Todas las tareas son del workspace (este repo): etiqueta `[workspace]`.
-- [ ] T1 [workspace] `repos.yaml` + `scripts/repo-lib.sh` (lectura/validación del registro; tests con bats o shell asserts)
-- [ ] T2 [workspace] Refactor `setup.sh` sobre el registro, auth por proveedor (github/gitlab/bitbucket/local), conservando diagnósticos Bitbucket
-- [ ] T3 [workspace] `scripts/repo-add.sh` idempotente (clone/registro/siembra)
-- [ ] T4 [workspace] Refactor `generate-as-is.sh`: sistema/semilla/orden desde registro; caso 1-repo
-- [ ] T5 [workspace] Skill `/repo-add` (orquesta script + autocompletar CLAUDE.md + `index_repository` + as-is + reporte)
-- [ ] T6 [workspace] `/as-is` y `/as-is-learn` parametrizados; `/as-is` consulta el grafo MCP primero
-- [ ] T7 [workspace] Perfil `rules/domain-banking.md`; reglas base des-bancarizadas; plantilla de spec y `CLAUDE.repo.md` genéricas
-- [ ] T8 [workspace] CLAUDE.md + README genéricos (homebanking como ejemplo); plantilla GitHub Actions equivalente al pipeline
-- [ ] T9 [workspace] `.env.example` multi-proveedor + `diag-bitbucket.sh` → `diag-git.sh` por proveedor
+- [x] T1 [workspace] `repos.yaml` + `scripts/repo-lib.sh` (lectura/validación del registro; tests con bats o shell asserts)
+- [x] T2 [workspace] Refactor `setup.sh` sobre el registro, auth por proveedor (github/gitlab/bitbucket/local), conservando diagnósticos Bitbucket
+- [x] T3 [workspace] `scripts/repo-add.sh` idempotente (clone/registro/siembra)
+- [x] T4 [workspace] Refactor `generate-as-is.sh`: sistema/semilla/orden desde registro; caso 1-repo
+- [x] T5 [workspace] Skill `/repo-add` (orquesta script + autocompletar CLAUDE.md + `index_repository` + as-is + reporte)
+- [x] T6 [workspace] `/as-is` y `/as-is-learn` parametrizados; `/as-is` consulta el grafo MCP primero
+- [x] T7 [workspace] Perfil `rules/domain-banking.md`; reglas base des-bancarizadas; plantilla de spec y `CLAUDE.repo.md` genéricas
+- [x] T8 [workspace] CLAUDE.md + README genéricos (homebanking como ejemplo); plantilla GitHub Actions equivalente al pipeline
+- [x] T9 [workspace] `.env.example` multi-proveedor + `diag-bitbucket.sh` → `diag-git.sh` por proveedor
 
 Orden de despliegue: no aplica (un solo repo); orden de merge: T1→T2→T3→T4→(T5–T9 en paralelo).
 
