@@ -22,7 +22,9 @@ En incidente:
    no fallan, los sistemas y procesos permiten el fallo.
 5. Acciones correctivas con dueño y fecha; cada una genera al menos un test de
    regresión o una regla nueva en knowledge/ o .claude/rules/.
-6. Actualiza knowledge/uso.md: MTTR del incidente, change failure rate.
+6. Registra el MTTR en el postmortem (campo `MTTR:`) y corre
+   `scripts/dora.sh`: CFR y MTTR de knowledge/uso.md se derivan de los
+   postmortems y del git de los repos — nunca edites la tabla a mano (RN-F4).
 
 Escala inmediatamente al humano (gate DevOps/SRE) ante: pérdida de datos,
 incidente de seguridad, impacto a clientes en curso, o si mitigar requiere

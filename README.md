@@ -219,7 +219,8 @@ git -c credential.helper= \
 │   ├── repo-add.sh                  # Alta idempotente de un repo en el sistema
 │   ├── setup.sh                     # Clona/actualiza TODOS los repos del registro
 │   ├── generate-as-is.sh            # Mapa as-is del sistema · --check
-│   └── tests/test-repo-lib.sh       # Asserts de la librería (bash 3.2)
+│   ├── dora.sh                      # Métricas DORA en knowledge/uso.md · --check
+│   └── tests/                       # test-repo-lib.sh · test-dora.sh (bash 3.2)
 │
 ├── templates/
 │   └── CLAUDE.repo.md               # Plantilla que repo-add/setup siembran por repo
