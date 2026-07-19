@@ -127,18 +127,26 @@ acotada a un bloque de un archivo de knowledge; sin credenciales.
 **NFRs:** una pasada; < 5 s con repos clonados; salida determinista.
 
 ## 10. Plan de tareas (F6)
-- [ ] T1 [workspace] tests primero (TDD): `scripts/tests/test-dora.sh` con
+- [x] T1 [workspace] tests primero (TDD): `scripts/tests/test-dora.sh` con
       fixtures (repos git sintéticos con merges fechados + postmortems
-      sintéticos) cubriendo CA1.1–CA1.4 y CA2.1 — deben FALLAR
-- [ ] T2 [workspace] `scripts/dora.sh` hasta poner verde test-dora.sh sin
+      sintéticos) cubriendo CA1.1–CA1.4 y CA2.1 — commiteados EN ROJO (13 fallos)
+- [x] T2 [workspace] `scripts/dora.sh` hasta poner verde test-dora.sh sin
       tocar los tests + marcadores DORA en knowledge/uso.md
-- [ ] T3 [workspace] integración F9: instrucción en el agente operacion +
+- [x] T3 [workspace] integración F9: instrucción en el agente operacion +
       fila en la tabla de scripts del README + regla RN-F4 propuesta en
       knowledge/reglas-negocio.md (entra vigente al aprobarse esta spec)
 
 ## 11. Certificación (F7)
-/convergir sin brechas pendientes + veredicto del agente de calidad
-(incluye SC-01..03 del §3) + gate QA/PR: __
+Convergencia (2026-07-19, código real vs esta spec): CA1.1–CA1.4 y CA2.1
+SATISFECHOS con test que los cubre (test-dora.sh 17/17, commiteado en rojo
+primero); CA2.2 SATISFECHO (agents/operacion.md instruye correr el script).
+SC-01 ✓ (celdas "sin datos" con causa en el uso.md real); SC-02 ✓ (sello
+[GENERADO v1], secciones manuales byte a byte intactas — assert dedicado);
+SC-03 ✓ (un comando). Regresión: test-repo-lib.sh 40/40. Sin brechas: no se
+añadió subsección de convergencia (plan intacto).
+Nota fuera de plan (candidata a tarea futura): cablear `dora.sh --check` en
+el paso de CI junto a `generate-as-is.sh --check`.
+Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
 
 ## 12. Trazabilidad
 Origen: pendiente registrado al cierre de specs/2026-07-mejoras-spec-kit.md
