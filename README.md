@@ -29,8 +29,10 @@ claude                                                 # launch from the root
 ```
 
 <p align="center">
-  <img src="docs/assets/demo.svg" alt="One feature through the whole lifecycle: spec with triage and clarification, human gate, TDD with red tests first, convergence check and a second human gate" width="100%">
+  <img src="docs/assets/demo.svg" alt="Step-by-step demo: environment from scratch, spec for an ADK + Gemini customer assistant, human gate approvals, TDD, and a live interaction with human-approved escalation" width="100%">
 </p>
+
+<p align="center">▶ <strong><a href="docs/demo-assistant.md">Follow the full demo walkthrough</a></strong> — environment from scratch to a running ADK + Gemini customer assistant, with every command and every human gate. Example spec included: <a href="specs/2026-07-asistente-clientes-adk.md"><code>specs/2026-07-asistente-clientes-adk.md</code></a>.</p>
 
 📐 **[Architecture & usage guide (EN)](docs/architecture.en.html)** ·
 **[Documento de arquitectura (ES)](docs/arquitectura.html)** — generated
@@ -111,7 +113,8 @@ dev-sdd-kit/
 │   ├── 2026-07-mejoras-spec-kit.md
 │   ├── 2026-07-metricas-dora.md
 │   ├── 2026-07-docs-html.md
-│   └── 2026-07-github-docs.md
+│   ├── 2026-07-github-docs.md
+│   └── 2026-07-asistente-clientes-adk.md   # Example: new-app flow (demo)
 │
 ├── knowledge/                        # The system's memory
 │   ├── reglas-negocio.md             # Business rules in force (RN-xx)
@@ -124,6 +127,7 @@ dev-sdd-kit/
 ├── docs/
 │   ├── index.html                    # Landing page (GitHub Pages)
 │   ├── architecture.en.html · arquitectura.html   # Generated architecture docs
+│   ├── demo-assistant.md             # Demo walkthrough (ADK + Gemini assistant)
 │   ├── guia-operativa.md             # Full operating guide (ES)
 │   ├── instructivo-repo-existente.md # Repo onboarding walkthrough (ES)
 │   └── assets/  banner.svg · demo.svg
