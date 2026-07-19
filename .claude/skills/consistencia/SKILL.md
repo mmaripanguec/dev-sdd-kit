@@ -27,9 +27,11 @@ fábrica. ESTRICTAMENTE READ-ONLY: no edites ningún artefacto; solo informa.
   `knowledge/reglas-negocio.md` (RN citada que no existe, o vigente que la
   spec viola). **Todo conflicto de este pase es CRITICAL automáticamente.**
 - **E · Cobertura**: requisitos (CA/SC) sin tarea en el plan y tareas sin
-  requisito que las justifique — en AMBAS direcciones. Etiquetas de tarea que
-  no son repos registrados ni `[workspace]`. Si la spec aún no tiene plan,
-  omite el pase y decláralo.
+  requisito que las justifique — en AMBAS direcciones. Etiquetas de REPO de
+  tarea que no son repos registrados ni `[workspace]` (el marcador `[P]` de
+  paralelismo y las prioridades `[P1]`/`[P2]`/`[P3]` de historias no son
+  etiquetas de repo; no los marques). Si la spec aún no tiene plan, omite el
+  pase y decláralo.
 - **F · Contradicciones**: spec vs as-is (afirma algo que el código
   contradice), spec vs ADR vigente, drift terminológico (misma entidad con
   dos nombres), tareas cuyo orden viola `deploy_order`.

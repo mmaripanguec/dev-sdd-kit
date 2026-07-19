@@ -51,7 +51,8 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
    sección Clarificaciones de la spec; marcadores [NECESITA CLARIFICACIÓN]
    pendientes bloquean la DoR).
 2. Fases y gates con /orquestar; NUNCA saltar un gate. Antes de los gates
-   DoR y Arquitectura: /consistencia sin hallazgos CRITICAL.
+   DoR y Arquitectura: /consistencia con veredicto APTO PARA GATE (el
+   criterio de bloqueo lo define esa skill; no lo dupliques aquí).
 3. Construcción con /implement-task: TDD, un commit por tarea EN SU repo.
 4. PROHIBIDO modificar tests para hacerlos pasar.
 5. Al cerrar F6: /convergir compara el código real contra la spec y añade

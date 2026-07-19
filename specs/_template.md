@@ -14,8 +14,8 @@
 > Ambigüedad: resolver con /clarificar antes de F1. Lo que quede sin resolver
 > se marca en línea como `[NECESITA CLARIFICACIÓN: pregunta concreta]`
 > (máximo 3 marcadores; prioridad alcance > seguridad/privacidad > UX >
-> detalle técnico; el resto se asume y se documenta en Supuestos del §7).
-> Un marcador pendiente bloquea la DoR.
+> detalle técnico; el resto se asume y se documenta en el bloque Supuestos
+> del § Análisis). Un marcador pendiente bloquea la DoR.
 
 ## 1. Problema
 Qué duele hoy, para quién y con qué evidencia (datos de knowledge/uso.md si existen).
@@ -59,6 +59,8 @@ darla de alta (/repo-add + /repo-map) o marcarla explícitamente fuera de
 alcance — nunca asumir su comportamiento>
 **Casos límite:** nulos/extremos · concurrencia · fallos de terceros ·
 zonas horarias/monedas · permisos · volumen (cada uno con su CA en Gherkin)
+**Supuestos:** <ambigüedades asumidas con default razonable (incluye las no
+preguntadas por /clarificar); cada supuesto indica quién lo convalida>
 **Regulatorio:** <requisitos de datos personales/transaccionales aplicables>
 
 ## 9. Diseño (F5)
@@ -80,9 +82,9 @@ Si el triage fue "nueva aplicación", la T0 crea el aplicativo:
 - [ ] T2 [<repo-registrado>] [P] …
 Orden de despliegue: según `deploy_order` del registro (proveedor antes que
 consumidor; compatibilidad hacia atrás).
-### Convergencia (YYYY-MM-DD)
-Tareas añadidas por /convergir al comparar el código real contra esta spec
-(append-only; si no hay brecha, esta subsección no existe).
+Al cerrar F6, /convergir añade aquí una subsección `### Convergencia (fecha)`
+con las brechas código↔spec detectadas (append-only); si no hay brechas,
+esa subsección nunca se crea y el plan queda intacto.
 
 ## 11. Certificación (F7)
 /convergir sin brechas pendientes + veredicto del agente de calidad

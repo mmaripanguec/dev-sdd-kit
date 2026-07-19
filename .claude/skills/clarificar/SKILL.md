@@ -35,7 +35,7 @@ Con las respuestas:
    (historias, análisis, fuera de alcance…) y elimina su marcador
    `[NECESITA CLARIFICACIÓN]`.
 3. Ambigüedades detectadas pero no preguntadas (excedían el máximo o tenían
-   default): al § Análisis como supuestos, o como marcador si bloquean
+   default): al bloque Supuestos del § Análisis, o como marcador si bloquean
    (máximo 3 marcadores vivos en la spec).
 
 Si aún no existe spec (se clarifica un requerimiento previo a /spec-create),

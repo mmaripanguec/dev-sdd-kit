@@ -22,14 +22,15 @@ F0 Triage          → PASO 0 de /spec-create: ¿aplicativo existente o
                      dependencias sin contexto => PREGUNTAR (repo, alta,
                      pack), nunca asumir · inconsistencia => PREGUNTAR ·
                      ambigüedad detectada => /clarificar (máx. 5 preguntas;
-                     respuestas a la sección Clarificaciones de la spec)
+                     las decisiones alimentan /spec-create y, ya creada la
+                     spec, se registran en su sección Clarificaciones)
 F1 Requerimiento   → subagente requisitos   → historias INVEST P1-P3 → GATE PO/TL
 F2 Estimación      → subagente estimacion   → puntos + WSJF
 F3 Refinamiento    → loop /spec-review + correcciones hasta DoR;
-                     /consistencia sin CRITICAL antes de presentar   → GATE DoR
+                     /consistencia con veredicto APTO PARA GATE      → GATE DoR
 F4 Análisis        → subagente analisis     → reglas, deps, límites
 F5 Diseño          → subagente arquitectura → contratos, C4, ADRs;
-                     /consistencia sin CRITICAL antes de presentar   → GATE Arquitectura
+                     /consistencia con veredicto APTO PARA GATE      → GATE Arquitectura
 F6 Construcción    → /harness-init si es multi-sesión; luego
                      /implement-task por cada tarea del plan (TDD)
 F7 Certificación   → /convergir (brechas → tareas TC, se implementan
