@@ -2,7 +2,7 @@
 name: convergir
 description: Cierra la brecha funcional código↔spec al terminar la construcción (F6/F7) — evalúa el código real contra las historias y criterios de la spec y AÑADE el trabajo restante como tareas de convergencia. Usar antes de la certificación F7 o cuando pidan "convergir la spec" / "qué falta de la spec".
 argument-hint: "<ruta-de-la-spec>"
-allowed-tools: Read Glob Grep Edit Bash(git -C:*) Bash(scripts/*)
+allowed-tools: Read Glob Grep Edit
 ---
 
 Converge la spec $ARGUMENTS contra el código real de los repos afectados.
