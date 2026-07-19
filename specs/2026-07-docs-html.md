@@ -159,20 +159,33 @@ fuentes internas; sin credenciales ni red.
 legible en móvil (CSS responsive simple).
 
 ## 10. Plan de tareas (F6)
-- [ ] T1 [workspace] tests primero (TDD): `scripts/tests/test-docs.sh` —
+- [x] T1 [workspace] tests primero (TDD): `scripts/tests/test-docs.sh` —
       fixtures y asserts de CA1.1–CA1.4 (catálogo derivado, cero listas en
-      duro, --check, "sin datos"), CA2.3 (sin URLs externas) — EN ROJO
-- [ ] T2 [workspace] `templates/docs-arquitectura.html` (prosa estable:
+      duro, --check, "sin datos"), CA2.3 (sin URLs externas) — commiteados
+      EN ROJO (19 fallos)
+- [x] T2 [workspace] `templates/docs-arquitectura.html` (prosa estable:
       arquitectura F0–F9, capas de conocimiento, modelo de artefactos con
       trazabilidad, guía de uso por escenario) con placeholders
-- [ ] T3 [workspace] `scripts/docs.sh` hasta verde sin tocar tests +
+- [x] T3 [workspace] `scripts/docs.sh` hasta verde sin tocar tests +
       `docs/arquitectura.html` generado y versionado
-- [ ] T4 [workspace] [P] README enlaza el HTML + CI regenera en el bloque
+- [x] T4 [workspace] [P] README enlaza el HTML + CI regenera en el bloque
       de sincronización (CA4.1–CA4.2)
 
 ## 11. Certificación (F7)
-/convergir sin brechas pendientes + veredicto del agente de calidad
-(incluye SC-01..03 del §3) + gate QA/PR: __
+Convergencia (2026-07-19, código real vs esta spec): CA1.1–CA1.4, CA2.3 con
+test dedicado (test-docs.sh 24/24, commiteado en rojo primero — 19 fallos);
+CA2.1/CA2.2 SATISFECHOS en la plantilla (nav de 4 secciones; tabla F0–F9
+consistente con /orquestar); CA3.1/CA3.2 SATISFECHOS (guía por escenarios
+A–D con comandos exactos y tabla de gates/permisos); CA4.1/CA4.2
+SATISFECHOS (README + ambos CI, YAML validado). Sin brechas: no se añadió
+subsección de convergencia.
+SC-01 ✓ (HTML autocontenido con onboarding en 4 escenarios); SC-02 ✓
+(--check en verde; CI lo regenera); SC-03 ✓ (asserts de cero recursos
+externos). Regresión: test-repo-lib 40/40 · test-dora 17/17.
+Supuesto documentado: la tabla F0–F9 y la guía de escenarios son prosa
+estable de la plantilla — si /orquestar cambia de fases, la plantilla se
+actualiza en el mismo PR (la consistencia la vigila /consistencia pase F).
+Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
 
 ## 12. Trazabilidad
 Origen: pedido de Marcos (2026-07-19): "actualizar la documentación, generar
