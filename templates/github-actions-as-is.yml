@@ -36,16 +36,19 @@ jobs:
       - name: Derivar metricas DORA (repos clonados; RN-F4)
         run: ./scripts/dora.sh
 
+      - name: Regenerar documentacion derivada
+        run: ./scripts/docs.sh
+
       - name: Commitear si cambio
         run: |
-          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md; then
-            git add knowledge/as-is/ knowledge/uso.md
+          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html; then
+            git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html
             git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" \
                 -c user.name=fabrica-bot \
-              commit -m "chore(sync): mapa as-is + metricas DORA [skip ci]"
+              commit -m "chore(sync): as-is + DORA + documentacion [skip ci]"
             git push origin HEAD
           else
-            echo "as-is y DORA ya sincronizados"
+            echo "as-is, DORA y documentacion ya sincronizados"
           fi
         env:
           FACTORY_BOT_EMAIL: ${{ vars.FACTORY_BOT_EMAIL }}
