@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | aprobada |
+| Estado | borrador (implementación en rama; gates DoR y QA/PR pendientes) |
 | Tipo de requerimiento | existente `[workspace]` (triage F0: solo contexto/skills; no toca repos de código) |
 | Contexto cargado | análisis comparativo dev-sdd-kit vs github/spec-kit (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (SDD) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
 | Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 (instrucción en sesión: "implementa en otra rama") |
-| Gate DoR | auto-revisión /spec-review en esta rama |
+| Gate DoR | pendiente — la auto-revisión del agente no sustituye al gate humano |
 | Gate Arquitectura | N/A — no altera arquitectura de código; solo skills y plantillas del workspace |
 
 ## 1. Problema
@@ -37,7 +37,7 @@ multi-repo, contexto verificable).
 - SC-01 Toda spec nueva registra sus decisiones de clarificación en el
   documento (0 decisiones perdidas en conversación).
 - SC-02 El 100% de las specs que llegan a los gates DoR/Arquitectura lo hacen
-  con informe de /consistencia sin CRITICAL.
+  con veredicto APTO PARA GATE de /consistencia.
 - SC-03 Ninguna spec cierra F6 sin informe de /convergir (se elimina el
   estado "F7 Pendiente" sin evidencia, como quedó la spec de generalización).
 
@@ -150,23 +150,29 @@ informes ≤ 50 hallazgos (límite de spec-kit) priorizados por severidad.
 - [x] T4 [workspace] skill `/convergir` (.claude/skills/convergir)
 - [x] T5 [workspace] actualizar `/spec-review`: DoR incorpora marcadores
       pendientes, SC-xx medibles e historias priorizadas
-- [x] T6 [workspace] integrar en `/orquestar` (secuencia F0.5, pre-gates, F7)
-      y en `CLAUDE.md` + README (tabla de comandos)
+- [x] T6 [workspace] integrar en `/orquestar` (F0, F3, F5 y F7), en
+      `/spec-create` (triage 0.4 y cierre de F3) y en `CLAUDE.md` + README
 
 ## 9. Certificación (F7)
-Verificación ejecutada el 2026-07-19 en `feature/mejoras-spec-kit`:
+Verificación técnica ejecutada el 2026-07-19 en `feature/mejoras-spec-kit`:
 - Las 3 skills cargan: frontmatter válido y registradas por el harness en
-  la sesión (clarificar, consistencia, convergir disponibles como /comando).
+  la sesión (clarificar, consistencia, convergir disponibles como /comando),
+  con permisos de mínimo privilegio (Read Glob Grep [+Edit solo la spec]).
 - `specs/_template.md` contiene las 5 incorporaciones (marcadores,
-  Clarificaciones, Criterios de éxito, [P1], Convergencia).
-- `/orquestar` referencia las 3 skills en F0/F3/F5/F7 (5 menciones).
-- Auto-revisión DoR-13 de esta spec: CUMPLE (sin marcadores pendientes,
-  SC-01..03 medibles, historias P1/P2 con MVP viable en H1+H4).
-- Auto-/consistencia: sin CRITICAL (tareas etiquetadas `[workspace]` válidas;
-  RN-F1..F3 son reglas de proceso nuevas, candidatas a promoverse a
-  knowledge/reglas-negocio.md al aprobarse el PR).
-Veredicto: APTO (auto-certificación) · Gate QA/PR humano: pendiente de
-revisión del PR de la rama.
+  Clarificaciones, Criterios de éxito, prioridades, convergencia en prosa).
+- `/orquestar` referencia las 3 skills (clarificar en F0; consistencia en
+  F3 y F5; convergir en F7) y `/spec-create` las incorpora (0.4 y F3).
+- Revisión multi-agente independiente (26 agentes, 2026-07-19): 10 hallazgos
+  confirmados, corregidos en esta misma rama (permisos, criterio de gate
+  único, marcador [P], placeholder de plantilla, destinos de supuestos,
+  integración en spec-create y honestidad de esta sección).
+- MVP = historias P1 (H1 clarificación + H2 consistencia); H3/H4 son P2.
+- RN-F1..F3 son reglas de proceso nuevas, candidatas a promoverse a
+  knowledge/reglas-negocio.md al aprobarse el PR.
+Veredicto del agente: la verificación técnica pasa; la certificación y el
+estado "aprobada/implementada" los otorga el gate humano QA/PR al revisar
+el PR de la rama — ningún gate de esta spec se considera aprobado por
+auto-revisión.
 
 ## 10. Trazabilidad
 Origen: análisis comparativo dev-sdd-kit vs github/spec-kit + referencias
