@@ -11,27 +11,47 @@
 | Gate DoR | aprobado por __ el __ (commit __) |
 | Gate Arquitectura | aprobado por __ el __ (commit __) |
 
+> Ambigüedad: resolver con /clarificar antes de F1. Lo que quede sin resolver
+> se marca en línea como `[NECESITA CLARIFICACIÓN: pregunta concreta]`
+> (máximo 3 marcadores; prioridad alcance > seguridad/privacidad > UX >
+> detalle técnico; el resto se asume y se documenta en Supuestos del §7).
+> Un marcador pendiente bloquea la DoR.
+
 ## 1. Problema
 Qué duele hoy, para quién y con qué evidencia (datos de knowledge/uso.md si existen).
 
 ## 2. Objetivo
 Resultado observable al terminar. Una o dos frases en lenguaje de negocio.
 
-## 3. Fuera de alcance
+## 3. Criterios de éxito
+Medibles y agnósticos de tecnología (qué cambia para el negocio/usuario,
+no cómo). Se certifican en F7 y se contrastan en F9 con knowledge/uso.md.
+- SC-01 <métrica + umbral + plazo; p.ej. "el alta de un repo toma < 5 min">
+- SC-02 …
+
+## 4. Fuera de alcance
 Lo que explícitamente NO se hará en esta iteración. No dejar vacío.
 
-## 4. Historias de usuario (F1 · INVEST)
-### H1 — <título>
+## 5. Clarificaciones
+Registro de sesiones de /clarificar (las respuestas ADEMÁS se integran en la
+sección que corresponda; esto es la traza de la decisión).
+### Sesión YYYY-MM-DD
+- P: <pregunta> → R: <respuesta elegida> (decide: <quién>)
+
+## 6. Historias de usuario (F1 · INVEST)
+Cada historia lleva prioridad: [P1] = MVP (las P1 por sí solas deben ser un
+producto viable e independientemente testeable), [P2] = importante, [P3] = deseable.
+### H1 [P1] — <título>
 Como <rol>, quiero <acción>, para <valor>.
 **Criterios de aceptación (Gherkin):**
 - CA1.1 Dado <contexto>, cuando <acción>, entonces <resultado medible>.
 
-## 5. Estimación (F2)
+## 7. Estimación (F2)
 | Historia | Puntos | Complejidad | Supuestos |
 |---|---|---|---|
 Prioridad WSJF: <orden y justificación>
 
-## 6. Análisis (F4)
+## 8. Análisis (F4)
 **Reglas de negocio:** RN-01 … (sincronizadas con knowledge/reglas-negocio.md)
 **Dependencias:** <dominios, sistemas, equipos; bloqueantes marcados.
 Toda dependencia sin contexto en la fábrica: preguntar su repositorio,
@@ -41,26 +61,32 @@ alcance — nunca asumir su comportamiento>
 zonas horarias/monedas · permisos · volumen (cada uno con su CA en Gherkin)
 **Regulatorio:** <requisitos de datos personales/transaccionales aplicables>
 
-## 7. Diseño (F5)
+## 9. Diseño (F5)
 **Contratos:** enlace a OpenAPI/esquemas de eventos versionados.
 **Diagramas C4 (mermaid):** contenedores y componentes.
 **ADRs:** enlaces a knowledge/decisiones/ADR-____.md
 **Threat model (STRIDE):** aplica sí/no; mitigaciones en el ADR.
 **NFRs / SLOs:** disponibilidad __%, latencia p99 __ms, volumen __.
 
-## 8. Plan de tareas (F6)
+## 10. Plan de tareas (F6)
 Formato multi-repo: cada tarea se etiqueta con el nombre de su repositorio
 destino tal como aparece en repos.yaml (las etiquetas válidas son SOLO los
 repos registrados; `[workspace]` para cambios en este repo de contexto).
+Tareas sin archivos ni dependencias en común pueden llevar además `[P]`
+(paralelizables entre sí). Agrupar por historia, P1 primero (MVP).
 Si el triage fue "nueva aplicación", la T0 crea el aplicativo:
 - [ ] T0 [workspace] crear repo + /repo-add + scaffolding según diseño F5 + as-is y pack iniciales
 - [ ] T1 [<repo-registrado>] … (una tarea = un commit EN ESE repo; TDD; /implement-task)
-- [ ] T2 [<repo-registrado>] …
+- [ ] T2 [<repo-registrado>] [P] …
 Orden de despliegue: según `deploy_order` del registro (proveedor antes que
 consumidor; compatibilidad hacia atrás).
+### Convergencia (YYYY-MM-DD)
+Tareas añadidas por /convergir al comparar el código real contra esta spec
+(append-only; si no hay brecha, esta subsección no existe).
 
-## 9. Certificación (F7)
-Veredicto del agente de calidad + gate QA/PR: __
+## 11. Certificación (F7)
+/convergir sin brechas pendientes + veredicto del agente de calidad
+(incluye SC-xx del §3) + gate QA/PR: __
 
-## 10. Trazabilidad
+## 12. Trazabilidad
 Spec → ADRs → commits → expediente CAB → postmortems relacionados.
