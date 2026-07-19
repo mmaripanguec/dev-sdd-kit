@@ -190,76 +190,130 @@ prerequisito); derivados de la cabecera de cada <code>scripts/*.sh</code>.</p>
 <p>La spec es el contrato que gobierna el flujo; el conocimiento que la
 operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
-<svg viewBox="0 0 960 430" role="img" style="width:100%;height:auto;font-family:inherit"
-     aria-label="Flujo conceptual: requerimiento, spec, código, producción y operación, con el conocimiento retroalimentando la próxima feature">
+<svg viewBox="0 0 1040 440" role="img" style="width:100%;height:auto;font-family:inherit"
+     aria-label="Flujo conceptual de las 10 fases F0 a F9 con sus gates, la capa de conocimiento y el ciclo de retroalimentación hacia la próxima feature">
   <defs>
     <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
             markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/>
     </marker>
+    <marker id="flok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+            markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--ok)"/>
+    </marker>
   </defs>
   <style>
-    .caja{fill:var(--card);stroke:var(--line);stroke-width:1.2;rx:8}
-    .titulo{fill:var(--fg);font-size:13px;font-weight:600}
-    .sub{fill:var(--muted);font-size:10.5px}
-    .gate-l{fill:var(--warn);font-size:10.5px;font-weight:600}
+    .caja{fill:var(--card);stroke:var(--line);stroke-width:1.2}
+    .kbox{fill:var(--bg);stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 3}
+    .titulo{fill:var(--fg);font-size:12.5px;font-weight:600}
+    .sub{fill:var(--muted);font-size:9.8px}
+    .gate-l{fill:var(--warn);font-size:10px;font-weight:700}
     .linea{stroke:var(--muted);stroke-width:1.4;fill:none;marker-end:url(#fl)}
-    .retro{stroke:var(--ok);stroke-width:1.6;fill:none;marker-end:url(#fl);stroke-dasharray:6 4}
-    .retro-l{fill:var(--ok);font-size:11px;font-weight:600}
+    .lfina{stroke:var(--muted);stroke-width:1;fill:none;marker-end:url(#fl);opacity:.75}
+    .retro{stroke:var(--ok);stroke-width:1.6;fill:none;marker-end:url(#flok);stroke-dasharray:6 4}
+    .retro-l{fill:var(--ok);font-size:10.5px;font-weight:600}
   </style>
 
-  <!-- flujo principal -->
-  <rect class="caja" x="8" y="40" width="130" height="54" rx="8"/>
-  <text class="titulo" x="73" y="62" text-anchor="middle">Requerimiento</text>
-  <text class="sub" x="73" y="80" text-anchor="middle">F0 triage · F1–F2</text>
+  <!-- fila A: F0 a F4 -->
+  <rect class="caja" x="48" y="40" width="168" height="64" rx="8"/>
+  <text class="titulo" x="132" y="58" text-anchor="middle">F0 Triage</text>
+  <text class="sub" x="132" y="74" text-anchor="middle">/spec-create · /clarificar</text>
+  <text class="sub" x="132" y="88" text-anchor="middle">clasifica y carga contexto</text>
 
-  <rect class="caja" x="200" y="40" width="150" height="54" rx="8"/>
-  <text class="titulo" x="275" y="62" text-anchor="middle">Spec · contrato</text>
-  <text class="sub" x="275" y="80" text-anchor="middle">specs/ · F1–F5</text>
-  <text class="gate-l" x="275" y="112" text-anchor="middle">gates PO/TL · DoR · Arq</text>
+  <rect class="caja" x="252" y="40" width="168" height="64" rx="8"/>
+  <text class="titulo" x="336" y="58" text-anchor="middle">F1 Requerimiento</text>
+  <text class="sub" x="336" y="74" text-anchor="middle">agente requisitos</text>
+  <text class="sub" x="336" y="88" text-anchor="middle">historias INVEST P1–P3</text>
 
-  <rect class="caja" x="430" y="40" width="140" height="54" rx="8"/>
-  <text class="titulo" x="500" y="62" text-anchor="middle">Código</text>
-  <text class="sub" x="500" y="80" text-anchor="middle">repos/&lt;repo&gt; · F6 TDD</text>
+  <rect class="caja" x="456" y="40" width="168" height="64" rx="8"/>
+  <text class="titulo" x="540" y="58" text-anchor="middle">F2 Estimación</text>
+  <text class="sub" x="540" y="74" text-anchor="middle">agente estimacion</text>
+  <text class="sub" x="540" y="88" text-anchor="middle">puntos + WSJF con uso.md</text>
 
-  <rect class="caja" x="650" y="40" width="130" height="54" rx="8"/>
-  <text class="titulo" x="715" y="62" text-anchor="middle">Producción</text>
-  <text class="sub" x="715" y="80" text-anchor="middle">F8 · CAB</text>
+  <rect class="caja" x="660" y="40" width="168" height="64" rx="8"/>
+  <text class="titulo" x="744" y="58" text-anchor="middle">F3 Refinamiento</text>
+  <text class="sub" x="744" y="74" text-anchor="middle">/spec-review · /consistencia</text>
+  <text class="sub" x="744" y="88" text-anchor="middle">DoR de 13 puntos</text>
 
-  <rect class="caja" x="826" y="40" width="126" height="54" rx="8"/>
-  <text class="titulo" x="889" y="62" text-anchor="middle">Operación</text>
-  <text class="sub" x="889" y="80" text-anchor="middle">F9 · SRE</text>
+  <rect class="caja" x="864" y="40" width="168" height="64" rx="8"/>
+  <text class="titulo" x="948" y="58" text-anchor="middle">F4 Análisis</text>
+  <text class="sub" x="948" y="74" text-anchor="middle">agente analisis</text>
+  <text class="sub" x="948" y="88" text-anchor="middle">RN · deps · casos límite</text>
 
-  <line class="linea" x1="138" y1="67" x2="196" y2="67"/>
-  <line class="linea" x1="350" y1="67" x2="426" y2="67"/>
-  <text class="sub" x="388" y="58" text-anchor="middle">/implement-task</text>
-  <line class="linea" x1="570" y1="67" x2="646" y2="67"/>
-  <text class="gate-l" x="608" y="58" text-anchor="middle">QA/PR · CAB</text>
-  <line class="linea" x1="780" y1="67" x2="822" y2="67"/>
+  <line class="linea" x1="216" y1="72" x2="248" y2="72"/>
+  <line class="linea" x1="420" y1="72" x2="452" y2="72"/>
+  <text class="gate-l" x="436" y="33" text-anchor="middle">PO/TL</text>
+  <line class="linea" x1="624" y1="72" x2="656" y2="72"/>
+  <line class="linea" x1="828" y1="72" x2="860" y2="72"/>
+  <text class="gate-l" x="844" y="33" text-anchor="middle">DoR</text>
+
+  <!-- bajada de fila A a fila B -->
+  <path class="linea" d="M 948 104 L 948 138 L 132 138 L 132 166"/>
+
+  <!-- fila B: F5 a F9 -->
+  <rect class="caja" x="48" y="170" width="168" height="64" rx="8"/>
+  <text class="titulo" x="132" y="188" text-anchor="middle">F5 Diseño</text>
+  <text class="sub" x="132" y="204" text-anchor="middle">agente arquitectura</text>
+  <text class="sub" x="132" y="218" text-anchor="middle">contratos · C4 · STRIDE</text>
+
+  <rect class="caja" x="252" y="170" width="168" height="64" rx="8"/>
+  <text class="titulo" x="336" y="188" text-anchor="middle">F6 Construcción</text>
+  <text class="sub" x="336" y="204" text-anchor="middle">/harness-init · /implement-task</text>
+  <text class="sub" x="336" y="218" text-anchor="middle">TDD · un commit por tarea</text>
+
+  <rect class="caja" x="456" y="170" width="168" height="64" rx="8"/>
+  <text class="titulo" x="540" y="188" text-anchor="middle">F7 Certificación</text>
+  <text class="sub" x="540" y="204" text-anchor="middle">/convergir · agente calidad</text>
+  <text class="sub" x="540" y="218" text-anchor="middle">veredicto contra la spec</text>
+
+  <rect class="caja" x="660" y="170" width="168" height="64" rx="8"/>
+  <text class="titulo" x="744" y="188" text-anchor="middle">F8 Producción</text>
+  <text class="sub" x="744" y="204" text-anchor="middle">agente publicacion</text>
+  <text class="sub" x="744" y="218" text-anchor="middle">expediente de riesgo</text>
+
+  <rect class="caja" x="864" y="170" width="168" height="64" rx="8"/>
+  <text class="titulo" x="948" y="188" text-anchor="middle">F9 Operación</text>
+  <text class="sub" x="948" y="204" text-anchor="middle">agente operacion</text>
+  <text class="sub" x="948" y="218" text-anchor="middle">postmortems · señales doradas</text>
+
+  <line class="linea" x1="216" y1="202" x2="248" y2="202"/>
+  <text class="gate-l" x="232" y="163" text-anchor="middle">Arq</text>
+  <line class="linea" x1="420" y1="202" x2="452" y2="202"/>
+  <line class="linea" x1="624" y1="202" x2="656" y2="202"/>
+  <text class="gate-l" x="640" y="163" text-anchor="middle">QA/PR</text>
+  <line class="linea" x1="828" y1="202" x2="860" y2="202"/>
+  <text class="gate-l" x="844" y="163" text-anchor="middle">CAB</text>
+  <text class="gate-l" x="948" y="252" text-anchor="middle">gate SRE</text>
 
   <!-- capa de conocimiento -->
-  <rect class="caja" x="200" y="230" width="150" height="54" rx="8"/>
-  <text class="titulo" x="275" y="252" text-anchor="middle">ADRs</text>
-  <text class="sub" x="275" y="270" text-anchor="middle">el porqué de las decisiones</text>
+  <rect class="kbox" x="48" y="300" width="200" height="58" rx="8"/>
+  <text class="titulo" x="148" y="320" text-anchor="middle">ADRs</text>
+  <text class="sub" x="148" y="336" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="148" y="349" text-anchor="middle">el porqué (F5 decide)</text>
 
-  <rect class="caja" x="410" y="230" width="180" height="54" rx="8"/>
-  <text class="titulo" x="500" y="252" text-anchor="middle">as-is · packs · grafo</text>
-  <text class="sub" x="500" y="270" text-anchor="middle">derivados, con sello y aserciones</text>
+  <rect class="kbox" x="272" y="300" width="220" height="58" rx="8"/>
+  <text class="titulo" x="382" y="320" text-anchor="middle">as-is · packs · grafo</text>
+  <text class="sub" x="382" y="336" text-anchor="middle">derivados del código</text>
+  <text class="sub" x="382" y="349" text-anchor="middle">con sello y aserciones</text>
 
-  <rect class="caja" x="742" y="230" width="210" height="54" rx="8"/>
-  <text class="titulo" x="847" y="252" text-anchor="middle">Postmortems · métricas DORA</text>
-  <text class="sub" x="847" y="270" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <rect class="kbox" x="516" y="300" width="230" height="58" rx="8"/>
+  <text class="titulo" x="631" y="320" text-anchor="middle">Spec · contrato vivo</text>
+  <text class="sub" x="631" y="336" text-anchor="middle">specs/ — la escriben F1–F5</text>
+  <text class="sub" x="631" y="349" text-anchor="middle">F7 certifica contra ella</text>
 
-  <line class="linea" x1="275" y1="120" x2="275" y2="226"/>
-  <text class="sub" x="283" y="180">F5 decide</text>
-  <line class="linea" x1="500" y1="94" x2="500" y2="226"/>
-  <text class="sub" x="508" y="180">se deriva del código</text>
-  <line class="linea" x1="889" y1="94" x2="889" y2="226"/>
-  <text class="sub" x="897" y="180">F9 registra</text>
+  <rect class="kbox" x="770" y="300" width="254" height="58" rx="8"/>
+  <text class="titulo" x="897" y="320" text-anchor="middle">Postmortems · métricas DORA</text>
+  <text class="sub" x="897" y="336" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="897" y="349" text-anchor="middle">F9 registra sin culpables</text>
+
+  <line class="lfina" x1="132" y1="234" x2="140" y2="296"/>
+  <line class="lfina" x1="336" y1="234" x2="370" y2="296"/>
+  <line class="lfina" x1="540" y1="234" x2="610" y2="296"/>
+  <line class="lfina" x1="948" y1="260" x2="910" y2="296"/>
 
   <!-- retroalimentación -->
-  <path class="retro" d="M 847 284 L 847 360 L 73 360 L 73 98"/>
-  <text class="retro-l" x="460" y="352" text-anchor="middle">el conocimiento alimenta la próxima feature (F1 prioriza · F2 estima con datos)</text>
+  <path class="retro" d="M 897 358 L 897 400 L 20 400 L 20 72 L 44 72"/>
+  <text class="retro-l" x="458" y="392" text-anchor="middle">el conocimiento alimenta la próxima feature: F1 prioriza con uso real · F2 estima con historial · F0 carga packs frescos</text>
 </svg>
 
 <h3>Artefactos y trazabilidad</h3>
