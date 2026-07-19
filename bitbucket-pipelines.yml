@@ -17,14 +17,15 @@ definitions:
           # Con los repos clonados, deriva las metricas DORA reales (RN-F4);
           # dora.sh --check queda para verificar sin escribir (uso local/PRs)
           - ./scripts/dora.sh
+          - ./scripts/docs.sh
           - |
-            if ! git diff --quiet knowledge/as-is/ knowledge/uso.md; then
-              git add knowledge/as-is/ knowledge/uso.md
+            if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html; then
+              git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html
               git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" -c user.name=fabrica-bot \
-                commit -m "chore(sync): mapa as-is + metricas DORA [skip ci]"
+                commit -m "chore(sync): as-is + DORA + documentacion [skip ci]"
               git push origin HEAD
             else
-              echo "as-is y DORA ya sincronizados"
+              echo "as-is, DORA y documentacion ya sincronizados"
             fi
 
 pipelines:

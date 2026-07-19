@@ -57,6 +57,9 @@ Sistema de ejemplo preconfigurado en `repos.yaml`: **homebanking**
 
 > **Guía paso a paso completa** (repo existente → contexto → primer
 > requerimiento): [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md)
+> **Documento integral navegable** (arquitectura, especificación técnica,
+> modelo y guía de uso): [docs/arquitectura.html](docs/arquitectura.html) —
+> derivado del código; regenerar con `./scripts/docs.sh` (el CI también lo hace).
 
 ### Opción 0 — ¿Dónde comienza todo? Instanciar la plantilla
 
@@ -220,6 +223,7 @@ git -c credential.helper= \
 │   ├── setup.sh                     # Clona/actualiza TODOS los repos del registro
 │   ├── generate-as-is.sh            # Mapa as-is del sistema · --check
 │   ├── dora.sh                      # Métricas DORA en knowledge/uso.md · --check
+│   ├── docs.sh                      # docs/arquitectura.html derivado · --check
 │   └── tests/                       # test-repo-lib.sh · test-dora.sh (bash 3.2)
 │
 ├── templates/
