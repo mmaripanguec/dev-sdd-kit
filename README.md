@@ -87,13 +87,55 @@ feeds knowledge back into the next feature. See the full conceptual diagram
 in the [architecture document](docs/architecture.en.html).
 
 ```
-repos.yaml            # System topology — the single source of truth
-.claude/              # 13 skills (slash commands), 7 phase agents, 6 rule sets
-specs/                # Feature specs: the contracts (12-section template)
-knowledge/            # ADRs, blameless postmortems, business rules, DORA metrics
-scripts/              # Automation + 3 self-test suites (99 asserts)
-docs/                 # Generated architecture docs (EN/ES) + operating guides
-harness/              # Multi-session agent harness (Anthropic initializer pattern)
+dev-sdd-kit/
+├── README.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE
+├── CLAUDE.md                         # Shared context — loaded every session
+├── repos.yaml                        # System topology — the single source of truth
+│
+├── .claude/
+│   ├── skills/                       # 14 slash commands (one SKILL.md each)
+│   │   ├── spec-create/  spec-review/  clarificar/  consistencia/
+│   │   ├── implement-task/  convergir/  harness-init/  orquestar/
+│   │   ├── repo-add/  repo-map/  system-map/
+│   │   └── as-is/  as-is-sync/  as-is-learn/
+│   ├── agents/                       # 7 phase agents
+│   │   ├── requisitos.md  estimacion.md  analisis.md  arquitectura.md
+│   │   └── calidad.md  publicacion.md  operacion.md
+│   └── rules/                        # 6 rule sets
+│       ├── code-style.md  testing.md  security.md
+│       └── api-design.md  observability.md  domain-banking.md
+│
+├── specs/                            # The contracts (every feature starts here)
+│   ├── _template.md                  # 12-section spec template
+│   ├── 2026-07-generalizacion-workspace.md
+│   ├── 2026-07-mejoras-spec-kit.md
+│   ├── 2026-07-metricas-dora.md
+│   ├── 2026-07-docs-html.md
+│   ├── 2026-07-github-docs.md
+│
+├── knowledge/                        # The system's memory
+│   ├── reglas-negocio.md             # Business rules in force (RN-xx)
+│   ├── estandares.md                 # Standard → file map
+│   ├── uso.md                        # DORA metrics (derived — do not hand-edit)
+│   ├── decisiones/_template-adr.md   # Architecture Decision Records
+│   ├── incidentes/_template-postmortem.md   # Blameless postmortems
+│   └── as-is/  INDEX.md · system.md  # Derived as-is map
+│
+├── docs/
+│   ├── index.html                    # Landing page (GitHub Pages)
+│   ├── architecture.en.html · arquitectura.html   # Generated architecture docs
+│   ├── guia-operativa.md             # Full operating guide (ES)
+│   ├── instructivo-repo-existente.md # Repo onboarding walkthrough (ES)
+│   └── assets/  banner.svg · demo.svg
+│
+├── templates/                        # What the factory instantiates
+│   ├── CLAUDE.repo.md  pack-repo.md  pack-sistema.md  pack-indice.md
+│   ├── docs-arquitectura.html  docs-architecture.en.html
+│   └── github-actions-as-is.yml
+│
+├── scripts/                          # Automation + 3 self-test suites (99 asserts)
+├── harness/  claude-progress.md      # Multi-session agent harness
+└── .github/                          # Issue & PR templates
 ```
 
 ## Documentation
