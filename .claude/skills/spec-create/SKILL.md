@@ -37,13 +37,18 @@ o los packs revelan que el aplicativo depende de otro sistema/servicio:
   falsa, dependencia declarada que no aparece en el código o viceversa):
   **SIEMPRE PREGUNTA**; nunca normalices en silencio.
 
+**0.4 Ambigüedad del requerimiento**: si el pedido admite interpretaciones
+que cambian alcance, diseño o certificación, corre /clarificar ANTES de F1;
+sus decisiones alimentan la spec y quedan en su sección Clarificaciones.
+
 ## Tarea
 Crea `specs/$(date +%Y-%m)-$0.md` a partir de [specs/_template.md](../../../specs/_template.md):
 
 1. Delega la redacción de historias al subagente `requisitos` (fase 1).
 2. Con las historias aprobadas por PO/TL, delega estimación al subagente
    `estimacion` (fase 2).
-3. Itera refinamiento con /spec-review hasta cumplir la DoR (fase 3).
+3. Itera refinamiento con /spec-review hasta cumplir la DoR, y cierra la
+   fase con /consistencia en veredicto APTO PARA GATE (fase 3).
 4. Delega análisis (reglas, dependencias, casos límite) al subagente
    `analisis` (fase 4).
 5. Delega diseño (contratos, C4, ADRs) al subagente `arquitectura` (fase 5).

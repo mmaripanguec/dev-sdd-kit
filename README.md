@@ -244,7 +244,10 @@ commitea **en este workspace**.
 | `/as-is <pregunta>` | Responde sobre el estado real del sistema (módulos, quién llama a quién, endpoints) usando el grafo de código indexado + el mapa persistido; advierte si el mapa está desactualizado | Humano o Claude |
 | `/as-is-sync` | Regenera el mapa, resume el cambio en lenguaje de arquitectura y **escala si detecta drift arquitectónico** | Humano o Claude |
 | `/spec-create <nombre>` | Construye una spec por capas (F1–F5) con parada en cada gate | Humano o Claude |
-| `/spec-review <ruta>` | Audita la spec contra la Definition of Ready (10 puntos) | Humano o Claude |
+| `/spec-review <ruta>` | Audita la spec contra la Definition of Ready (13 puntos) | Humano o Claude |
+| `/clarificar <spec\|tema>` | Resuelve ambigüedades con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec | Humano o Claude |
+| `/consistencia <ruta>` | Análisis read-only de consistencia cruzada spec↔reglas↔ADRs↔as-is↔plan (6 pases, severidades); CRITICAL bloquea el gate | Humano o Claude |
+| `/convergir <ruta>` | Compara el código real contra la spec al cerrar F6 y añade las brechas como tareas de convergencia (append-only) | Humano o Claude |
 | `/implement-task <spec> <T#>` | Una tarea del plan, con TDD estricto, en el repo que indique la etiqueta `[pwa|proxy|backend]` | Humano o Claude |
 | `/harness-init <spec>` | Prepara harness multi-sesión (feature_list, init.sh, bitácora) | Humano o Claude |
 | `/orquestar <spec>` | Ciclo E2E completo con gates registrados | **Solo humano** |

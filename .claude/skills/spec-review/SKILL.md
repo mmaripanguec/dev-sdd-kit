@@ -20,6 +20,15 @@ CUMPLE / NO CUMPLE + evidencia (cita la línea) o qué falta.
 8. Requisitos regulatorios/datos personales identificados si aplican.
 9. NFRs con números (SLO, latencia, volumen), no adjetivos.
 10. Sin secretos, credenciales ni datos reales de clientes en el documento.
+11. Sin marcadores `[NECESITA CLARIFICACIÓN]` pendientes (resolver con
+    /clarificar; las decisiones constan en la sección Clarificaciones).
+12. Criterios de éxito SC-xx medibles y agnósticos de tecnología (umbral y
+    plazo; certificables en F7 y contrastables con knowledge/uso.md).
+13. Historias priorizadas [P1]/[P2]/[P3]; las P1 por sí solas constituyen un
+    MVP viable e independientemente testeable.
+
+Complemento: la consistencia CRUZADA con reglas de negocio, ADRs, as-is y
+plan de tareas la audita /consistencia; recomiéndala si aún no se corrió.
 
 Veredicto final: LISTA PARA DoR / REQUIERE CAMBIOS (lista priorizada).
 No edites la spec: reporta; los cambios los aplica el ciclo crear-revisar-mejorar.

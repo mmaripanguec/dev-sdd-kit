@@ -20,15 +20,21 @@ Ejecuta el ciclo E2E para: $ARGUMENTS
 F0 Triage          → PASO 0 de /spec-create: ¿aplicativo existente o
                      aplicación nueva? · cargar packs de contexto vigentes ·
                      dependencias sin contexto => PREGUNTAR (repo, alta,
-                     pack), nunca asumir · inconsistencia => PREGUNTAR
-F1 Requerimiento   → subagente requisitos   → historias INVEST      → GATE PO/TL
+                     pack), nunca asumir · inconsistencia => PREGUNTAR ·
+                     ambigüedad detectada => /clarificar (máx. 5 preguntas;
+                     las decisiones alimentan /spec-create y, ya creada la
+                     spec, se registran en su sección Clarificaciones)
+F1 Requerimiento   → subagente requisitos   → historias INVEST P1-P3 → GATE PO/TL
 F2 Estimación      → subagente estimacion   → puntos + WSJF
-F3 Refinamiento    → loop /spec-review + correcciones hasta DoR     → GATE DoR
+F3 Refinamiento    → loop /spec-review + correcciones hasta DoR;
+                     /consistencia con veredicto APTO PARA GATE      → GATE DoR
 F4 Análisis        → subagente analisis     → reglas, deps, límites
-F5 Diseño          → subagente arquitectura → contratos, C4, ADRs   → GATE Arquitectura
+F5 Diseño          → subagente arquitectura → contratos, C4, ADRs;
+                     /consistencia con veredicto APTO PARA GATE      → GATE Arquitectura
 F6 Construcción    → /harness-init si es multi-sesión; luego
                      /implement-task por cada tarea del plan (TDD)
-F7 Certificación   → subagente calidad      → veredicto trazable    → GATE QA/PR
+F7 Certificación   → /convergir (brechas → tareas TC, se implementan
+                     con TDD) + subagente calidad → veredicto         → GATE QA/PR
 F8 Producción      → subagente publicacion  → expediente de riesgo  → GATE Comité CAB
 F9 Operación       → subagente operacion    → monitoreo, postmortem → GATE DevOps/SRE
 
