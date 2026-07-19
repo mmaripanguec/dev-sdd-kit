@@ -111,7 +111,7 @@ dev-sdd-kit/
 │   ├── 2026-07-mejoras-spec-kit.md
 │   ├── 2026-07-metricas-dora.md
 │   ├── 2026-07-docs-html.md
-│   ├── 2026-07-github-docs.md
+│   └── 2026-07-github-docs.md
 │
 ├── knowledge/                        # The system's memory
 │   ├── reglas-negocio.md             # Business rules in force (RN-xx)

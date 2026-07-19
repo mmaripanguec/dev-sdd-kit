@@ -1,16 +1,7 @@
 # Registro de repositorios del sistema - UNICA fuente de verdad de la topologia.
-# Ningun script o skill puede nombrar repos en duro (RN-G1,
-# specs/2026-07-generalizacion-workspace.md). Alta de repos:
-#   ./scripts/repo-add.sh <url-o-ruta>   (o la skill /repo-add)
-# Validar a mano:  . scripts/repo-lib.sh && registry_validate
-#
-# Campos por repo:
-#   name         obligatorio - nombre de la carpeta bajo repos/
-#   url          obligatorio - URL git (https/ssh) o ruta local absoluta
-#   provider     obligatorio - github | gitlab | bitbucket | local
-#   role         opcional    - que hace este repo dentro del sistema
-#   deploy_order opcional    - menor = se despliega antes (proveedor primero)
-#   domain       opcional    - generic (default) | banking (activa rules/domain-banking.md)
+# ESTE ES UN REGISTRO DE EJEMPLO (sistema demo 'homebanking' con URLs ficticias):
+# para tu sistema, primero corre ./scripts/init-sistema.sh <nombre> y luego
+# ./scripts/repo-add.sh <url-o-ruta> por cada repo real.
 system:
   name: homebanking
   entrypoint: homebanking-pwa
