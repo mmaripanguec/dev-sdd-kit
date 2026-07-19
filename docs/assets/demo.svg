@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="ui-monospace,Menlo,Consolas,monospace" role="img" aria-label="Animated illustration of the factory flow: spec creation with triage and clarification, human gate, TDD implementation and convergence">
+  <!-- ventana de terminal -->
+  <rect width="900" height="380" rx="12" fill="#0d1420"/>
+  <rect width="900" height="34" rx="12" fill="#182a42"/>
+  <rect y="22" width="900" height="12" fill="#182a42"/>
+  <circle cx="22" cy="17" r="6" fill="#ff5f57"/>
+  <circle cx="42" cy="17" r="6" fill="#febc2e"/>
+  <circle cx="62" cy="17" r="6" fill="#28c840"/>
+  <text x="450" y="22" font-size="12" fill="#8fa4bd" text-anchor="middle">dev-sdd-kit — one feature, the whole lifecycle</text>
+
+  <g font-size="14.5">
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="0.5s" fill="freeze"/>
+      <text x="24" y="66" fill="#5fce96">$ <tspan fill="#e8eaed">/spec-create payments-refund "refunds over the payments API"</tspan></text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="1.6s" fill="freeze"/>
+      <text x="24" y="94" fill="#8fa4bd">✔ F0 triage — existing system · 2 repos affected · context packs loaded &amp; fresh</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="2.8s" fill="freeze"/>
+      <text x="24" y="122" fill="#66aef0">? clarify 1/3 — refund window: [A] 30 days [B] 90 days [C] custom  <tspan fill="#e8eaed">→ B (recorded in spec)</tspan></text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="4.2s" fill="freeze"/>
+      <text x="24" y="150" fill="#8fa4bd">✔ spec written — stories P1–P3 · Gherkin criteria · measurable success criteria</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="5.4s" fill="freeze"/>
+      <text x="24" y="178" fill="#e0a458">⏸ GATE PO/TL — waiting for HUMAN approval (agents cannot approve their own work)</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="7s" fill="freeze"/>
+      <text x="24" y="206" fill="#5fce96">$ <tspan fill="#e8eaed">/implement-task specs/2026-07-payments-refund.md T1</tspan></text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="8.2s" fill="freeze"/>
+      <text x="24" y="234" fill="#ff6b6b">✔ RED — 4 failing tests committed FIRST (editing tests to pass: forbidden)</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="9.6s" fill="freeze"/>
+      <text x="24" y="262" fill="#28c840">✔ GREEN — implementation passes · one commit per task, in its repo</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="11s" fill="freeze"/>
+      <text x="24" y="290" fill="#8fa4bd">✔ /convergir — every criterion checked against real code: 0 gaps</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="12.4s" fill="freeze"/>
+      <text x="24" y="318" fill="#8fa4bd">✔ DORA metrics &amp; architecture docs regenerated from sources — sealed, CI-checked</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1" dur="0.3s" begin="13.8s" fill="freeze"/>
+      <text x="24" y="350" fill="#e0a458">⏸ GATE QA/PR — human verdict, recorded in the spec. <tspan fill="#5fce96">The loop closes. ∎</tspan></text>
+    </g>
+  </g>
+</svg>

@@ -28,9 +28,15 @@ claude                                                 # launch from the root
 /spec-create my-feature what you need, in plain words  # specify with gates
 ```
 
+<p align="center">
+  <img src="docs/assets/demo.svg" alt="One feature through the whole lifecycle: spec with triage and clarification, human gate, TDD with red tests first, convergence check and a second human gate" width="100%">
+</p>
+
 📐 **[Architecture & usage guide (EN)](docs/architecture.en.html)** ·
 **[Documento de arquitectura (ES)](docs/arquitectura.html)** — generated
 from the live workspace, always current.
+
+> ⭐ If this approach resonates, a star helps other teams find it.
 
 ## Why this exists
 
