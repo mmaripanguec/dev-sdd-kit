@@ -144,8 +144,11 @@ SC-01 ✓ (celdas "sin datos" con causa en el uso.md real); SC-02 ✓ (sello
 [GENERADO v1], secciones manuales byte a byte intactas — assert dedicado);
 SC-03 ✓ (un comando). Regresión: test-repo-lib.sh 40/40. Sin brechas: no se
 añadió subsección de convergencia (plan intacto).
-Nota fuera de plan (candidata a tarea futura): cablear `dora.sh --check` en
-el paso de CI junto a `generate-as-is.sh --check`.
+Nota fuera de plan — resuelta el 2026-07-19 a pedido del gate: el CI corre
+`dora.sh` tras `setup.sh` y auto-commitea uso.md junto al as-is (patrón
+regenerar-y-commitear del pipeline; `--check` queda para uso local/PRs,
+porque el CI con repos clonados siempre diferiría de una tabla local
+"sin datos").
 Veredicto del agente: verificación técnica pasa.
 Gate QA/PR: aprobado por Marcos Maripangue el 2026-07-19 ("o.k aprobado",
 tras el diff completo de la rama). RN-F4 pasa a vigente.

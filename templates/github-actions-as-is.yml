@@ -33,16 +33,19 @@ jobs:
       - name: Regenerar mapa as-is
         run: ./scripts/generate-as-is.sh
 
+      - name: Derivar metricas DORA (repos clonados; RN-F4)
+        run: ./scripts/dora.sh
+
       - name: Commitear si cambio
         run: |
-          if ! git diff --quiet knowledge/as-is/; then
-            git add knowledge/as-is/
+          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md; then
+            git add knowledge/as-is/ knowledge/uso.md
             git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" \
                 -c user.name=fabrica-bot \
-              commit -m "chore(as-is): sincroniza mapa del sistema [skip ci]"
+              commit -m "chore(sync): mapa as-is + metricas DORA [skip ci]"
             git push origin HEAD
           else
-            echo "as-is ya sincronizado"
+            echo "as-is y DORA ya sincronizados"
           fi
         env:
           FACTORY_BOT_EMAIL: ${{ vars.FACTORY_BOT_EMAIL }}

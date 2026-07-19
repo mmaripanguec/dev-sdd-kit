@@ -1,4 +1,4 @@
-# Pipeline del workspace: sincroniza el mapa as-is del sistema.
+# Pipeline del workspace: sincroniza el mapa as-is y las metricas DORA.
 # Variables (Repository settings > Repository variables; tokens marcar Secured)
 # segun los proveedores declarados en repos.yaml:
 #   BITBUCKET_USER / BITBUCKET_TOKEN   (App Password / API token / Access token)
@@ -14,14 +14,17 @@ definitions:
           # setup.sh detecta BITBUCKET_TOKEN en el entorno y usa modo token
           - ./scripts/setup.sh
           - ./scripts/generate-as-is.sh
+          # Con los repos clonados, deriva las metricas DORA reales (RN-F4);
+          # dora.sh --check queda para verificar sin escribir (uso local/PRs)
+          - ./scripts/dora.sh
           - |
-            if ! git diff --quiet knowledge/as-is/; then
-              git add knowledge/as-is/
+            if ! git diff --quiet knowledge/as-is/ knowledge/uso.md; then
+              git add knowledge/as-is/ knowledge/uso.md
               git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" -c user.name=fabrica-bot \
-                commit -m "chore(as-is): sincroniza mapa del sistema [skip ci]"
+                commit -m "chore(sync): mapa as-is + metricas DORA [skip ci]"
               git push origin HEAD
             else
-              echo "as-is ya sincronizado"
+              echo "as-is y DORA ya sincronizados"
             fi
 
 pipelines:
