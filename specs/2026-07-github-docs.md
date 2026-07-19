@@ -140,20 +140,32 @@ archivos (regla vigente).
 **NFRs:** README < 200 líneas (portada, no manual); ambos HTML < 300 KB.
 
 ## 10. Plan de tareas (F6)
-- [ ] T1 [workspace] asserts EN en test-docs.sh (ambas salidas, rótulos EN,
+- [x] T1 [workspace] asserts EN en test-docs.sh (ambas salidas, rótulos EN,
       "no data", autocontenido) — EN ROJO
-- [ ] T2 [workspace] mover README.md → docs/guia-operativa.md (íntegro) +
+- [x] T2 [workspace] mover README.md → docs/guia-operativa.md (íntegro) +
       README.md nuevo en inglés + corregir referencias internas
-- [ ] T3 [workspace] [P] LICENSE (MIT) + CONTRIBUTING.md + .github/
+- [x] T3 [workspace] [P] LICENSE (MIT) + CONTRIBUTING.md + .github/
       (plantillas de issue bug/feature y de PR, en inglés)
-- [ ] T4 [workspace] templates/docs-architecture.en.html + docs.sh bilingüe
+- [x] T4 [workspace] templates/docs-architecture.en.html + docs.sh bilingüe
       hasta verde + docs/architecture.en.html generado
-- [ ] T5 [workspace] [P] CI commitea ambos HTML + precisión de la
+- [x] T5 [workspace] [P] CI commitea ambos HTML + precisión de la
       convención de idioma en CLAUDE.md + .gitignore (.DS_Store)
 
 ## 11. Certificación (F7)
-/convergir sin brechas pendientes + veredicto del agente de calidad
-(incluye SC-01..03 del §3) + gate QA/PR: __
+Convergencia (2026-07-19, código real vs esta spec): CA1.1–CA1.3 SATISFECHOS
+(README EN de portada; guía española íntegra en docs/guia-operativa.md con
+nota cruzada; única referencia interna corregida — grep sin enlaces rotos);
+CA2.1–CA2.3 SATISFECHOS (LICENSE MIT, CONTRIBUTING con el proceso real,
+.github con plantillas bug/feature/PR y checklist de gates); CA3.1–CA3.3
+SATISFECHOS con test dedicado (asserts EN commiteados en rojo — 5 fallos —
+y docs.sh bilingüe hasta verde: test-docs 37/37; --check cubre ambas
+ediciones; CI las commitea). Sin brechas: no se añadió subsección de
+convergencia. SC-01 ✓ · SC-02 ✓ (LICENSE/CONTRIBUTING/plantillas presentes)
+· SC-03 ✓ (cero artefactos internos traducidos; guía ES íntegra).
+Regresión: test-repo-lib 40/40 · test-dora 17/17. Supuestos que convalida
+el gate: nombre público "dev-sdd-kit", copyright "Marcos Maripangue",
+ejemplo homebanking visible en el repo público.
+Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
 
 ## 12. Trazabilidad
 Origen: pedido de Marcos (2026-07-19) "documentación para publicar en
