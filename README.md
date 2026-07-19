@@ -22,7 +22,7 @@ before code, and every document or metric is derived from the real sources.
 
 ```bash
 git clone <this-repo-url> my-system && cd my-system
-./scripts/init-sistema.sh                              # instantiate the template
+./scripts/init-sistema.sh my-system                   # instantiate the template
 claude                                                 # launch from the root
 /repo-add https://github.com/your-org/your-repo.git    # onboard your first repo
 /spec-create my-feature what you need, in plain words  # specify with gates
