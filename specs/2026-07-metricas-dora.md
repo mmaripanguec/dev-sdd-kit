@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
+| Estado | implementada |
 | Tipo de requerimiento | existente `[workspace]` (triage F0: solo scripts y knowledge; no toca repos de código) |
 | Contexto cargado | knowledge/uso.md, agente operacion, plantilla postmortem, scripts/repo-lib.sh (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (medición DORA) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
 | Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 ("avanzar con los pendientes") |
-| Gate DoR | pendiente |
+| Gate DoR | aprobado por Marcos Maripangue el 2026-07-19 (revisión del diff completo; convalida los 3 supuestos de Clarificaciones) |
 | Gate Arquitectura | N/A — sin arquitectura de código de sistema; scripts del workspace |
 
 ## 1. Problema
@@ -146,7 +146,9 @@ SC-03 ✓ (un comando). Regresión: test-repo-lib.sh 40/40. Sin brechas: no se
 añadió subsección de convergencia (plan intacto).
 Nota fuera de plan (candidata a tarea futura): cablear `dora.sh --check` en
 el paso de CI junto a `generate-as-is.sh --check`.
-Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
+Veredicto del agente: verificación técnica pasa.
+Gate QA/PR: aprobado por Marcos Maripangue el 2026-07-19 ("o.k aprobado",
+tras el diff completo de la rama). RN-F4 pasa a vigente.
 
 ## 12. Trazabilidad
 Origen: pendiente registrado al cierre de specs/2026-07-mejoras-spec-kit.md
