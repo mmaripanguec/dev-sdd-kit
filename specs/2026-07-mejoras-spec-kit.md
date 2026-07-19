@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador (implementación en rama; gates DoR y QA/PR pendientes) |
+| Estado | implementada |
 | Tipo de requerimiento | existente `[workspace]` (triage F0: solo contexto/skills; no toca repos de código) |
 | Contexto cargado | análisis comparativo dev-sdd-kit vs github/spec-kit (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (SDD) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
 | Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 (instrucción en sesión: "implementa en otra rama") |
-| Gate DoR | pendiente — la auto-revisión del agente no sustituye al gate humano |
+| Gate DoR | aprobado por Marcos Maripangue el 2026-07-19 (revisión del diff completo de la rama en sesión: "o.k avanzar aprobado") |
 | Gate Arquitectura | N/A — no altera arquitectura de código; solo skills y plantillas del workspace |
 
 ## 1. Problema
@@ -169,10 +169,11 @@ Verificación técnica ejecutada el 2026-07-19 en `feature/mejoras-spec-kit`:
 - MVP = historias P1 (H1 clarificación + H2 consistencia); H3/H4 son P2.
 - RN-F1..F3 son reglas de proceso nuevas, candidatas a promoverse a
   knowledge/reglas-negocio.md al aprobarse el PR.
-Veredicto del agente: la verificación técnica pasa; la certificación y el
-estado "aprobada/implementada" los otorga el gate humano QA/PR al revisar
-el PR de la rama — ningún gate de esta spec se considera aprobado por
-auto-revisión.
+Veredicto del agente: la verificación técnica pasa.
+Gate QA/PR: aprobado por Marcos Maripangue el 2026-07-19, tras revisar el
+diff completo de la rama (10 commits, 10 archivos) y el informe de la
+revisión multi-agente con sus correcciones aplicadas. Con esta aprobación
+RN-F1..F3 quedan promovidas a knowledge/reglas-negocio.md.
 
 ## 10. Trazabilidad
 Origen: análisis comparativo dev-sdd-kit vs github/spec-kit + referencias
