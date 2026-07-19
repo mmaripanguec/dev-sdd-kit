@@ -240,8 +240,8 @@ prerequisito); derivados de la cabecera de cada <code>scripts/*.sh</code>.</p>
 <p>La spec es el contrato que gobierna el flujo; el conocimiento que la
 operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
-<svg viewBox="0 0 1040 500" role="img" style="width:100%;height:auto;font-family:inherit"
-     aria-label="Flujo conceptual: las fases F0 a F4 escriben la SPEC (contrato vivo al centro), que gobierna F5 a F9; la capa de conocimiento y el ciclo de retroalimentación cierran el modelo">
+<svg viewBox="0 0 1040 478" role="img" style="width:100%;height:auto;font-family:inherit"
+     aria-label="Flujo conceptual: F0 a F4 escriben la SPEC (contrato vivo al centro), la SPEC gobierna F5 a F9, el conocimiento se deriva y retroalimenta la próxima feature">
   <defs>
     <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
             markerHeight="7" orient="auto-start-reverse">
@@ -263,7 +263,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
     .titulo{fill:var(--fg);font-size:12.5px;font-weight:600}
     .spec-t{fill:var(--acc);font-size:14px;font-weight:700}
     .sub{fill:var(--muted);font-size:9.8px}
-    .gate-l{fill:var(--warn);font-size:10px;font-weight:700}
+    .gate-l{fill:var(--warn);font-size:9.5px;font-weight:700}
     .linea{stroke:var(--muted);stroke-width:1.4;fill:none;marker-end:url(#fl)}
     .lacc{stroke:var(--acc);stroke-width:1.4;fill:none;marker-end:url(#flacc)}
     .lcert{stroke:var(--acc);stroke-width:1.3;fill:none;marker-end:url(#flacc);stroke-dasharray:4 3}
@@ -273,7 +273,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
     .acc-l{fill:var(--acc);font-size:10px;font-weight:600}
   </style>
 
-  <!-- fila A: F0 a F4 -->
+  <!-- fila A: F0 a F4 (el QUÉ: escriben la spec) -->
   <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
   <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarificar</text>
@@ -301,92 +301,90 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
   <line class="linea" x1="420" y1="68" x2="452" y2="68"/>
-  <text class="gate-l" x="436" y="29" text-anchor="middle">PO/TL</text>
+  <text class="gate-l" x="436" y="60" text-anchor="middle">PO/TL</text>
   <line class="linea" x1="624" y1="68" x2="656" y2="68"/>
   <line class="linea" x1="828" y1="68" x2="860" y2="68"/>
-  <text class="gate-l" x="844" y="29" text-anchor="middle">DoR</text>
+  <text class="gate-l" x="844" y="60" text-anchor="middle">DoR</text>
 
-  <!-- cada fase escribe su sección de la spec -->
+  <!-- F0..F4 escriben su sección (el detalle vive dentro de la banda) -->
   <line class="lacc" x1="132" y1="100" x2="132" y2="146"/>
   <line class="lacc" x1="336" y1="100" x2="336" y2="146"/>
   <line class="lacc" x1="540" y1="100" x2="540" y2="146"/>
   <line class="lacc" x1="744" y1="100" x2="744" y2="146"/>
   <line class="lacc" x1="948" y1="100" x2="948" y2="146"/>
-  <text class="acc-l" x="52" y="128">cada fase</text>
-  <text class="acc-l" x="52" y="140">escribe →</text>
 
-  <!-- LA SPEC: contrato vivo al centro del modelo -->
+  <!-- LA SPEC: contrato vivo, centro y conector del modelo -->
   <rect class="spec" x="48" y="150" width="984" height="62" rx="10"/>
   <text class="spec-t" x="540" y="174" text-anchor="middle">SPEC · el contrato vivo — specs/&lt;feature&gt;.md</text>
   <text class="sub" x="540" y="192" text-anchor="middle">clarificaciones (F0) · historias y criterios de éxito (F1) · estimación (F2) · DoR (F3) · análisis (F4) · diseño y plan de tareas (F5)</text>
   <text class="sub" x="540" y="205" text-anchor="middle">todo lo de abajo se construye y certifica CONTRA este documento; sus gates quedan registrados en él</text>
 
-  <!-- la spec gobierna la construcción -->
-  <line class="lacc" x1="132" y1="212" x2="132" y2="256"/>
-  <text class="acc-l" x="140" y="240">F5 completa el diseño</text>
-  <line class="lacc" x1="336" y1="212" x2="336" y2="256"/>
-  <text class="acc-l" x="344" y="240">el plan gobierna F6</text>
-  <path class="lcert" d="M 540 256 L 540 212"/>
-  <text class="acc-l" x="548" y="240">/convergir certifica ↑</text>
+  <!-- la spec gobierna la construcción; F7 certifica de vuelta -->
+  <line class="lacc" x1="132" y1="212" x2="132" y2="264"/>
+  <text class="acc-l" x="140" y="243">completa el diseño</text>
+  <line class="lacc" x1="336" y1="212" x2="336" y2="264"/>
+  <text class="acc-l" x="344" y="243">el plan gobierna F6</text>
+  <path class="lcert" d="M 540 264 L 540 216"/>
+  <text class="acc-l" x="548" y="243">certifica contra la spec</text>
 
-  <!-- fila B: F5 a F9 -->
-  <rect class="caja" x="48" y="260" width="168" height="64" rx="8"/>
-  <text class="titulo" x="132" y="278" text-anchor="middle">F5 Diseño</text>
-  <text class="sub" x="132" y="294" text-anchor="middle">agente arquitectura</text>
-  <text class="sub" x="132" y="308" text-anchor="middle">contratos · C4 · STRIDE</text>
+  <!-- fila B: F5 a F9 (el CÓMO: obedecen y verifican la spec) -->
+  <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="132" y="286" text-anchor="middle">F5 Diseño</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">agente arquitectura</text>
+  <text class="sub" x="132" y="316" text-anchor="middle">contratos · C4 · STRIDE</text>
 
-  <rect class="caja" x="252" y="260" width="168" height="64" rx="8"/>
-  <text class="titulo" x="336" y="278" text-anchor="middle">F6 Construcción</text>
-  <text class="sub" x="336" y="294" text-anchor="middle">/harness-init · /implement-task</text>
-  <text class="sub" x="336" y="308" text-anchor="middle">TDD · un commit por tarea</text>
+  <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="336" y="286" text-anchor="middle">F6 Construcción</text>
+  <text class="sub" x="336" y="302" text-anchor="middle">/harness-init · /implement-task</text>
+  <text class="sub" x="336" y="316" text-anchor="middle">TDD · un commit por tarea</text>
 
-  <rect class="caja" x="456" y="260" width="168" height="64" rx="8"/>
-  <text class="titulo" x="540" y="278" text-anchor="middle">F7 Certificación</text>
-  <text class="sub" x="540" y="294" text-anchor="middle">/convergir · agente calidad</text>
-  <text class="sub" x="540" y="308" text-anchor="middle">veredicto contra la spec</text>
+  <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certificación</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · agente calidad</text>
+  <text class="sub" x="540" y="316" text-anchor="middle">veredicto contra la spec</text>
 
-  <rect class="caja" x="660" y="260" width="168" height="64" rx="8"/>
-  <text class="titulo" x="744" y="278" text-anchor="middle">F8 Producción</text>
-  <text class="sub" x="744" y="294" text-anchor="middle">agente publicacion</text>
-  <text class="sub" x="744" y="308" text-anchor="middle">expediente de riesgo</text>
+  <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="744" y="286" text-anchor="middle">F8 Producción</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">agente publicacion</text>
+  <text class="sub" x="744" y="316" text-anchor="middle">expediente de riesgo</text>
 
-  <rect class="caja" x="864" y="260" width="168" height="64" rx="8"/>
-  <text class="titulo" x="948" y="278" text-anchor="middle">F9 Operación</text>
-  <text class="sub" x="948" y="294" text-anchor="middle">agente operacion</text>
-  <text class="sub" x="948" y="308" text-anchor="middle">postmortems · señales doradas</text>
+  <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operación</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">agente operacion</text>
+  <text class="sub" x="948" y="316" text-anchor="middle">postmortems · señales doradas</text>
 
-  <line class="linea" x1="216" y1="292" x2="248" y2="292"/>
-  <text class="gate-l" x="232" y="253" text-anchor="middle">Arq</text>
-  <line class="linea" x1="420" y1="292" x2="452" y2="292"/>
-  <line class="linea" x1="624" y1="292" x2="656" y2="292"/>
-  <text class="gate-l" x="640" y="253" text-anchor="middle">QA/PR</text>
-  <line class="linea" x1="828" y1="292" x2="860" y2="292"/>
-  <text class="gate-l" x="844" y="253" text-anchor="middle">CAB</text>
-  <text class="gate-l" x="948" y="342" text-anchor="middle">gate SRE</text>
+  <line class="linea" x1="216" y1="300" x2="248" y2="300"/>
+  <text class="gate-l" x="232" y="292" text-anchor="middle">Arq</text>
+  <line class="linea" x1="420" y1="300" x2="452" y2="300"/>
+  <line class="linea" x1="624" y1="300" x2="656" y2="300"/>
+  <text class="gate-l" x="640" y="292" text-anchor="middle">QA/PR</text>
+  <line class="linea" x1="828" y1="300" x2="860" y2="300"/>
+  <text class="gate-l" x="844" y="292" text-anchor="middle">CAB</text>
 
-  <!-- capa de conocimiento -->
-  <rect class="kbox" x="48" y="380" width="240" height="58" rx="8"/>
-  <text class="titulo" x="168" y="400" text-anchor="middle">ADRs</text>
-  <text class="sub" x="168" y="416" text-anchor="middle">knowledge/decisiones</text>
-  <text class="sub" x="168" y="429" text-anchor="middle">el porqué (F5 decide)</text>
+  <!-- capa de conocimiento: alineada bajo la fase que la escribe -->
+  <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
+  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="132" y="429" text-anchor="middle">el porqué de las decisiones</text>
 
-  <rect class="kbox" x="330" y="380" width="260" height="58" rx="8"/>
-  <text class="titulo" x="460" y="400" text-anchor="middle">as-is · packs · grafo</text>
-  <text class="sub" x="460" y="416" text-anchor="middle">derivados del código (F6+)</text>
-  <text class="sub" x="460" y="429" text-anchor="middle">con sello y aserciones</text>
+  <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="336" y="400" text-anchor="middle">as-is · packs · grafo</text>
+  <text class="sub" x="336" y="416" text-anchor="middle">derivados del código</text>
+  <text class="sub" x="336" y="429" text-anchor="middle">con sello y aserciones</text>
 
-  <rect class="kbox" x="700" y="380" width="332" height="58" rx="8"/>
-  <text class="titulo" x="866" y="400" text-anchor="middle">Postmortems · métricas DORA</text>
-  <text class="sub" x="866" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
-  <text class="sub" x="866" y="429" text-anchor="middle">F9 registra sin culpables</text>
+  <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
+  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="948" y="429" text-anchor="middle">F9 registra sin culpables</text>
 
-  <line class="lfina" x1="132" y1="324" x2="160" y2="376"/>
-  <line class="lfina" x1="336" y1="324" x2="440" y2="376"/>
-  <line class="lfina" x1="948" y1="346" x2="890" y2="376"/>
+  <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
+  <line class="lfina" x1="336" y1="332" x2="336" y2="376"/>
+  <line class="lfina" x1="948" y1="332" x2="948" y2="376"/>
+  <text class="gate-l" x="940" y="356" text-anchor="end">gate SRE</text>
 
-  <!-- retroalimentación -->
-  <path class="retro" d="M 866 438 L 866 468 L 20 468 L 20 68 L 44 68"/>
-  <text class="retro-l" x="450" y="460" text-anchor="middle">el conocimiento alimenta la próxima feature: F1 prioriza con uso real · F2 estima con historial · F0 carga packs frescos</text>
+  <!-- retroalimentación: el ciclo se cierra -->
+  <path class="retro" d="M 948 438 L 948 462 L 20 462 L 20 68 L 44 68"/>
+  <text class="retro-l" x="484" y="455" text-anchor="middle">el conocimiento alimenta la próxima feature: F1 prioriza con uso real · F2 estima con historial · F0 carga packs frescos</text>
 </svg>
 
 <h3>Artefactos y trazabilidad</h3>
