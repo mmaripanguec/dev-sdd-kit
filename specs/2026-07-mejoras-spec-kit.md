@@ -33,6 +33,14 @@ convergencia funcional y criterios de éxito medibles con priorización de
 historias — sin renunciar a sus fortalezas (TDD obligatorio, gates con permisos,
 multi-repo, contexto verificable).
 
+## 2.1 Criterios de éxito
+- SC-01 Toda spec nueva registra sus decisiones de clarificación en el
+  documento (0 decisiones perdidas en conversación).
+- SC-02 El 100% de las specs que llegan a los gates DoR/Arquitectura lo hacen
+  con informe de /consistencia sin CRITICAL.
+- SC-03 Ninguna spec cierra F6 sin informe de /convergir (se elimina el
+  estado "F7 Pendiente" sin evidencia, como quedó la spec de generalización).
+
 ## 3. Fuera de alcance
 - Tests opcionales (retroceso de spec-kit; el TDD sigue siendo obligatorio).
 - Constitución auto-evaluada por el LLM como gate (nuestros gates humanos con
@@ -146,9 +154,19 @@ informes ≤ 50 hallazgos (límite de spec-kit) priorizados por severidad.
       y en `CLAUDE.md` + README (tabla de comandos)
 
 ## 9. Certificación (F7)
-Verificación: las 3 skills nuevas cargan (frontmatter válido), la plantilla
-contiene las secciones nuevas, /spec-review sobre ESTA spec da LISTA PARA DoR,
-y /consistencia sobre esta spec no arroja CRITICAL. Veredicto: __
+Verificación ejecutada el 2026-07-19 en `feature/mejoras-spec-kit`:
+- Las 3 skills cargan: frontmatter válido y registradas por el harness en
+  la sesión (clarificar, consistencia, convergir disponibles como /comando).
+- `specs/_template.md` contiene las 5 incorporaciones (marcadores,
+  Clarificaciones, Criterios de éxito, [P1], Convergencia).
+- `/orquestar` referencia las 3 skills en F0/F3/F5/F7 (5 menciones).
+- Auto-revisión DoR-13 de esta spec: CUMPLE (sin marcadores pendientes,
+  SC-01..03 medibles, historias P1/P2 con MVP viable en H1+H4).
+- Auto-/consistencia: sin CRITICAL (tareas etiquetadas `[workspace]` válidas;
+  RN-F1..F3 son reglas de proceso nuevas, candidatas a promoverse a
+  knowledge/reglas-negocio.md al aprobarse el PR).
+Veredicto: APTO (auto-certificación) · Gate QA/PR humano: pendiente de
+revisión del PR de la rama.
 
 ## 10. Trazabilidad
 Origen: análisis comparativo dev-sdd-kit vs github/spec-kit + referencias
