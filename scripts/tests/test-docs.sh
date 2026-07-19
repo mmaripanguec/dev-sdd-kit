@@ -133,6 +133,11 @@ printf 'repos: []\n' > "${WS2}/repos.yaml"
 HTML2=$(cat "${WS2}/docs/arquitectura.html" 2>/dev/null || echo "")
 assert_contains "registro vacio declara sin datos" "sin datos" "$HTML2"
 
+echo "== CA2.4: diagrama de flujo conceptual del modelo (svg inline) =="
+assert_contains "diagrama svg presente"          "<svg"                 "$HTML"
+assert_contains "diagrama: la spec como contrato" "Spec"                "$HTML"
+assert_contains "diagrama: ciclo de retroalimentacion" "alimenta"       "$HTML"
+
 echo "== CA2.3: autocontenido, sin recursos externos =="
 assert_not_contains "sin scripts externos"     "script src=\"http"                 "$HTML"
 assert_not_contains "sin hojas de estilo CDN"  "stylesheet\" href=\"http"          "$HTML"

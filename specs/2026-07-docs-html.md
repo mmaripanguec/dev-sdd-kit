@@ -170,6 +170,9 @@ legible en móvil (CSS responsive simple).
       `docs/arquitectura.html` generado y versionado
 - [x] T4 [workspace] [P] README enlaza el HTML + CI regenera en el bloque
       de sincronización (CA4.1–CA4.2)
+- [x] T5 [workspace] diagrama de flujo conceptual del modelo en §3 — SVG
+      inline con tema claro/oscuro y ciclo de retroalimentación (pedido de
+      Marcos en la revisión del gate QA/PR; assert CA2.4 en test-docs.sh)
 
 ## 11. Certificación (F7)
 Convergencia (2026-07-19, código real vs esta spec): CA1.1–CA1.4, CA2.3 con
