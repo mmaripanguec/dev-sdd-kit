@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
+| Estado | implementada |
 | Tipo de requerimiento | existente `[workspace]` (triage F0: documentación y metadatos de publicación; no toca repos de código) |
 | Contexto cargado | README actual, docs/arquitectura.html + docs.sh, convención "artefactos en español" de CLAUDE.md (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (publicación open source) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
 | Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 (respuestas de clarificación: alcance/paquete/licencia/orden) |
-| Gate DoR | pendiente |
+| Gate DoR | aprobado por Marcos Maripangue el 2026-07-19 (junto al QA/PR, revisión consolidada de ambas ramas) |
 | Gate Arquitectura | N/A — documentación y metadatos; sin arquitectura de código |
 
 ## 1. Problema
@@ -165,7 +165,11 @@ convergencia. SC-01 ✓ · SC-02 ✓ (LICENSE/CONTRIBUTING/plantillas presentes)
 Regresión: test-repo-lib 40/40 · test-dora 17/17. Supuestos que convalida
 el gate: nombre público "dev-sdd-kit", copyright "Marcos Maripangue",
 ejemplo homebanking visible en el repo público.
-Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
+Veredicto del agente: verificación técnica pasa.
+Gate QA/PR: aprobado por Marcos Maripangue el 2026-07-19 ("o.k aprobado",
+revisión consolidada: README/landing/demo en navegador, paquete GitHub,
+kit de difusión y plan de lanzamiento corregido con evidencia; convalida
+los supuestos registrados en Análisis).
 
 ## 12. Trazabilidad
 Origen: pedido de Marcos (2026-07-19) "documentación para publicar en

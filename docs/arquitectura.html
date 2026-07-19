@@ -419,7 +419,7 @@ pendientes bloquean la DoR (RN-F3).</p>
 <tr><th>Archivo</th><th>Spec</th><th>Estado</th></tr>
 <tr><td><code>2026-07-docs-html.md</code></td><td>Spec: Documentación HTML derivada de la fábrica (arquitectura, técnica, modelo y uso)</td><td>implementada</td></tr>
 <tr><td><code>2026-07-generalizacion-workspace.md</code></td><td>Spec: Generalización del workspace — fábrica para CUALQUIER sistema de repos</td><td>implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales)</td></tr>
-<tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>borrador</td></tr>
+<tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>implementada</td></tr>
 <tr><td><code>2026-07-mejoras-spec-kit.md</code></td><td>Spec: Adopción de mecánicas de calidad de GitHub Spec Kit</td><td>implementada</td></tr>
 <tr><td><code>2026-07-metricas-dora.md</code></td><td>Spec: Derivación automática de métricas DORA en knowledge/uso.md</td><td>implementada</td></tr>
 </table></div>
@@ -435,7 +435,7 @@ postmortems (RN-F4: fuente y período declarados, o «sin datos»).</p>
 
 <h3>Escenario A — Instalar la fábrica para un sistema nuevo</h3>
 <pre>git clone &lt;url-de-la-plantilla&gt; mi-sistema && cd mi-sistema
-./scripts/init-sistema.sh          # limpia datos de instancia, crea registro
+./scripts/init-sistema.sh mi-sistema   # limpia datos de instancia, crea registro
 /repo-add &lt;url-o-ruta&gt;             # por cada repo del sistema
 /system-map                        # cuando haya ≥2 repos con pack</pre>
 

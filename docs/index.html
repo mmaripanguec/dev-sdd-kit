@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="dev-sdd-kit — the spec-driven development factory for multi-repo systems. Human gates backed by permissions, strict TDD, and docs and metrics that cannot lie. Built for Claude Code.">
+<title>dev-sdd-kit · The spec-driven factory for multi-repo systems</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1a1a1a; --muted:#5a6270; --line:#e3e6ea;
+    --card:#f6f7f9; --acc:#0b5fa5; --ok:#1a7f4b; --code:#eef1f4;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12151a; --fg:#e8eaed; --muted:#9aa3ad; --line:#2a2f37;
+      --card:#1a1f26; --acc:#66aef0; --ok:#5fce96; --code:#20262e;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--fg)}
+  .wrap{max-width:60rem;margin:0 auto;padding:0 1.5rem}
+  .hero{padding:4.5rem 0 3rem;text-align:center}
+  .hero h1{font-size:2.6rem;margin:0 0 .4rem}
+  .hero .tag{font-size:1.25rem;color:var(--muted);margin:0 0 1.6rem}
+  .hero .sub{max-width:44rem;margin:0 auto 2rem;color:var(--muted)}
+  .cta{display:inline-block;margin:.3rem .4rem;padding:.7rem 1.4rem;border-radius:8px;
+       text-decoration:none;font-weight:600}
+  .cta.pri{background:var(--acc);color:#fff}
+  .cta.sec{border:1.5px solid var(--acc);color:var(--acc)}
+  pre{font-family:ui-monospace,Menlo,monospace;background:var(--code);border-radius:8px;
+      padding:1rem 1.2rem;overflow-x:auto;font-size:.9rem;text-align:left;
+      max-width:38rem;margin:0 auto 1rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem;
+        padding:2rem 0 3rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:1.3rem 1.4rem;text-align:left}
+  .card h3{margin:0 0 .5rem;font-size:1.05rem}
+  .card p{margin:0;color:var(--muted);font-size:.95rem}
+  footer{border-top:1px solid var(--line);padding:1.5rem;color:var(--muted);
+         font-size:.85rem;text-align:center}
+  footer a{color:var(--acc)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>dev-sdd-kit</h1>
+    <p class="tag">The spec-driven factory for multi-repo systems</p>
+    <p class="sub">A workspace template for Claude Code where every change starts
+    as a spec, humans approve at six permission-backed gates, tests are written
+    first and cannot be edited to pass, and documentation and metrics are
+    derived from the real sources — so they cannot lie.</p>
+
+    <pre>git clone &lt;repo-url&gt; my-system && cd my-system
+./scripts/init-sistema.sh my-system
+/repo-add https://github.com/your-org/your-repo.git</pre>
+
+    <a class="cta pri" href="architecture.en.html">Architecture &amp; guide (EN)</a>
+    <a class="cta sec" href="arquitectura.html">Documento de arquitectura (ES)</a>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📋 Spec-anchored, end to end</h3>
+      <p>Ten phases from triage to operations — not just spec → code. Structured
+      clarification, cross-artifact consistency analysis, code↔spec convergence
+      and blameless postmortems close the loop.</p>
+    </div>
+    <div class="card">
+      <h3>🔒 Gates backed by permissions</h3>
+      <p>Agents hold no production credentials and cannot approve their own
+      work. Every gate records who approved, when, and on which commit —
+      enforced by tool permissions, not by prompt text.</p>
+    </div>
+    <div class="card">
+      <h3>🧭 Built for multi-repo &amp; brownfield</h3>
+      <p>The system topology is data (<code>repos.yaml</code>); an as-is map, a
+      code graph and per-repo context packs with executable assertions keep
+      agents grounded in code that already exists.</p>
+    </div>
+    <div class="card">
+      <h3>📊 Docs and metrics that cannot lie</h3>
+      <p>The architecture document, the as-is map and the DORA metrics are
+      generated from live sources with provenance seals. No source? The cell
+      says "no data" — never a made-up number.</p>
+    </div>
+    <div class="card">
+      <h3>🧪 Strict TDD, verified in CI</h3>
+      <p>Failing tests are committed before implementation and agents are
+      forbidden from editing them. Three self-test suites guard the factory's
+      own tooling; CI fails on documentation drift.</p>
+    </div>
+    <div class="card">
+      <h3>📚 Evidence-based method</h3>
+      <p>The process encodes what DORA, McKinsey, Anthropic and Thoughtworks
+      identify in high performers: small batches, human-in-the-loop, context
+      engineering and system-level metrics.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  MIT licensed · <a href="architecture.en.html">Documentation</a> ·
+  <a href="guia-operativa.md">Guía operativa (ES)</a> ·
+  Internal working language is Spanish by design — see the docs for details.
+</footer>
+
+</body>
+</html>

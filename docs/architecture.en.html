@@ -428,7 +428,7 @@ the DoR (rule RN-F3).</p>
 <tr><th>File</th><th>Spec</th><th>Status</th></tr>
 <tr><td><code>2026-07-docs-html.md</code></td><td>Spec: Documentación HTML derivada de la fábrica (arquitectura, técnica, modelo y uso)</td><td>implementada</td></tr>
 <tr><td><code>2026-07-generalizacion-workspace.md</code></td><td>Spec: Generalización del workspace — fábrica para CUALQUIER sistema de repos</td><td>implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales)</td></tr>
-<tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>borrador</td></tr>
+<tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>implementada</td></tr>
 <tr><td><code>2026-07-mejoras-spec-kit.md</code></td><td>Spec: Adopción de mecánicas de calidad de GitHub Spec Kit</td><td>implementada</td></tr>
 <tr><td><code>2026-07-metricas-dora.md</code></td><td>Spec: Derivación automática de métricas DORA en knowledge/uso.md</td><td>implementada</td></tr>
 </table></div>
@@ -444,7 +444,7 @@ the postmortems (RN-F4: source and period declared, or "no data").</p>
 
 <h3>Scenario A — Install the factory for a new system</h3>
 <pre>git clone &lt;template-url&gt; my-system && cd my-system
-./scripts/init-sistema.sh          # cleans instance data, creates the registry
+./scripts/init-sistema.sh my-system   # cleans instance data, creates the registry
 /repo-add &lt;url-or-path&gt;            # once per system repo
 /system-map                        # once ≥2 repos have context packs</pre>
 
