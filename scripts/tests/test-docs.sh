@@ -174,6 +174,14 @@ assert_contains "catalogo real inyectado en EN"       "spec-create"      "$REAL_
 assert_not_contains "EN sin recursos externos"        "src=\"http"       "$REAL_EN"
 assert_contains "la version ES sigue generandose"     "Guía de uso"      "$REAL"
 
+echo "== CA3.1-CA3.2 (marketing): landing autocontenida para GitHub Pages =="
+LANDING=$(cat docs/index.html 2>/dev/null || echo "")
+assert_contains "landing existe con hero"             "dev-sdd-kit"          "$LANDING"
+assert_contains "landing enlaza edicion EN"           "architecture.en.html" "$LANDING"
+assert_contains "landing enlaza edicion ES"           "arquitectura.html"    "$LANDING"
+assert_not_contains "landing sin scripts externos"    "script src=\"http"    "$LANDING"
+assert_not_contains "landing sin css externo"         "stylesheet\" href=\"http" "$LANDING"
+
 echo ""
 echo "RESULTADO: ${PASS} ok, ${FAIL} fallos"
 [ "${FAIL}" -eq 0 ]
