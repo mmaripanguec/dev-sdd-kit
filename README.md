@@ -1,68 +1,93 @@
-# dev-sdd-kit · Multi-Repo Digital Factory
+<p align="center">
+  <img src="docs/assets/banner.svg" alt="dev-sdd-kit — the spec-driven factory for multi-repo systems" width="100%">
+</p>
 
-A **spec-driven development (SDD) workspace template** for building and
-maintaining any system made of one or more code repositories, operated with
-[Claude Code](https://claude.com/claude-code). Register a repo (git URL or
-local path) and the factory clones, indexes and maps it on its own — leaving
-it ready to take requirements as specs with human gates, strict TDD and full
-traceability.
+<h1 align="center">dev-sdd-kit</h1>
+<p align="center"><strong>The spec-driven factory for multi-repo systems.</strong><br>
+Human gates backed by permissions · strict TDD · docs and metrics that cannot lie.</p>
 
-**Code lives in each repo; the system's knowledge lives here.**
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/tests-99%20passing-brightgreen.svg" alt="99 tests passing">
+  <img src="https://img.shields.io/badge/lifecycle-F0%E2%86%92F9%20complete-0b5fa5.svg" alt="Complete F0-F9 lifecycle">
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-5fce96.svg" alt="PRs welcome"></a>
+</p>
 
-## Why
+A **spec-driven development (SDD) workspace template** for
+[Claude Code](https://claude.com/claude-code): register any repository — or
+several — and the factory clones, indexes and maps it, then takes every
+requirement through a full lifecycle where **the spec is the contract**,
+humans approve at six permission-backed gates, failing tests are committed
+before code, and every document or metric is derived from the real sources.
+
+```bash
+git clone <this-repo-url> my-system && cd my-system
+./scripts/init-sistema.sh                              # instantiate the template
+claude                                                 # launch from the root
+/repo-add https://github.com/your-org/your-repo.git    # onboard your first repo
+/spec-create my-feature what you need, in plain words  # specify with gates
+```
+
+📐 **[Architecture & usage guide (EN)](docs/architecture.en.html)** ·
+**[Documento de arquitectura (ES)](docs/arquitectura.html)** — generated
+from the live workspace, always current.
+
+## Why this exists
 
 AI agents write code fast; what breaks teams is everything around it:
-requirements lost in chat, architecture decisions nobody recorded,
-documentation that lies, and agents that ship to production unchecked. This
-factory encodes the discipline that industry research (DORA, McKinsey,
-Anthropic, Thoughtworks) identifies in high performers:
+requirements lost in chat, decisions nobody recorded, docs that lie, agents
+shipping unchecked. Industry research is consistent about what separates
+high performers — and this factory encodes it:
 
-- **The spec is the contract** — every non-trivial change starts as a spec
-  and is certified against it (spec-anchored, not vibe coding).
-- **Human gates backed by permissions**, not instructions: agents hold no
-  production credentials and cannot approve their own work.
-- **Derived, never hand-written**: the as-is map, DORA metrics and the
-  architecture document are generated from the real sources with provenance
-  seals — they cannot go stale or lie ("no data" beats made-up data).
-- **Strict TDD**: failing tests are committed first; agents are forbidden
-  from editing tests to make them pass.
-- **Process proportional to risk**: a triage step decides how much ceremony
-  each change deserves.
+- **DORA 2024–2025**: AI raises throughput but *lowers stability* unless
+  engineering discipline gets stronger, not weaker.
+- **McKinsey, State of AI 2025**: the practices most correlated with impact
+  are full workflow redesign (55% of high performers vs 20%) and formal
+  human-in-the-loop validation (65% vs 23%).
+- **Anthropic / Thoughtworks**: curated context as infrastructure and
+  spec-anchored development — the spec persists and evolves; code is still
+  the authority, verified against it.
+
+Every mechanism here maps to those findings: 10 phases (F0 triage → F9
+operations), six human gates enforced by *tool permissions* (agents cannot
+approve their own work or touch production), strict TDD with untouchable
+tests, and derived artifacts with provenance seals that say **"no data"
+before they ever make something up**.
+
+## How it compares
+
+Honest differences — each of these tools is good at what it targets:
+
+| | **dev-sdd-kit** | GitHub spec-kit | AWS Kiro | OpenSpec |
+|---|---|---|---|---|
+| Lifecycle coverage | **F0–F9: triage → operations** (CAB, postmortems, DORA) | spec → implement | spec → implement (IDE) | change proposals |
+| Multi-repo systems | **Core design** (`repos.yaml` registry, deploy order, cross-repo specs) | single-repo focus | single-repo focus | single-repo focus |
+| Brownfield grounding | **Derived as-is map + code graph + context packs with executable assertions** | limited | limited | delta-based (good) |
+| Human gates | **Permission-backed** (agents lack credentials; approvals recorded per commit) | constitution self-checked by the LLM | agent hooks | review-based |
+| TDD | **Mandatory, tests untouchable** | optional ("only if requested") | optional | optional |
+| Derived docs & metrics | **Architecture doc (EN/ES), as-is, DORA — generated, sealed, CI-checked** | — | — | — |
+| Agent ecosystem | Claude Code | **30+ agents** | Kiro IDE | several |
+| Maturity / community | Young | **122k★, huge ecosystem** | AWS-backed | growing |
+
+If you want a lightweight spec→code flow with any agent, spec-kit is
+excellent. If you run **systems of several existing repositories** and need
+the whole lifecycle governed — this is what dev-sdd-kit was built for.
 
 ## Architecture at a glance
 
-A requirement flows through 10 phases (F0 triage → F9 operations) with six
-human gates. Phases F0–F5 write the spec; construction and certification
-run *against* it; operations feeds knowledge back into the next feature.
+A requirement flows through 10 phases with six human gates. Phases F0–F5
+write the spec; construction and certification run *against* it; operations
+feeds knowledge back into the next feature. See the full conceptual diagram
+in the [architecture document](docs/architecture.en.html).
 
-- 📐 **[Architecture & usage document (English)](docs/architecture.en.html)**
-- 📐 **[Documento de arquitectura y guía (español)](docs/arquitectura.html)**
-
-Both are generated from the live workspace by `./scripts/docs.sh` — they are
-always up to date with the actual skills, agents, rules and topology.
-
-## Quickstart
-
-Prerequisites: git, bash 3.2+, python3, [Claude Code](https://claude.com/claude-code) CLI.
-
-```bash
-# 1. Instantiate the template for your system
-git clone <this-repo-url> my-system && cd my-system
-./scripts/init-sistema.sh
-
-# 2. Register your repositories (clones, indexes, seeds context, maps as-is)
-claude   # always launch from the workspace root
-/repo-add https://github.com/your-org/your-repo.git
-
-# 3. Specify your first feature (triage → user stories → design, with gates)
-/spec-create my-feature short description of what you need
 ```
-
-Joining an existing system on a new machine instead:
-
-```bash
-cp .env.example .env      # credentials per git provider
-./scripts/setup.sh        # clones/updates every repo in the registry
+repos.yaml            # System topology — the single source of truth
+.claude/              # 13 skills (slash commands), 7 phase agents, 6 rule sets
+specs/                # Feature specs: the contracts (12-section template)
+knowledge/            # ADRs, blameless postmortems, business rules, DORA metrics
+scripts/              # Automation + 3 self-test suites (99 asserts)
+docs/                 # Generated architecture docs (EN/ES) + operating guides
+harness/              # Multi-session agent harness (Anthropic initializer pattern)
 ```
 
 ## Documentation
@@ -73,32 +98,19 @@ cp .env.example .env      # credentials per git provider
 | [docs/arquitectura.html](docs/arquitectura.html) | Español | Same document in the factory's working language (generated) |
 | [docs/guia-operativa.md](docs/guia-operativa.md) | Español | Complete operating guide: installation, auth per provider, E2E cycle, governance |
 | [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md) | Español | Step-by-step: onboarding an existing repo up to the first spec |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | English | How to contribute following the factory's own process |
+| [CHANGELOG.md](CHANGELOG.md) | English | Release history |
 
 > **A note on language**: public-facing documentation is in English; the
 > factory's *working* artifacts (skills, rules, specs, knowledge base) are
-> in Spanish by design — it is a working template, and its teams operate in
-> Spanish. Everything is structured markdown; translating for your team is
-> straightforward.
-
-## What's inside
-
-```
-repos.yaml            # System topology — the single source of truth
-.claude/              # 13 skills (slash commands), 7 phase agents, 6 rule sets
-specs/                # Feature specs: the contracts (12-section template)
-knowledge/            # ADRs, blameless postmortems, business rules, DORA metrics
-scripts/              # Automation: repo onboarding, as-is map, DORA, docs (+ tests)
-docs/                 # Generated architecture docs + operating guides
-harness/              # Multi-session agent harness (Anthropic initializer pattern)
-```
+> in Spanish by design — it is a working template and its teams operate in
+> Spanish. Everything is structured markdown; adapting the language for
+> your team is straightforward.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). In short: every change follows the
-factory's own process — spec first, human gates, failing tests before code,
-one commit per task, and the three test suites green
-(`scripts/tests/*.sh`).
+See [CONTRIBUTING.md](CONTRIBUTING.md) — every change follows the factory's
+own process: spec first, human gates, failing tests before code, one commit
+per task, three suites green. Issues and PRs come with templates.
 
 ## License
 
