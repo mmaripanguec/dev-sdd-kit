@@ -7,7 +7,7 @@
 | Contexto cargado | repos.yaml, .claude/skills+agents+rules, knowledge/, README, docs/instructivo (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (documentación) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
-| Gate PO/TL | pendiente |
+| Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 (historias H1-H4 y prioridades tal como presentadas) |
 | Gate DoR | pendiente |
 | Gate Arquitectura | N/A — documentación del workspace; sin arquitectura de código de sistema |
 
@@ -150,8 +150,9 @@ frontmatter de `.claude/skills/*/SKILL.md` y `.claude/agents/*.md`, títulos
 de `.claude/rules/*.md`, tabla RN de knowledge/reglas-negocio.md, bloque
 DORA de uso.md, registro vía repo-lib.sh e índice de `specs/*.md` (nombre +
 estado) → renderiza la plantilla → `docs/arquitectura.html` con sello
-`[GENERADO v1] fecha · workspace@commit`. `--check` compara ignorando la
-fecha (patrón dora.sh).
+`[GENERADO v1] <fecha> · scripts/docs.sh` (solo fecha: incluir el commit
+del propio workspace sería autorreferente — commitear el HTML lo cambiaría).
+`--check` compara ignorando el sello (patrón dora.sh).
 **Threat model (STRIDE):** no aplica — genera un archivo local desde
 fuentes internas; sin credenciales ni red.
 **NFRs:** generación < 5 s; archivo < 300 KB; sin dependencias externas;
