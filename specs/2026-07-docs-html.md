@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
+| Estado | implementada |
 | Tipo de requerimiento | existente `[workspace]` (triage F0: documentación de la fábrica; los repos del sistema no participan) |
 | Contexto cargado | repos.yaml, .claude/skills+agents+rules, knowledge/, README, docs/instructivo (sesión 2026-07-19) |
 | Dominio de negocio | proceso de la fábrica (documentación) |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |
 | Gate PO/TL | aprobado por Marcos Maripangue el 2026-07-19 (historias H1-H4 y prioridades tal como presentadas) |
-| Gate DoR | pendiente |
+| Gate DoR | aprobado por Marcos Maripangue el 2026-07-19 (junto al QA/PR, tras revisar el HTML final) |
 | Gate Arquitectura | N/A — documentación del workspace; sin arquitectura de código de sistema |
 
 ## 1. Problema
@@ -188,7 +188,10 @@ externos). Regresión: test-repo-lib 40/40 · test-dora 17/17.
 Supuesto documentado: la tabla F0–F9 y la guía de escenarios son prosa
 estable de la plantilla — si /orquestar cambia de fases, la plantilla se
 actualiza en el mismo PR (la consistencia la vigila /consistencia pase F).
-Veredicto del agente: verificación técnica pasa · gate QA/PR humano: __
+Veredicto del agente: verificación técnica pasa.
+Gate QA/PR: aprobado por Marcos Maripangue el 2026-07-19 tras revisión
+iterativa del HTML en navegador (diagrama ampliado a 10 fases, spec como
+eje central y flechas ortogonales — T5 y dos ajustes de estilo en gate).
 
 ## 12. Trazabilidad
 Origen: pedido de Marcos (2026-07-19): "actualizar la documentación, generar
