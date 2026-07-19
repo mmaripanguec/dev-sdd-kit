@@ -164,6 +164,16 @@ assert_contains "workspace real: skill spec-create presente" "spec-create" "$REA
 assert_contains "workspace real: agente calidad presente"    "calidad"     "$REAL"
 assert_contains "workspace real: RN-F4 presente"             "RN-F4"       "$REAL"
 
+echo "== CA3.1-CA3.2: versión EN generada junto a la ES (workspace real) =="
+REAL_EN=$(cat docs/architecture.en.html 2>/dev/null || echo "")
+assert_contains "architecture.en.html con prosa EN"   "Usage guide"      "$REAL_EN"
+assert_contains "diagrama EN: F3 Refinement"          "F3 Refinement"    "$REAL_EN"
+assert_contains "rotulos generados en ingles"         "What it does"     "$REAL_EN"
+assert_contains "nota de idioma de trabajo"           "working language" "$REAL_EN"
+assert_contains "catalogo real inyectado en EN"       "spec-create"      "$REAL_EN"
+assert_not_contains "EN sin recursos externos"        "src=\"http"       "$REAL_EN"
+assert_contains "la version ES sigue generandose"     "Guía de uso"      "$REAL"
+
 echo ""
 echo "RESULTADO: ${PASS} ok, ${FAIL} fallos"
 [ "${FAIL}" -eq 0 ]

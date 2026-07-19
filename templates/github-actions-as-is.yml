@@ -41,8 +41,8 @@ jobs:
 
       - name: Commitear si cambio
         run: |
-          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html; then
-            git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html
+          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html; then
+            git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html
             git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" \
                 -c user.name=fabrica-bot \
               commit -m "chore(sync): as-is + DORA + documentacion [skip ci]"

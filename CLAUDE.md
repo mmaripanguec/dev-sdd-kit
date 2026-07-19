@@ -76,6 +76,8 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Estándares: `knowledge/estandares.md`
 
 ## Convenciones
-- Artefactos en español; identificadores de código en inglés.
+- Artefactos internos en español; identificadores de código en inglés.
+  Documentación PÚBLICA de GitHub (README, CONTRIBUTING, LICENSE, .github,
+  docs/architecture.en.html) en inglés.
 - Conventional Commits + referencia a la spec, en el workspace y en cada repo.
 - Toda decisión de arquitectura → ADR. Todo incidente → postmortem sin culpables.

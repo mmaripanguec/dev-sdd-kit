@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
-# docs.sh - Genera docs/arquitectura.html desde templates/docs-arquitectura.html
-# inyectando el catalogo VIVO del workspace: skills, agentes, reglas, scripts,
-# topologia (repos.yaml), reglas de negocio, indice de specs y bloque DORA.
-# La prosa estable vive en la plantilla; aqui solo se derivan datos (RN-G1,
-# RN-F4: sin fuente => "sin datos" con causa, nunca se inventa).
+# docs.sh - Genera la documentacion HTML derivada del workspace en sus dos
+# ediciones: docs/arquitectura.html (ES) y docs/architecture.en.html (EN),
+# desde templates/docs-arquitectura.html y templates/docs-architecture.en.html.
+# El catalogo VIVO (skills, agentes, reglas, scripts, topologia, RN, specs,
+# DORA) se recolecta UNA vez y se inyecta en ambas; los rotulos generados
+# (cabeceras, "sin datos"/"no data") salen de un diccionario por idioma.
+# La prosa estable vive en cada plantilla (RN-G1, RN-F4).
 # Compatible con bash 3.2. Uso:
 #   ./scripts/docs.sh [--root <workspace>] [--check]
-#   --check: exit 1 si el HTML publicado difiere de lo recalculado (CI).
+#   --check: exit 1 si alguna edicion difiere de lo recalculado (CI).
 set -u
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -21,9 +23,7 @@ done
 cd "${ROOT}"
 . scripts/repo-lib.sh
 
-TPL="templates/docs-arquitectura.html"
-OUT="docs/arquitectura.html"
-[ -f "${TPL}" ] || { echo "ERROR: no existe ${TPL}" >&2; exit 1; }
+[ -f "templates/docs-arquitectura.html" ] || { echo "ERROR: no existe templates/docs-arquitectura.html" >&2; exit 1; }
 mkdir -p docs
 
 # ---- topologia: derivada del registro via repo-lib (RN-G1) ----
@@ -34,25 +34,70 @@ for name in $(registry_repos); do
   role=$(registry_get "${name}" role 2>/dev/null || echo "")
   orden=$(registry_get "${name}" deploy_order 2>/dev/null || echo "")
   dom=$(registry_get "${name}" domain 2>/dev/null || echo "")
-  clonado="no"; [ -d "repos/${name}/.git" ] && clonado="sí"
+  clonado="no"; [ -d "repos/${name}/.git" ] && clonado="si"
   echo "TOPO|${name}|${prov}|${role}|${orden}|${dom}|${clonado}" >> "${DATA}"
 done
 
-python3 - "${DATA}" "${TPL}" "${OUT}" "${CHECK}" <<'PYEOF'
+python3 - "${DATA}" "${CHECK}" <<'PYEOF'
 import glob, html, os, re, sys
 from datetime import date
 
-data_path, tpl_path, out_path, check = sys.argv[1:5]
+data_path, check = sys.argv[1:3]
 esc = html.escape
 
-def tabla(cabeceras, filas, vacio):
-    if not filas:
-        return f'<p class="muted">sin datos ({esc(vacio)})</p>'
-    out = ['<div class="wide"><table>',
-           "<tr>" + "".join(f"<th>{esc(c)}</th>" for c in cabeceras) + "</tr>"]
-    out += ["<tr>" + "".join(f"<td>{v}</td>" for v in f) + "</tr>" for f in filas]
-    out.append("</table></div>")
-    return "\n".join(out)
+PARES = [
+    ("templates/docs-arquitectura.html", "docs/arquitectura.html", "es"),
+    ("templates/docs-architecture.en.html", "docs/architecture.en.html", "en"),
+]
+
+S = {
+  "es": {
+    "sello": "[GENERADO v1] {} · scripts/docs.sh — no editar a mano",
+    "sin_datos": "sin datos ({})",
+    "clonado": {"si": "sí", "no": "no"},
+    "sin_desc_skill": "(sin descripción — completar frontmatter)",
+    "sin_desc": "(sin descripción)",
+    "sin_desc_script": "(sin descripción de cabecera)",
+    "topo_h": ["Repo", "Proveedor", "Rol", "Orden despliegue", "Dominio", "Clonado"],
+    "topo_v": "registro sin repos — dar de alta con /repo-add",
+    "skills_h": ["Comando", "Qué hace (frontmatter)"],
+    "skills_v": "sin skills en .claude/skills",
+    "agentes_h": ["Agente", "Fase y propósito"],
+    "agentes_v": "sin agentes en .claude/agents",
+    "reglas_h": ["Archivo", "Regla", "Estándares base"],
+    "reglas_v": "sin reglas en .claude/rules",
+    "scripts_h": ["Script", "Qué hace"],
+    "scripts_v": "sin scripts",
+    "rn_h": ["ID", "Regla", "Dominio", "Origen", "Vigente desde"],
+    "rn_v": "sin reglas registradas en knowledge/reglas-negocio.md",
+    "specs_h": ["Archivo", "Spec", "Estado"],
+    "specs_v": "sin specs en specs/",
+    "dora_v": "knowledge/uso.md sin bloque DORA — correr scripts/dora.sh",
+  },
+  "en": {
+    "sello": "[GENERATED v1] {} · scripts/docs.sh — do not edit by hand",
+    "sin_datos": "no data ({})",
+    "clonado": {"si": "yes", "no": "no"},
+    "sin_desc_skill": "(no description — fill in the frontmatter)",
+    "sin_desc": "(no description)",
+    "sin_desc_script": "(no header description)",
+    "topo_h": ["Repo", "Provider", "Role", "Deploy order", "Domain", "Cloned"],
+    "topo_v": "no repos registered — add one with /repo-add",
+    "skills_h": ["Command", "What it does (frontmatter)"],
+    "skills_v": "no skills under .claude/skills",
+    "agentes_h": ["Agent", "Phase and purpose"],
+    "agentes_v": "no agents under .claude/agents",
+    "reglas_h": ["File", "Rule", "Base standards"],
+    "reglas_v": "no rules under .claude/rules",
+    "scripts_h": ["Script", "What it does"],
+    "scripts_v": "no scripts",
+    "rn_h": ["ID", "Rule", "Domain", "Origin", "In force since"],
+    "rn_v": "no rules registered in knowledge/reglas-negocio.md",
+    "specs_h": ["File", "Spec", "Status"],
+    "specs_v": "no specs under specs/",
+    "dora_v": "knowledge/uso.md has no DORA block — run scripts/dora.sh",
+  },
+}
 
 def frontmatter(path):
     texto = open(path, encoding="utf-8").read()
@@ -65,37 +110,26 @@ def frontmatter(path):
                 campos[kv.group(1)] = kv.group(2).strip()
     return campos
 
-# topologia (recolectada por bash desde el registro)
+# ---------- recoleccion (una sola vez; datos crudos, sin idioma) ----------
 topo = []
 for linea in open(data_path, encoding="utf-8"):
     p = linea.rstrip("\n").split("|")
     if p[0] == "TOPO":
-        topo.append([esc(x) for x in p[1:7]])
-TOPOLOGIA = tabla(["Repo", "Proveedor", "Rol", "Orden despliegue", "Dominio", "Clonado"],
-                  topo, "registro sin repos — dar de alta con /repo-add")
+        topo.append(p[1:7])  # name, prov, role, orden, dom, clonado(si/no)
 
-# skills
-filas = []
+skills = []
 for f in sorted(glob.glob(".claude/skills/*/SKILL.md")):
     fm = frontmatter(f)
     nombre = fm.get("name") or os.path.basename(os.path.dirname(f))
-    desc = fm.get("description") or '<em>(sin descripción — completar frontmatter)</em>'
-    if fm.get("description"):
-        desc = esc(desc)
-    filas.append([f"<code>/{esc(nombre)}</code>", desc])
-SKILLS = tabla(["Comando", "Qué hace (frontmatter)"], filas, "sin skills en .claude/skills")
+    skills.append((nombre, fm.get("description")))
 
-# agentes
-filas = []
+agentes = []
 for f in sorted(glob.glob(".claude/agents/*.md")):
     fm = frontmatter(f)
     nombre = fm.get("name") or os.path.splitext(os.path.basename(f))[0]
-    desc = esc(fm.get("description", "")) or '<em>(sin descripción)</em>'
-    filas.append([f"<code>{esc(nombre)}</code>", desc])
-AGENTES = tabla(["Agente", "Fase y propósito"], filas, "sin agentes en .claude/agents")
+    agentes.append((nombre, fm.get("description")))
 
-# reglas transversales
-filas = []
+reglas = []
 for f in sorted(glob.glob(".claude/rules/*.md")):
     titulo = base = ""
     for linea in open(f, encoding="utf-8"):
@@ -105,37 +139,29 @@ for f in sorted(glob.glob(".claude/rules/*.md")):
             base = linea[2:].strip()
         if titulo and base:
             break
-    filas.append([f"<code>{esc(os.path.basename(f))}</code>", esc(titulo), esc(base)])
-REGLAS = tabla(["Archivo", "Regla", "Estándares base"], filas, "sin reglas en .claude/rules")
+    reglas.append((os.path.basename(f), titulo, base))
 
-# scripts (cabecera "# nombre.sh - descripcion")
-filas = []
+scripts = []
 for f in sorted(glob.glob("scripts/*.sh")):
-    desc = ""
+    desc = None
     for linea in open(f, encoding="utf-8"):
         m = re.match(r"#\s*[\w.-]+\.sh\s*-\s*(.+)", linea)
         if m:
             desc = m.group(1).strip()
             break
-    filas.append([f"<code>{esc(os.path.basename(f))}</code>",
-                  esc(desc) or '<em>(sin descripción de cabecera)</em>'])
-SCRIPTS = tabla(["Script", "Qué hace"], filas, "sin scripts")
+    scripts.append((os.path.basename(f), desc))
 
-# reglas de negocio vigentes (tabla markdown -> filas, sin la fila de ejemplo)
-filas = []
+rn = []
 try:
     for linea in open("knowledge/reglas-negocio.md", encoding="utf-8"):
         m = re.match(r"\|\s*(RN-[\w-]+)\s*\|(.*)", linea)
         if m and "<ej" not in m.group(2):
             celdas = [c.strip() for c in m.group(2).split("|") if c.strip() != ""]
-            filas.append([f"<code>{esc(m.group(1))}</code>"] + [esc(c) for c in celdas[:4]])
+            rn.append([m.group(1)] + celdas[:4])
 except FileNotFoundError:
     pass
-REGLAS_NEGOCIO = tabla(["ID", "Regla", "Dominio", "Origen", "Vigente desde"],
-                       filas, "sin reglas registradas en knowledge/reglas-negocio.md")
 
-# indice de specs (titulo + estado)
-filas = []
+especs = []
 for f in sorted(glob.glob("specs/*.md")):
     if os.path.basename(f).startswith("_"):
         continue
@@ -148,20 +174,62 @@ for f in sorted(glob.glob("specs/*.md")):
             estado = m.group(1)
         if titulo and estado:
             break
-    filas.append([f"<code>{esc(os.path.basename(f))}</code>", esc(titulo),
-                  esc(estado) or "?"])
-SPECS = tabla(["Archivo", "Spec", "Estado"], filas, "sin specs en specs/")
+    especs.append((os.path.basename(f), titulo, estado or "?"))
 
-# bloque DORA de uso.md (markdown -> html)
-DORA = '<p class="muted">sin datos (knowledge/uso.md sin bloque DORA — correr scripts/dora.sh)</p>'
+dora_md = None
 try:
     uso = open("knowledge/uso.md", encoding="utf-8").read()
     m = re.search(r"<!-- DORA:BEGIN -->\n?(.*?)\n?<!-- DORA:END -->", uso, re.S)
     if m and m.group(1).strip():
+        dora_md = m.group(1).strip()
+except FileNotFoundError:
+    pass
+
+# ---------- render por idioma ----------
+def tabla(cabeceras, filas, vacio, s):
+    if not filas:
+        return '<p class="muted">%s</p>' % esc(s["sin_datos"].format(vacio))
+    out = ['<div class="wide"><table>',
+           "<tr>" + "".join(f"<th>{esc(c)}</th>" for c in cabeceras) + "</tr>"]
+    out += ["<tr>" + "".join(f"<td>{v}</td>" for v in fila) + "</tr>" for fila in filas]
+    out.append("</table></div>")
+    return "\n".join(out)
+
+def render(lang):
+    s = S[lang]
+    valores = {}
+    valores["SELLO"] = s["sello"].format(date.today().isoformat())
+    valores["TOPOLOGIA"] = tabla(s["topo_h"],
+        [[esc(n), esc(p), esc(r), esc(o), esc(d), esc(s["clonado"].get(c, c))]
+         for n, p, r, o, d, c in topo], s["topo_v"], s)
+    valores["SKILLS"] = tabla(s["skills_h"],
+        [[f"<code>/{esc(n)}</code>",
+          esc(d) if d else f'<em>{esc(s["sin_desc_skill"])}</em>'] for n, d in skills],
+        s["skills_v"], s)
+    valores["AGENTES"] = tabla(s["agentes_h"],
+        [[f"<code>{esc(n)}</code>",
+          esc(d) if d else f'<em>{esc(s["sin_desc"])}</em>'] for n, d in agentes],
+        s["agentes_v"], s)
+    valores["REGLAS"] = tabla(s["reglas_h"],
+        [[f"<code>{esc(a)}</code>", esc(t), esc(b)] for a, t, b in reglas],
+        s["reglas_v"], s)
+    valores["SCRIPTS"] = tabla(s["scripts_h"],
+        [[f"<code>{esc(a)}</code>",
+          esc(d) if d else f'<em>{esc(s["sin_desc_script"])}</em>'] for a, d in scripts],
+        s["scripts_v"], s)
+    valores["REGLAS_NEGOCIO"] = tabla(s["rn_h"],
+        [[f"<code>{esc(f[0])}</code>"] + [esc(c) for c in f[1:]] for f in rn],
+        s["rn_v"], s)
+    valores["SPECS"] = tabla(s["specs_h"],
+        [[f"<code>{esc(a)}</code>", esc(t), esc(e)] for a, t, e in especs],
+        s["specs_v"], s)
+    if dora_md is None:
+        valores["DORA"] = '<p class="muted">%s</p>' % esc(s["sin_datos"].format(s["dora_v"]))
+    else:
         piezas, celdas_md = [], []
-        for linea in m.group(1).strip().splitlines():
+        for linea in dora_md.splitlines():
             if linea.startswith("|"):
-                if re.match(r"\|[\s|:-]+\|$", linea.replace("-", "-")) and "---" in linea:
+                if "---" in linea:
                     continue
                 celdas_md.append(["<td>%s</td>" % esc(c.strip())
                                   for c in linea.strip("|").split("|")])
@@ -171,32 +239,36 @@ try:
             cab = "".join(celdas_md[0]).replace("<td>", "<th>").replace("</td>", "</th>")
             cuerpo = "".join("<tr>%s</tr>" % "".join(f) for f in celdas_md[1:])
             piezas.append(f'<div class="wide"><table><tr>{cab}</tr>{cuerpo}</table></div>')
-        DORA = "\n".join(piezas)
-except FileNotFoundError:
-    pass
-
-SELLO = f"[GENERADO v1] {date.today().isoformat()} · scripts/docs.sh — no editar a mano"
-
-htmlout = open(tpl_path, encoding="utf-8").read()
-for clave, valor in [("SELLO", SELLO), ("TOPOLOGIA", TOPOLOGIA), ("SKILLS", SKILLS),
-                     ("AGENTES", AGENTES), ("REGLAS", REGLAS), ("SCRIPTS", SCRIPTS),
-                     ("REGLAS_NEGOCIO", REGLAS_NEGOCIO), ("SPECS", SPECS), ("DORA", DORA)]:
-    htmlout = htmlout.replace("{{%s}}" % clave, valor)
+        valores["DORA"] = "\n".join(piezas)
+    return valores
 
 def sin_sello(texto):  # la fecha de generacion no cuenta como drift
-    return re.sub(r"\[GENERADO v1\] \d{4}-\d{2}-\d{2}", "[GENERADO v1]", texto)
+    return re.sub(r"\[GENERA(?:DO|TED) v1\] \d{4}-\d{2}-\d{2}", "[SELLO]", texto)
 
-vigente = open(out_path, encoding="utf-8").read() if os.path.exists(out_path) else None
+drift = escritos = 0
+for tpl_path, out_path, lang in PARES:
+    if not os.path.exists(tpl_path):
+        print(f"aviso: {tpl_path} no existe — se omite la edicion '{lang}'")
+        continue
+    salida = open(tpl_path, encoding="utf-8").read()
+    for clave, valor in render(lang).items():
+        salida = salida.replace("{{%s}}" % clave, valor)
+    vigente = open(out_path, encoding="utf-8").read() if os.path.exists(out_path) else None
+    if check == "1":
+        if vigente is None or sin_sello(vigente) != sin_sello(salida):
+            print(f"DRIFT: {out_path} difiere de lo recalculado. Correr scripts/docs.sh")
+            drift += 1
+        continue
+    if vigente == salida:
+        continue
+    open(out_path, "w", encoding="utf-8").write(salida)
+    escritos += 1
+    print("Regenerado " + out_path)
+
 if check == "1":
-    if vigente is None or sin_sello(vigente) != sin_sello(htmlout):
-        print("DRIFT: docs/arquitectura.html difiere de lo recalculado. Correr scripts/docs.sh")
+    if drift:
         sys.exit(1)
     print("OK: documentacion en sincronia")
-    sys.exit(0)
-
-if vigente == htmlout:
+elif not escritos:
     print("Sin cambios: documentacion ya en sincronia")
-    sys.exit(0)
-open(out_path, "w", encoding="utf-8").write(htmlout)
-print("Documentacion regenerada en " + out_path)
 PYEOF

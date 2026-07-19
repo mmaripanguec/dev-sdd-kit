@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<!-- Plantilla de scripts/docs.sh. La prosa estable vive aqui; los bloques
-     {{...}} se inyectan desde las fuentes reales al generar. NO editar el
-     docs/arquitectura.html generado: editar esta plantilla y regenerar. -->
-<html lang="es">
+<!-- Template for scripts/docs.sh (English edition). Stable prose lives here;
+     {{...}} blocks are injected from the workspace's real sources at
+     generation time. Do NOT edit the generated docs/architecture.en.html:
+     edit this template and regenerate. -->
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fábrica digital · Arquitectura y guía</title>
+<title>Digital Factory · Architecture &amp; Guide</title>
 <style>
   :root{
     --bg:#ffffff; --fg:#1a1a1a; --muted:#5a6270; --line:#e3e6ea;
@@ -46,6 +47,8 @@
   .capas div{border:1px solid var(--line);border-radius:6px;margin:.35rem 0;
              padding:.5rem .8rem;background:var(--card);font-size:.92rem}
   .muted{color:var(--muted)}
+  .lang-note{border-left:3px solid var(--acc);padding:.5rem .9rem;background:var(--card);
+             font-size:.9rem;margin:1rem 0}
   footer{border-top:1px solid var(--line);padding:1.2rem 1.5rem;font-size:.8rem;color:var(--muted)}
   @media (max-width:640px){ .wide{overflow-x:auto} }
 </style>
@@ -53,109 +56,116 @@
 <body>
 
 <header>
-  <h1>Fábrica digital de software · dev-sdd-kit</h1>
-  <p class="muted">Workspace de desarrollo dirigido por especificaciones (SDD)
-  para sistemas de uno o más repositorios, operado con Claude Code.</p>
-  <p class="sello">[GENERADO v1] 2026-07-19 · scripts/docs.sh — no editar a mano</p>
+  <h1>Digital Software Factory · dev-sdd-kit</h1>
+  <p class="muted">A spec-driven development (SDD) workspace for systems made
+  of one or more repositories, operated with Claude Code.</p>
+  <p class="sello">[GENERATED v1] 2026-07-19 · scripts/docs.sh — do not edit by hand</p>
 </header>
 
 <nav>
-  <a href="#arquitectura">1 · Arquitectura</a>
-  <a href="#tecnica">2 · Especificación técnica</a>
-  <a href="#modelo">3 · Modelo</a>
-  <a href="#uso">4 · Guía de uso</a>
+  <a href="#architecture">1 · Architecture</a>
+  <a href="#technical">2 · Technical specification</a>
+  <a href="#model">3 · Model</a>
+  <a href="#usage">4 · Usage guide</a>
 </nav>
 
 <main>
 
-<h2 id="arquitectura">1 · Arquitectura</h2>
+<div class="lang-note">🌐 The factory's <strong>working language is
+Spanish</strong>: catalog entries injected below (skill descriptions,
+business rules, DORA table) appear verbatim in Spanish, as they are read
+from the live workspace. The structure, labels and prose of this document
+are in English. Spanish edition: <a href="arquitectura.html">arquitectura.html</a>.</div>
 
-<p>La fábrica separa <strong>código</strong> de <strong>conocimiento</strong>:
-el código vive en los repos del sistema (clonados en <code>repos/</code>,
-cada uno con su propio git); el conocimiento compartido — specs, decisiones,
-incidentes, reglas, mapas — vive en este workspace y se versiona aquí. La
-topología del sistema es <em>dato</em>, no prosa: se declara una sola vez en
-<code>repos.yaml</code> y todo lo demás se deriva.</p>
+<h2 id="architecture">1 · Architecture</h2>
+
+<p>The factory separates <strong>code</strong> from <strong>knowledge</strong>:
+code lives in the system's repositories (cloned under <code>repos/</code>,
+each with its own git); the shared knowledge — specs, decisions, incidents,
+rules, maps — lives in this workspace and is versioned here. The system
+topology is <em>data</em>, not prose: declared once in
+<code>repos.yaml</code>, everything else is derived from it.</p>
 
 <div class="card">
-<strong>Principios no negociables</strong>
+<strong>Non-negotiable principles</strong>
 <ul>
-  <li>La spec es el contrato: todo cambio no trivial parte de una spec y se
-      certifica contra ella.</li>
-  <li>Gates humanos respaldados por <em>permisos</em>, no solo por
-      instrucciones: los agentes no tienen credenciales de producción.</li>
-  <li>Lo derivable se deriva (as-is, métricas DORA, este documento); toda
-      métrica declara fuente y período o declara «sin datos» (RN-F4).</li>
-  <li>TDD obligatorio: el test se escribe y commitea antes; prohibido
-      modificar tests para hacerlos pasar.</li>
-  <li>El proceso es proporcional al riesgo: el triage F0 decide qué
-      controles cargar (RN-F1).</li>
+  <li>The spec is the contract: every non-trivial change starts as a spec
+      and is certified against it.</li>
+  <li>Human gates backed by <em>permissions</em>, not instructions: agents
+      hold no production credentials.</li>
+  <li>Whatever can be derived, is derived (as-is map, DORA metrics, this
+      document); every published metric declares source and period or says
+      "no data" (rule RN-F4).</li>
+  <li>Strict TDD: failing tests are written and committed first; modifying
+      tests to make them pass is forbidden.</li>
+  <li>Process proportional to risk: the F0 triage decides how much control
+      each change loads (rule RN-F1).</li>
 </ul>
 </div>
 
-<h3>El ciclo de vida F0–F9</h3>
-<p>Un requerimiento recorre diez fases. Cada fase la ejecuta una skill o un
-subagente especializado y las decisiones importantes se detienen en un
-<span class="gate">gate humano</span> que queda registrado (quién, cuándo,
-sobre qué commit).</p>
+<h3>The F0–F9 lifecycle</h3>
+<p>A requirement flows through ten phases. Each phase is executed by a
+specialized skill or subagent, and the important decisions stop at a
+<span class="gate">human gate</span> that gets recorded (who, when, on
+which commit).</p>
 
 <div class="wide"><table>
-<tr><th>Fase</th><th>Nombre</th><th>La ejecuta</th><th>Produce</th><th>Gate</th></tr>
-<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (paso 0) + <code>/clarificar</code></td>
-    <td>Clasificación (existente / nueva / mixto), packs cargados, ambigüedades resueltas y trazadas</td><td>—</td></tr>
-<tr><td>F1</td><td>Requerimiento</td><td>agente <code>requisitos</code></td>
-    <td>Historias INVEST priorizadas P1–P3 con criterios Gherkin</td><td class="gate">PO/TL</td></tr>
-<tr><td>F2</td><td>Estimación</td><td>agente <code>estimacion</code></td>
-    <td>Story points + prioridad WSJF (con datos de uso.md)</td><td>—</td></tr>
-<tr><td>F3</td><td>Refinamiento</td><td><code>/spec-review</code> + <code>/consistencia</code></td>
-    <td>Spec que cumple la DoR de 13 puntos, sin hallazgos que bloqueen</td><td class="gate">DoR</td></tr>
-<tr><td>F4</td><td>Análisis</td><td>agente <code>analisis</code></td>
-    <td>Reglas de negocio RN-xx, dependencias, casos límite, regulatorio</td><td>—</td></tr>
-<tr><td>F5</td><td>Diseño</td><td>agente <code>arquitectura</code> + <code>/consistencia</code></td>
-    <td>Contratos OpenAPI, C4, ADRs, threat model STRIDE, NFRs</td><td class="gate">Arquitectura</td></tr>
-<tr><td>F6</td><td>Construcción</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
-    <td>Código con TDD, un commit por tarea EN su repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certificación</td><td><code>/convergir</code> + agente <code>calidad</code></td>
-    <td>Convergencia código↔spec + veredicto trazable</td><td class="gate">QA/PR</td></tr>
-<tr><td>F8</td><td>Paso a producción</td><td>agente <code>publicacion</code></td>
-    <td>Expediente de riesgo (ITIL) con rollback probado y SBOM</td><td class="gate">Comité CAB</td></tr>
-<tr><td>F9</td><td>Operación</td><td>agente <code>operacion</code></td>
-    <td>Señales doradas, postmortems sin culpables, métricas DORA</td><td class="gate">DevOps/SRE</td></tr>
+<tr><th>Phase</th><th>Name</th><th>Executed by</th><th>Produces</th><th>Gate</th></tr>
+<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarificar</code></td>
+    <td>Classification (existing / new / mixed), context packs loaded, ambiguities resolved and traced</td><td>—</td></tr>
+<tr><td>F1</td><td>Requirements</td><td><code>requisitos</code> agent</td>
+    <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
+<tr><td>F2</td><td>Estimation</td><td><code>estimacion</code> agent</td>
+    <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
+<tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistencia</code></td>
+    <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
+<tr><td>F4</td><td>Analysis</td><td><code>analisis</code> agent</td>
+    <td>Business rules RN-xx, dependencies, edge cases, regulatory</td><td>—</td></tr>
+<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistencia</code></td>
+    <td>OpenAPI contracts, C4 diagrams, ADRs, STRIDE threat model, NFRs</td><td class="gate">Architecture</td></tr>
+<tr><td>F6</td><td>Construction</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
+    <td>Code built with TDD, one commit per task IN its repo</td><td>—</td></tr>
+<tr><td>F7</td><td>Certification</td><td><code>/convergir</code> + <code>calidad</code> agent</td>
+    <td>Code↔spec convergence + traceable verdict</td><td class="gate">QA/PR</td></tr>
+<tr><td>F8</td><td>Release</td><td><code>publicacion</code> agent</td>
+    <td>Risk dossier (ITIL) with tested rollback and SBOM</td><td class="gate">CAB board</td></tr>
+<tr><td>F9</td><td>Operations</td><td><code>operacion</code> agent</td>
+    <td>Golden signals, blameless postmortems, DORA metrics</td><td class="gate">DevOps/SRE</td></tr>
 </table></div>
 
-<h3>Las capas de conocimiento</h3>
-<p>Cuatro capas responden preguntas distintas; juntas forman la memoria del
-sistema:</p>
+<h3>The knowledge layers</h3>
+<p>Four layers answer different questions; together they form the system's
+memory:</p>
 <div class="capas">
-  <div><strong>as-is</strong> (<code>knowledge/as-is/</code>) — <em>QUÉ HAY</em>:
-      estado real derivado del código, nunca editado a mano; grafo fino en el
-      MCP codebase-memory.</div>
-  <div><strong>Packs de contexto</strong> (skills cargables) — <em>CÓMO ESTÁ
-      ARMADO</em>: modelo mental por repo y de sistema, con evidencia
-      archivo:línea, sello de frescura y aserciones ejecutables.</div>
-  <div><strong>ADRs</strong> (<code>knowledge/decisiones/</code>) — <em>POR
-      QUÉ</em>: decisiones de arquitectura con contexto y consecuencias.</div>
-  <div><strong>Specs</strong> (<code>specs/</code>) — <em>QUÉ DEBERÍA
-      HABER</em>: el contrato de cada feature, con sus gates registrados.</div>
+  <div><strong>as-is</strong> (<code>knowledge/as-is/</code>) — <em>WHAT
+      EXISTS</em>: real state derived from the code, never hand-edited;
+      fine-grained graph in the codebase-memory MCP.</div>
+  <div><strong>Context packs</strong> (loadable skills) — <em>HOW IT IS
+      BUILT</em>: mental model per repo and per system, with file:line
+      evidence, freshness seal and executable assertions.</div>
+  <div><strong>ADRs</strong> (<code>knowledge/decisiones/</code>) — <em>WHY</em>:
+      architecture decisions with context and consequences.</div>
+  <div><strong>Specs</strong> (<code>specs/</code>) — <em>WHAT SHOULD
+      EXIST</em>: each feature's contract, with its gates recorded.</div>
 </div>
 
-<h2 id="tecnica">2 · Especificación técnica</h2>
+<h2 id="technical">2 · Technical specification</h2>
 
-<h3>Topología del sistema (repos.yaml)</h3>
-<p>Registro declarativo: única fuente de verdad de qué repos componen el
-sistema. Ningún script ni skill nombra repos en duro (RN-G1).</p>
+<h3>System topology (repos.yaml)</h3>
+<p>Declarative registry: the single source of truth for which repos make up
+the system. No script or skill hardcodes repo names (rule RN-G1).</p>
 <div class="wide"><table>
-<tr><th>Repo</th><th>Proveedor</th><th>Rol</th><th>Orden despliegue</th><th>Dominio</th><th>Clonado</th></tr>
+<tr><th>Repo</th><th>Provider</th><th>Role</th><th>Deploy order</th><th>Domain</th><th>Cloned</th></tr>
 <tr><td>homebanking-pwa-backend</td><td>bitbucket</td><td>servicios de negocio</td><td>1</td><td>banking</td><td>no</td></tr>
 <tr><td>homebanking-pwa-proxy</td><td>bitbucket</td><td>BFF/gateway entre la PWA y el backend</td><td>2</td><td>banking</td><td>no</td></tr>
 <tr><td>homebanking-pwa</td><td>bitbucket</td><td>frontend PWA del cliente</td><td>3</td><td>banking</td><td>no</td></tr>
 </table></div>
 
-<h3>Skills (comandos <code>/…</code>)</h3>
-<p>Derivadas de <code>.claude/skills/*/SKILL.md</code>; la descripción del
-frontmatter es el gatillo de auto-carga.</p>
+<h3>Skills (<code>/…</code> commands)</h3>
+<p>Derived from <code>.claude/skills/*/SKILL.md</code>; the frontmatter
+description is the auto-load trigger.</p>
 <div class="wide"><table>
-<tr><th>Comando</th><th>Qué hace (frontmatter)</th></tr>
+<tr><th>Command</th><th>What it does (frontmatter)</th></tr>
 <tr><td><code>/as-is-learn</code></td><td>Analiza los repos REALES para aprender como se definen y consumen las rutas, escribe extractores exactos por repo y regenera el mapa as-is. Usar cuando el grafo cross-repo salga vacio o incompleto, o cuando cambie el framework de un repo.</td></tr>
 <tr><td><code>/as-is-sync</code></td><td>Regenera el mapa as-is desde el código y commitea el resultado. Usar tras cambios estructurales (módulos nuevos, endpoints, migraciones) o cuando /as-is detecte desactualización.</td></tr>
 <tr><td><code>/as-is</code></td><td>Consulta el mapa as-is real del repositorio (módulos, dependencias, APIs, datos). Usar cuando pregunten cómo está estructurada la aplicación, qué depende de qué, qué APIs existen, o antes de diseñar (F5).</td></tr>
@@ -172,11 +182,11 @@ frontmatter es el gatillo de auto-carga.</p>
 <tr><td><code>/system-map</code></td><td>Genera o actualiza el PACK DE SISTEMA (&lt;prefijo&gt;-sistema, las uniones y el modelo mental que no viven en ningún repo) y el índice mapa-sistemas. Usar cuando el sistema tenga ≥2 repos con packs, cuando pidan &quot;el mapa del sistema&quot;/&quot;cómo se conectan los repos&quot;, o cuando /spec-create detecte que falta el pack de sistema.</td></tr>
 </table></div>
 
-<h3>Subagentes por fase</h3>
-<p>Derivados de <code>.claude/agents/*.md</code>; cada uno trabaja con
-contexto limpio y solo las herramientas que su fase necesita.</p>
+<h3>Per-phase subagents</h3>
+<p>Derived from <code>.claude/agents/*.md</code>; each works with a clean
+context and only the tools its phase needs.</p>
 <div class="wide"><table>
-<tr><th>Agente</th><th>Fase y propósito</th></tr>
+<tr><th>Agent</th><th>Phase and purpose</th></tr>
 <tr><td><code>analisis</code></td><td>Agente de análisis (F4 · Análisis). Extrae reglas de negocio, mapea dependencias y enumera casos límite antes del diseño.</td></tr>
 <tr><td><code>arquitectura</code></td><td>Agente de arquitectura (F5 · Diseño). Produce contratos entre sistemas, diagramas C4 y ADRs a partir de una spec analizada. Prepara el gate de Arquitectura.</td></tr>
 <tr><td><code>calidad</code></td><td>Agente de calidad (F7 · Certificación). Verifica cobertura, regresión y seguridad contra la spec con contexto limpio. Prepara el gate QA/PR.</td></tr>
@@ -186,11 +196,11 @@ contexto limpio y solo las herramientas que su fase necesita.</p>
 <tr><td><code>requisitos</code></td><td>Agente de requisitos (F1 · Requerimiento). Convierte una idea de negocio en historias de usuario INVEST con criterios de aceptación Gherkin. Prepara el gate PO/TL.</td></tr>
 </table></div>
 
-<h3>Reglas transversales</h3>
-<p>Derivadas de <code>.claude/rules/*.md</code>. Las de dominio (p.ej.
-banking) se activan solo para repos que lo declaran en el registro.</p>
+<h3>Cross-cutting rules</h3>
+<p>Derived from <code>.claude/rules/*.md</code>. Domain profiles (e.g.
+banking) activate only for repos that declare them in the registry.</p>
 <div class="wide"><table>
-<tr><th>Archivo</th><th>Regla</th><th>Estándares base</th></tr>
+<tr><th>File</th><th>Rule</th><th>Base standards</th></tr>
 <tr><td><code>api-design.md</code></td><td>Diseño de APIs</td><td>Base: service domains (capacidades de negocio) · Google AIP (aip.dev) · REST</td></tr>
 <tr><td><code>code-style.md</code></td><td>Estilo de código</td><td>Base: Google Style Guides (google.github.io/styleguide) · Google eng-practices (revisión de código)</td></tr>
 <tr><td><code>domain-banking.md</code></td><td>Perfil de dominio: banca</td><td>Aplica a los repos cuyo registro (`repos.yaml`) declara `domain: banking`.</td></tr>
@@ -200,10 +210,10 @@ banking) se activan solo para repos que lo declaran en el registro.</p>
 </table></div>
 
 <h3>Scripts</h3>
-<p>Automatización bash 3.2 sin dependencias nuevas (python3 como único
-prerequisito); derivados de la cabecera de cada <code>scripts/*.sh</code>.</p>
+<p>Bash 3.2 automation with no new dependencies (python3 is the only
+prerequisite); derived from each <code>scripts/*.sh</code> header.</p>
 <div class="wide"><table>
-<tr><th>Script</th><th>Qué hace</th></tr>
+<tr><th>Script</th><th>What it does</th></tr>
 <tr><td><code>afirmaciones.sh</code></td><td>Suite de aserciones de los packs de contexto.</td></tr>
 <tr><td><code>diag-bitbucket.sh</code></td><td>Diagnostica por que Bitbucket rechaza las credenciales.</td></tr>
 <tr><td><code>docs.sh</code></td><td>Genera la documentacion HTML derivada del workspace en sus dos</td></tr>
@@ -216,32 +226,31 @@ prerequisito); derivados de la cabecera de cada <code>scripts/*.sh</code>.</p>
 <tr><td><code>setup.sh</code></td><td>Clona o actualiza en repos/ TODOS los repositorios declarados en</td></tr>
 </table></div>
 
-<h3>Enforcement y CI</h3>
+<h3>Enforcement and CI</h3>
 <div class="card">
 <ul>
-  <li><strong>Permisos sobre instrucciones</strong>: <code>settings.json</code>
-      niega a los agentes credenciales (<code>.env</code>, llaves), despliegues
-      (<code>kubectl</code>, <code>terraform apply</code>) y push directo a main.
-      Cada skill declara <code>allowed-tools</code> de mínimo privilegio.</li>
-  <li><strong>CI</strong> (<code>bitbucket-pipelines.yml</code> / plantilla
-      GitHub Actions): en cada merge a main y en un schedule diario clona los
-      repos del registro, regenera as-is + métricas DORA + este documento y
-      commitea si hay cambios.</li>
-  <li><strong>Verificación del contexto</strong>: <code>frescura.sh</code>
-      detecta packs viejos por sello de commit; <code>afirmaciones.sh</code>
-      ejecuta las aserciones de cada pack (detecta QUÉ afirmación se volvió
-      falsa).</li>
+  <li><strong>Permissions over instructions</strong>: <code>settings.json</code>
+      denies agents credentials (<code>.env</code>, keys), deployments
+      (<code>kubectl</code>, <code>terraform apply</code>) and direct pushes to
+      main. Every skill declares least-privilege <code>allowed-tools</code>.</li>
+  <li><strong>CI</strong> (<code>bitbucket-pipelines.yml</code> / GitHub
+      Actions template): on every merge to main and on a daily schedule it
+      clones the registry's repos, regenerates as-is + DORA metrics + this
+      document, and commits if anything changed.</li>
+  <li><strong>Context verification</strong>: <code>frescura.sh</code> detects
+      stale packs by commit seal; <code>afirmaciones.sh</code> runs each
+      pack's assertions (detects WHICH claim became false).</li>
 </ul>
 </div>
 
-<h2 id="modelo">3 · Modelo</h2>
+<h2 id="model">3 · Model</h2>
 
-<h3>Diagrama de flujo conceptual</h3>
-<p>La spec es el contrato que gobierna el flujo; el conocimiento que la
-operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
+<h3>Conceptual flow diagram</h3>
+<p>The spec is the contract that governs the flow; the knowledge produced by
+operations feeds the next feature — the loop closes:</p>
 
 <svg viewBox="0 0 1040 478" role="img" style="width:100%;height:auto;font-family:inherit"
-     aria-label="Flujo conceptual: F0 a F4 escriben la SPEC (contrato vivo al centro), la SPEC gobierna F5 a F9, el conocimiento se deriva y retroalimenta la próxima feature">
+     aria-label="Conceptual flow: F0 to F4 write the SPEC (living contract at the center), the SPEC governs F5 to F9, knowledge is derived and feeds back into the next feature">
   <defs>
     <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
             markerHeight="7" orient="auto-start-reverse">
@@ -273,31 +282,31 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
     .acc-l{fill:var(--acc);font-size:10px;font-weight:600}
   </style>
 
-  <!-- fila A: F0 a F4 (el QUÉ: escriben la spec) -->
+  <!-- row A: F0 to F4 (the WHAT: they write the spec) -->
   <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
   <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarificar</text>
-  <text class="sub" x="132" y="84" text-anchor="middle">clasifica y carga contexto</text>
+  <text class="sub" x="132" y="84" text-anchor="middle">classifies · loads context</text>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
-  <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requerimiento</text>
-  <text class="sub" x="336" y="70" text-anchor="middle">agente requisitos</text>
-  <text class="sub" x="336" y="84" text-anchor="middle">historias INVEST P1–P3</text>
+  <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requirements</text>
+  <text class="sub" x="336" y="70" text-anchor="middle">requisitos agent</text>
+  <text class="sub" x="336" y="84" text-anchor="middle">INVEST stories P1–P3</text>
 
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
-  <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimación</text>
-  <text class="sub" x="540" y="70" text-anchor="middle">agente estimacion</text>
-  <text class="sub" x="540" y="84" text-anchor="middle">puntos + WSJF con uso.md</text>
+  <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
+  <text class="sub" x="540" y="70" text-anchor="middle">estimacion agent</text>
+  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
-  <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinamiento</text>
+  <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
   <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistencia</text>
-  <text class="sub" x="744" y="84" text-anchor="middle">DoR de 13 puntos</text>
+  <text class="sub" x="744" y="84" text-anchor="middle">13-point DoR</text>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
-  <text class="titulo" x="948" y="54" text-anchor="middle">F4 Análisis</text>
-  <text class="sub" x="948" y="70" text-anchor="middle">agente analisis</text>
-  <text class="sub" x="948" y="84" text-anchor="middle">RN · deps · casos límite</text>
+  <text class="titulo" x="948" y="54" text-anchor="middle">F4 Analysis</text>
+  <text class="sub" x="948" y="70" text-anchor="middle">analisis agent</text>
+  <text class="sub" x="948" y="84" text-anchor="middle">rules · deps · edge cases</text>
 
   <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
   <line class="linea" x1="420" y1="68" x2="452" y2="68"/>
@@ -306,117 +315,117 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
   <line class="linea" x1="828" y1="68" x2="860" y2="68"/>
   <text class="gate-l" x="844" y="60" text-anchor="middle">DoR</text>
 
-  <!-- F0..F4 escriben su sección (el detalle vive dentro de la banda) -->
+  <!-- F0..F4 write their section (details live inside the band) -->
   <line class="lacc" x1="132" y1="100" x2="132" y2="146"/>
   <line class="lacc" x1="336" y1="100" x2="336" y2="146"/>
   <line class="lacc" x1="540" y1="100" x2="540" y2="146"/>
   <line class="lacc" x1="744" y1="100" x2="744" y2="146"/>
   <line class="lacc" x1="948" y1="100" x2="948" y2="146"/>
 
-  <!-- LA SPEC: contrato vivo, centro y conector del modelo -->
+  <!-- THE SPEC: living contract, center and connector of the model -->
   <rect class="spec" x="48" y="150" width="984" height="62" rx="10"/>
-  <text class="spec-t" x="540" y="174" text-anchor="middle">SPEC · el contrato vivo — specs/&lt;feature&gt;.md</text>
-  <text class="sub" x="540" y="192" text-anchor="middle">clarificaciones (F0) · historias y criterios de éxito (F1) · estimación (F2) · DoR (F3) · análisis (F4) · diseño y plan de tareas (F5)</text>
-  <text class="sub" x="540" y="205" text-anchor="middle">todo lo de abajo se construye y certifica CONTRA este documento; sus gates quedan registrados en él</text>
+  <text class="spec-t" x="540" y="174" text-anchor="middle">SPEC · the living contract — specs/&lt;feature&gt;.md</text>
+  <text class="sub" x="540" y="192" text-anchor="middle">clarifications (F0) · stories &amp; success criteria (F1) · estimation (F2) · DoR (F3) · analysis (F4) · design &amp; task plan (F5)</text>
+  <text class="sub" x="540" y="205" text-anchor="middle">everything below is built and certified AGAINST this document; its gates are recorded in it</text>
 
-  <!-- la spec gobierna la construcción; F7 certifica de vuelta -->
+  <!-- the spec governs construction; F7 certifies back -->
   <line class="lacc" x1="132" y1="212" x2="132" y2="264"/>
-  <text class="acc-l" x="140" y="243">completa el diseño</text>
+  <text class="acc-l" x="140" y="243">completes the design</text>
   <line class="lacc" x1="336" y1="212" x2="336" y2="264"/>
-  <text class="acc-l" x="344" y="243">el plan gobierna F6</text>
+  <text class="acc-l" x="344" y="243">the plan governs F6</text>
   <path class="lcert" d="M 540 264 L 540 216"/>
-  <text class="acc-l" x="548" y="243">certifica contra la spec</text>
+  <text class="acc-l" x="548" y="243">certifies against the spec</text>
 
-  <!-- fila B: F5 a F9 (el CÓMO: obedecen y verifican la spec) -->
+  <!-- row B: F5 to F9 (the HOW: they obey and verify the spec) -->
   <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
-  <text class="titulo" x="132" y="286" text-anchor="middle">F5 Diseño</text>
-  <text class="sub" x="132" y="302" text-anchor="middle">agente arquitectura</text>
-  <text class="sub" x="132" y="316" text-anchor="middle">contratos · C4 · STRIDE</text>
+  <text class="titulo" x="132" y="286" text-anchor="middle">F5 Design</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">arquitectura agent</text>
+  <text class="sub" x="132" y="316" text-anchor="middle">contracts · C4 · STRIDE</text>
 
   <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
-  <text class="titulo" x="336" y="286" text-anchor="middle">F6 Construcción</text>
+  <text class="titulo" x="336" y="286" text-anchor="middle">F6 Construction</text>
   <text class="sub" x="336" y="302" text-anchor="middle">/harness-init · /implement-task</text>
-  <text class="sub" x="336" y="316" text-anchor="middle">TDD · un commit por tarea</text>
+  <text class="sub" x="336" y="316" text-anchor="middle">TDD · one commit per task</text>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
-  <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certificación</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · agente calidad</text>
-  <text class="sub" x="540" y="316" text-anchor="middle">veredicto contra la spec</text>
+  <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · calidad agent</text>
+  <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
-  <text class="titulo" x="744" y="286" text-anchor="middle">F8 Producción</text>
-  <text class="sub" x="744" y="302" text-anchor="middle">agente publicacion</text>
-  <text class="sub" x="744" y="316" text-anchor="middle">expediente de riesgo</text>
+  <text class="titulo" x="744" y="286" text-anchor="middle">F8 Release</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">publicacion agent</text>
+  <text class="sub" x="744" y="316" text-anchor="middle">risk dossier</text>
 
   <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
-  <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operación</text>
-  <text class="sub" x="948" y="302" text-anchor="middle">agente operacion</text>
-  <text class="sub" x="948" y="316" text-anchor="middle">postmortems · señales doradas</text>
+  <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operations</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">operacion agent</text>
+  <text class="sub" x="948" y="316" text-anchor="middle">postmortems · golden signals</text>
 
   <line class="linea" x1="216" y1="300" x2="248" y2="300"/>
-  <text class="gate-l" x="232" y="292" text-anchor="middle">Arq</text>
+  <text class="gate-l" x="232" y="292" text-anchor="middle">Arch</text>
   <line class="linea" x1="420" y1="300" x2="452" y2="300"/>
   <line class="linea" x1="624" y1="300" x2="656" y2="300"/>
   <text class="gate-l" x="640" y="292" text-anchor="middle">QA/PR</text>
   <line class="linea" x1="828" y1="300" x2="860" y2="300"/>
   <text class="gate-l" x="844" y="292" text-anchor="middle">CAB</text>
 
-  <!-- capa de conocimiento: alineada bajo la fase que la escribe -->
+  <!-- knowledge layer: aligned under the phase that writes it -->
   <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
   <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
-  <text class="sub" x="132" y="429" text-anchor="middle">el porqué de las decisiones</text>
+  <text class="sub" x="132" y="429" text-anchor="middle">the why behind decisions</text>
 
   <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
-  <text class="titulo" x="336" y="400" text-anchor="middle">as-is · packs · grafo</text>
-  <text class="sub" x="336" y="416" text-anchor="middle">derivados del código</text>
-  <text class="sub" x="336" y="429" text-anchor="middle">con sello y aserciones</text>
+  <text class="titulo" x="336" y="400" text-anchor="middle">as-is · packs · graph</text>
+  <text class="sub" x="336" y="416" text-anchor="middle">derived from the code</text>
+  <text class="sub" x="336" y="429" text-anchor="middle">sealed, with assertions</text>
 
   <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
   <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
-  <text class="sub" x="948" y="429" text-anchor="middle">F9 registra sin culpables</text>
+  <text class="sub" x="948" y="429" text-anchor="middle">F9 records, blameless</text>
 
   <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
   <line class="lfina" x1="336" y1="332" x2="336" y2="376"/>
   <line class="lfina" x1="948" y1="332" x2="948" y2="376"/>
-  <text class="gate-l" x="940" y="356" text-anchor="end">gate SRE</text>
+  <text class="gate-l" x="940" y="356" text-anchor="end">SRE gate</text>
 
-  <!-- retroalimentación: el ciclo se cierra -->
+  <!-- feedback: the loop closes -->
   <path class="retro" d="M 948 438 L 948 462 L 20 462 L 20 68 L 44 68"/>
-  <text class="retro-l" x="484" y="455" text-anchor="middle">el conocimiento alimenta la próxima feature: F1 prioriza con uso real · F2 estima con historial · F0 carga packs frescos</text>
+  <text class="retro-l" x="484" y="455" text-anchor="middle">knowledge feeds the next feature: F1 prioritizes with real usage · F2 estimates with history · F0 loads fresh packs</text>
 </svg>
 
-<h3>Artefactos y trazabilidad</h3>
-<p>Cada feature deja una cadena verificable de punta a punta:</p>
+<h3>Artifacts and traceability</h3>
+<p>Every feature leaves a verifiable end-to-end chain:</p>
 <div class="flujo">
   <span>Spec <code>specs/*.md</code></span><b>→</b>
   <span>ADRs <code>knowledge/decisiones/</code></span><b>→</b>
-  <span>Commits (uno por tarea, en su repo)</span><b>→</b>
-  <span>Expediente CAB</span><b>→</b>
+  <span>Commits (one per task, in its repo)</span><b>→</b>
+  <span>CAB dossier</span><b>→</b>
   <span>Postmortems <code>knowledge/incidentes/</code></span><b>→</b>
-  <span>uso.md (DORA) → alimenta F1/F2</span>
+  <span>uso.md (DORA) → feeds F1/F2</span>
 </div>
-<p>La spec usa la plantilla de 12 secciones (<code>specs/_template.md</code>):
-problema · objetivo · criterios de éxito SC-xx medibles · fuera de alcance ·
-clarificaciones trazadas · historias P1–P3 con Gherkin · estimación WSJF ·
-análisis (RN, dependencias, casos límite, supuestos) · diseño (contratos,
-C4, ADRs, STRIDE, NFRs) · plan de tareas etiquetadas por repo · certificación
-· trazabilidad. Los marcadores <code>[NECESITA CLARIFICACIÓN]</code>
-pendientes bloquean la DoR (RN-F3).</p>
+<p>Specs use the 12-section template (<code>specs/_template.md</code>):
+problem · objective · measurable success criteria SC-xx · out of scope ·
+traced clarifications · P1–P3 stories with Gherkin · WSJF estimation ·
+analysis (rules, dependencies, edge cases, assumptions) · design (contracts,
+C4, ADRs, STRIDE, NFRs) · task plan tagged per repo · certification ·
+traceability. Pending <code>[NECESITA CLARIFICACIÓN]</code> markers block
+the DoR (rule RN-F3).</p>
 
-<h3>Reglas de negocio vigentes</h3>
+<h3>Business rules in force</h3>
 <div class="wide"><table>
-<tr><th>ID</th><th>Regla</th><th>Dominio</th><th>Origen</th><th>Vigente desde</th></tr>
+<tr><th>ID</th><th>Rule</th><th>Domain</th><th>Origin</th><th>In force since</th></tr>
 <tr><td><code>RN-F1</code></td><td>El peso del proceso es proporcional al riesgo: el triage F0 decide si aplica /clarificar y qué controles carga</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
 <tr><td><code>RN-F2</code></td><td>Ninguna skill edita artefactos que no le pertenecen: /consistencia y /spec-review son read-only; /convergir solo añade al plan de su spec; la garantía se respalda en allowed-tools, no en instrucciones</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
 <tr><td><code>RN-F3</code></td><td>Un marcador [NECESITA CLARIFICACIÓN] pendiente bloquea la DoR (máximo 3 vivos por spec)</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
 <tr><td><code>RN-F4</code></td><td>Toda métrica publicada en knowledge/ declara fuente y período, o declara &quot;sin datos&quot;; prohibido el valor sin procedencia (DORA se deriva con scripts/dora.sh)</td><td>proceso-fábrica</td><td>specs/2026-07-metricas-dora.md</td><td>2026-07-19</td></tr>
 </table></div>
 
-<h3>Specs del workspace</h3>
+<h3>Workspace specs</h3>
 <div class="wide"><table>
-<tr><th>Archivo</th><th>Spec</th><th>Estado</th></tr>
+<tr><th>File</th><th>Spec</th><th>Status</th></tr>
 <tr><td><code>2026-07-docs-html.md</code></td><td>Spec: Documentación HTML derivada de la fábrica (arquitectura, técnica, modelo y uso)</td><td>implementada</td></tr>
 <tr><td><code>2026-07-generalizacion-workspace.md</code></td><td>Spec: Generalización del workspace — fábrica para CUALQUIER sistema de repos</td><td>implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales)</td></tr>
 <tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>borrador</td></tr>
@@ -424,76 +433,76 @@ pendientes bloquean la DoR (RN-F3).</p>
 <tr><td><code>2026-07-metricas-dora.md</code></td><td>Spec: Derivación automática de métricas DORA en knowledge/uso.md</td><td>implementada</td></tr>
 </table></div>
 
-<h3>Métricas DORA vigentes</h3>
-<p>Derivadas por <code>scripts/dora.sh</code> del git de los repos y de los
-postmortems (RN-F4: fuente y período declarados, o «sin datos»).</p>
+<h3>Current DORA metrics</h3>
+<p>Derived by <code>scripts/dora.sh</code> from the repos' git history and
+the postmortems (RN-F4: source and period declared, or "no data").</p>
 <p class="muted">[GENERADO v1] 2026-07-19 · período: últimos 90 días · fuentes: ninguna · no editar a mano (scripts/dora.sh)</p>
 <p class="muted">Sin datos de: homebanking-pwa-backend, homebanking-pwa-proxy, homebanking-pwa (no clonado — correr scripts/setup.sh)</p>
 <div class="wide"><table><tr><th>Métrica</th><th>Actual</th><th>Objetivo</th><th>Fuente</th></tr><tr><td>Frecuencia de despliegue</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>≥ 1/día</td><td>tags v* o merges a rama por defecto</td></tr><tr><td>Lead time (commit→prod)</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 1 día</td><td>primer commit de la rama → merge</td></tr><tr><td>Change failure rate</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 15%</td><td>knowledge/incidentes vs despliegues</td></tr><tr><td>MTTR</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 1 hora</td><td>campo MTTR de los postmortems</td></tr></table></div>
 
-<h2 id="uso">4 · Guía de uso</h2>
+<h2 id="usage">4 · Usage guide</h2>
 
-<h3>Escenario A — Instalar la fábrica para un sistema nuevo</h3>
-<pre>git clone &lt;url-de-la-plantilla&gt; mi-sistema && cd mi-sistema
-./scripts/init-sistema.sh          # limpia datos de instancia, crea registro
-/repo-add &lt;url-o-ruta&gt;             # por cada repo del sistema
-/system-map                        # cuando haya ≥2 repos con pack</pre>
+<h3>Scenario A — Install the factory for a new system</h3>
+<pre>git clone &lt;template-url&gt; my-system && cd my-system
+./scripts/init-sistema.sh          # cleans instance data, creates the registry
+/repo-add &lt;url-or-path&gt;            # once per system repo
+/system-map                        # once ≥2 repos have context packs</pre>
 
-<h3>Escenario B — Máquina nueva de un sistema existente</h3>
-<pre>git clone &lt;url-del-workspace&gt; && cd &lt;workspace&gt;
-cp .env.example .env               # credenciales según proveedor
-./scripts/setup.sh                 # clona/actualiza TODOS los repos del registro</pre>
+<h3>Scenario B — New machine for an existing system</h3>
+<pre>git clone &lt;workspace-url&gt; && cd &lt;workspace&gt;
+cp .env.example .env               # credentials per git provider
+./scripts/setup.sh                 # clones/updates ALL registry repos</pre>
 
-<h3>Escenario C — Especificar y construir una feature</h3>
-<pre>/spec-create &lt;nombre&gt; &lt;descripción&gt;   # triage F0 + F1..F5 con gates
-/clarificar &lt;spec&gt;                    # si hay ambigüedad (máx. 5 preguntas)
-/spec-review specs/&lt;spec&gt;.md          # DoR de 13 puntos
-/consistencia specs/&lt;spec&gt;.md         # cruzada; APTO PARA GATE para avanzar
-/harness-init specs/&lt;spec&gt;.md         # solo si es multi-sesión
-/implement-task specs/&lt;spec&gt;.md T1    # TDD, un commit por tarea EN su repo
-/convergir specs/&lt;spec&gt;.md            # brechas código↔spec antes de certificar</pre>
-<p class="muted">Regla de oro: lanzar Claude Code SIEMPRE desde la raíz del
-workspace; los commits de código van dentro de cada repo
-(<code>git -C repos/&lt;repo&gt; …</code>), los de conocimiento aquí.</p>
+<h3>Scenario C — Specify and build a feature</h3>
+<pre>/spec-create &lt;name&gt; &lt;description&gt;     # F0 triage + F1..F5 with gates
+/clarificar &lt;spec&gt;                    # if ambiguous (max 5 questions)
+/spec-review specs/&lt;spec&gt;.md          # 13-point Definition of Ready
+/consistencia specs/&lt;spec&gt;.md         # cross-check; needs APTO PARA GATE
+/harness-init specs/&lt;spec&gt;.md         # only for multi-session work
+/implement-task specs/&lt;spec&gt;.md T1    # TDD, one commit per task IN its repo
+/convergir specs/&lt;spec&gt;.md            # code↔spec gaps before certifying</pre>
+<p class="muted">Golden rule: always launch Claude Code from the workspace
+root; code commits go inside each repo (<code>git -C repos/&lt;repo&gt; …</code>),
+knowledge commits go here.</p>
 
-<h3>Escenario D — Consultar y operar</h3>
-<pre>/as-is ¿qué endpoints expone X?    # estado real (grafo + mapa)
-/as-is-sync                        # tras cambios estructurales
-./scripts/dora.sh                  # recalcular métricas (F9 tras incidente)
-/orquestar specs/&lt;spec&gt;.md         # ciclo E2E completo (solo humano)</pre>
+<h3>Scenario D — Query and operate</h3>
+<pre>/as-is which endpoints does X expose?   # real state (graph + map)
+/as-is-sync                             # after structural changes
+./scripts/dora.sh                       # recompute metrics (F9, after incidents)
+/orquestar specs/&lt;spec&gt;.md              # full E2E cycle (humans only)</pre>
 
-<h3>Qué aprueba el humano (y qué no puede hacer el agente)</h3>
+<h3>What humans approve (and what agents cannot do)</h3>
 <div class="wide"><table>
-<tr><th>Gate</th><th>El humano aprueba</th><th>El agente tiene vetado</th></tr>
-<tr><td class="gate">PO/TL</td><td>Historias y prioridades</td><td>Inventar alcance</td></tr>
-<tr><td class="gate">DoR</td><td>Spec lista (13 puntos + consistencia)</td><td>Avanzar con marcadores pendientes</td></tr>
-<tr><td class="gate">Arquitectura</td><td>Contratos, ADRs, threat model</td><td>Romper contratos sin ADR</td></tr>
-<tr><td class="gate">QA/PR</td><td>Veredicto de calidad + convergencia</td><td>Modificar tests; aprobar sus propios gates</td></tr>
-<tr><td class="gate">CAB</td><td>Riesgo del paso a producción</td><td>Desplegar (sin credenciales)</td></tr>
-<tr><td class="gate">DevOps/SRE</td><td>Acciones sobre producción</td><td>Tocar producción (sin credenciales)</td></tr>
+<tr><th>Gate</th><th>The human approves</th><th>The agent is denied</th></tr>
+<tr><td class="gate">PO/TL</td><td>Stories and priorities</td><td>Inventing scope</td></tr>
+<tr><td class="gate">DoR</td><td>Spec readiness (13 points + consistency)</td><td>Proceeding with pending markers</td></tr>
+<tr><td class="gate">Architecture</td><td>Contracts, ADRs, threat model</td><td>Breaking contracts without an ADR</td></tr>
+<tr><td class="gate">QA/PR</td><td>Quality verdict + convergence</td><td>Modifying tests; approving its own gates</td></tr>
+<tr><td class="gate">CAB</td><td>Release risk</td><td>Deploying (no credentials)</td></tr>
+<tr><td class="gate">DevOps/SRE</td><td>Actions on production</td><td>Touching production (no credentials)</td></tr>
 </table></div>
 
-<h3>Problemas frecuentes</h3>
+<h3>Troubleshooting</h3>
 <div class="wide"><table>
-<tr><th>Síntoma</th><th>Causa probable</th><th>Solución</th></tr>
-<tr><td>Un pack «miente» sobre el código</td><td>Pack caduco</td>
-    <td><code>scripts/frescura.sh comprobar</code> y regenerar con <code>/repo-map</code></td></tr>
-<tr><td>Tabla DORA «sin datos»</td><td>Repos sin clonar</td>
-    <td><code>./scripts/setup.sh</code> con credenciales y <code>./scripts/dora.sh</code></td></tr>
-<tr><td>El grafo cross-repo sale vacío</td><td>Framework no reconocido</td>
-    <td><code>/as-is-learn</code> escribe extractores por repo</td></tr>
-<tr><td>Clone falla en Bitbucket</td><td>Tipo de token vs usuario</td>
-    <td><code>./scripts/diag-bitbucket.sh</code> y tabla de auth de docs/guia-operativa.md</td></tr>
-<tr><td>Este documento desactualizado</td><td>Falta regenerar</td>
-    <td><code>./scripts/docs.sh</code> (el CI también lo hace)</td></tr>
+<tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr>
+<tr><td>A context pack "lies" about the code</td><td>Stale pack</td>
+    <td><code>scripts/frescura.sh comprobar</code>, then regenerate with <code>/repo-map</code></td></tr>
+<tr><td>DORA table says "sin datos"</td><td>Repos not cloned</td>
+    <td><code>./scripts/setup.sh</code> with credentials, then <code>./scripts/dora.sh</code></td></tr>
+<tr><td>Cross-repo graph comes out empty</td><td>Framework not recognized</td>
+    <td><code>/as-is-learn</code> writes per-repo extractors</td></tr>
+<tr><td>Bitbucket clone fails</td><td>Token type vs. user mismatch</td>
+    <td><code>./scripts/diag-bitbucket.sh</code> and the auth table in docs/guia-operativa.md</td></tr>
+<tr><td>This document is out of date</td><td>Regeneration missing</td>
+    <td><code>./scripts/docs.sh</code> (CI does it too)</td></tr>
 </table></div>
 
 </main>
 
 <footer>
-  [GENERADO v1] 2026-07-19 · scripts/docs.sh — no editar a mano · Documento derivado — editar <code>templates/docs-arquitectura.html</code>
-  y regenerar con <code>scripts/docs.sh</code>; los bloques de catálogo salen
-  de las fuentes reales del workspace.
+  [GENERATED v1] 2026-07-19 · scripts/docs.sh — do not edit by hand · Derived document — edit <code>templates/docs-architecture.en.html</code>
+  and regenerate with <code>scripts/docs.sh</code>; catalog blocks come from
+  the workspace's real sources.
 </footer>
 
 </body>
