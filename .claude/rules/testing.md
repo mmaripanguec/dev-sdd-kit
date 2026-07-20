@@ -1,13 +1,13 @@
 # Testing
-> Base: pirámide de tests (Google Testing Blog) · TDD (Beck) · ISO/IEC 25010
+> Base: test pyramid (Google Testing Blog) · TDD (Beck) · ISO/IEC 25010
 
-- TDD para toda lógica de negocio: test que falla → commit del test → implementar
-  → verde → refactor. NUNCA modificar el test para hacerlo pasar.
-- Pirámide: mayoría unit (rápidos, aislados), integración para contratos entre
-  módulos, E2E solo para flujos críticos de usuario.
-- Cobertura mínima en código nuevo: 80% líneas / 100% en auth y en las rutas
-  críticas que declare el perfil del dominio (p.ej. dinero en domain-banking).
-  La cobertura es piso, no meta: cada caso límite de la spec tiene su test.
-- Tests deterministas: sin sleeps, sin dependencia de red externa, sin orden implícito.
-- Datos de prueba sintéticos; PROHIBIDO usar datos reales de clientes en tests.
-- Cada bug corregido añade primero el test que lo reproduce (regresión).
+- TDD for all business logic: failing test → commit the test → implement
+  → green → refactor. NEVER modify the test to make it pass.
+- Pyramid: mostly unit (fast, isolated), integration for contracts between
+  modules, E2E only for critical user flows.
+- Minimum coverage on new code: 80% lines / 100% on auth and on the critical
+  paths declared by the domain profile (e.g. money in domain-banking).
+  Coverage is a floor, not a goal: every edge case in the spec has its test.
+- Deterministic tests: no sleeps, no external network dependency, no implicit ordering.
+- Synthetic test data; FORBIDDEN to use real customer data in tests.
+- Every fixed bug first adds the test that reproduces it (regression).

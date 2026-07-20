@@ -161,7 +161,7 @@ cp docs/arquitectura.html "${TMP}/real-antes.html" 2>/dev/null || true
 ./scripts/docs.sh >/dev/null 2>&1
 REAL=$(cat docs/arquitectura.html 2>/dev/null || echo "")
 assert_contains "workspace real: skill spec-create presente" "spec-create" "$REAL"
-assert_contains "workspace real: agente calidad presente"    "calidad"     "$REAL"
+assert_contains "workspace real: agente quality presente"    "quality"     "$REAL"
 assert_contains "workspace real: RN-F4 presente"             "RN-F4"       "$REAL"
 
 echo "== CA3.1-CA3.2: versión EN generada junto a la ES (workspace real) =="

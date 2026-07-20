@@ -1,20 +1,20 @@
-# ADR-NNNN: <título de la decisión>
-> Formato: Architecture Decision Record (Michael Nygard)
+# ADR-NNNN: <decision title>
+> Format: Architecture Decision Record (Michael Nygard)
 
-- **Estado:** propuesta | aceptada | reemplazada por ADR-____
-- **Fecha / Autor:** | **Spec relacionada:** specs/____.md
-- **Gate Arquitectura:** aprobado por __ el __
+- **Status:** proposed | accepted | superseded by ADR-____
+- **Date / Author:** | **Related spec:** specs/____.md
+- **Architecture gate:** approved by __ on __
 
-## Contexto
-Qué fuerza esta decisión: requisito, restricción, NFR, riesgo. Hechos, no opiniones.
+## Context
+What forces this decision: requirement, constraint, NFR, risk. Facts, not opinions.
 
-## Opciones evaluadas
-| Opción | Pros | Contras | Costo/Riesgo |
+## Options considered
+| Option | Pros | Cons | Cost/Risk |
 |---|---|---|---|
 
-## Decisión
-Qué se decide y por qué esta opción gana frente a las otras.
+## Decision
+What is decided and why this option wins over the others.
 
-## Consecuencias
-Lo que se vuelve más fácil, lo que se vuelve más difícil, deuda aceptada,
-y qué señal nos haría revisar esta decisión.
+## Consequences
+What becomes easier, what becomes harder, accepted debt,
+and what signal would make us revisit this decision.

@@ -1,28 +1,28 @@
-# Seguridad
-> Base: NIST SP 800-218 (SSDF) y 800-218A (GenAI) · Microsoft SDL · OWASP Top 10 / ASVS
+# Security
+> Base: NIST SP 800-218 (SSDF) and 800-218A (GenAI) · Microsoft SDL · OWASP Top 10 / ASVS
 
-## Producir software bien asegurado (SSDF grupo PW)
-- Validar TODA entrada externa en el borde; sanitizar salidas (XSS, inyección SQL/NoSQL/OS).
-- Secretos solo vía gestor de secretos/variables de entorno; PROHIBIDO en código,
-  logs, specs o commits. `.env` y llaves están vetados a los agentes (settings.json).
-- Autenticación y autorización en cada endpoint; denegar por defecto.
-- Cifrado en tránsito (TLS) y en reposo para datos personales y sensibles
-  (los perfiles de dominio amplían la lista, p.ej. financieros en banking).
-- Dependencias: solo versiones fijadas; correr análisis de vulnerabilidades (SCA)
-  antes de certificar; generar SBOM en el paso a producción (SSDF grupo PS).
+## Produce well-secured software (SSDF group PW)
+- Validate ALL external input at the edge; sanitize outputs (XSS, SQL/NoSQL/OS injection).
+- Secrets only via a secrets manager/environment variables; FORBIDDEN in code,
+  logs, specs or commits. `.env` and keys are off-limits to the agents (settings.json).
+- Authentication and authorization on every endpoint; deny by default.
+- Encryption in transit (TLS) and at rest for personal and sensitive data
+  (domain profiles extend the list, e.g. financial data in banking).
+- Dependencies: pinned versions only; run vulnerability analysis (SCA)
+  before certifying; generate an SBOM at the move to production (SSDF group PS).
 
-## Ciclo (Microsoft SDL)
-- Threat modeling (STRIDE) obligatorio en fase de Diseño para features que tocan
-  auth, datos personales o rutas críticas del perfil del dominio (p.ej. dinero
-  en banking); el resultado va al ADR.
-- Análisis estático (SAST) en CI; hallazgos critical/high bloquean el merge.
+## Lifecycle (Microsoft SDL)
+- Threat modeling (STRIDE) mandatory in the Design phase for features that touch
+  auth, personal data or the critical paths of the domain profile (e.g. money
+  in banking); the result goes into the ADR.
+- Static analysis (SAST) in CI; critical/high findings block the merge.
 
-## Respuesta (SSDF grupo RV)
-- Toda vulnerabilidad detectada en operación genera incidente + postmortem +
-  test de regresión + revisión de la causa raíz en el proceso.
+## Response (SSDF group RV)
+- Every vulnerability detected in operation generates an incident + postmortem +
+  regression test + root-cause review of the process.
 
-## Agentes de IA (SSDF 800-218A / NIST AI RMF)
-- Los agentes no reciben credenciales de producción; gates humanos respaldados
-  por permisos, no solo por instrucciones.
-- Código generado por IA pasa por los mismos controles que el humano: revisión,
-  SAST, tests. La autoría no exime del control.
+## AI agents (SSDF 800-218A / NIST AI RMF)
+- Agents do not receive production credentials; human gates backed by
+  permissions, not just by instructions.
+- AI-generated code goes through the same controls as human code: review,
+  SAST, tests. Authorship does not exempt from control.

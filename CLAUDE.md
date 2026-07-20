@@ -1,85 +1,86 @@
-# Workspace de la fábrica · Sistema declarado en repos.yaml
+# Factory workspace · System declared in repos.yaml
 
-## Qué es
-Workspace de la fábrica digital para desarrollar y mantener CUALQUIER sistema
-de uno o más repositorios de código. La topología (qué repos componen el
-sistema, su proveedor git, roles, entrypoint y orden de despliegue) vive en
-`repos.yaml` — la ÚNICA fuente de verdad; ningún script o skill nombra repos
-en duro. Los repos se clonan en `repos/` (gitignoreados aquí; cada uno es su
-propio git).
+## What it is
+Workspace of the digital factory to develop and maintain ANY system made of
+one or more code repositories. The topology (which repos make up the
+system, their git provider, roles, entrypoint and deploy order) lives in
+`repos.yaml` — the single source of truth; no script or skill hardcodes
+repo names. Repos are cloned into `repos/` (gitignored here; each one is
+its own git).
 
-Este repo (workspace) versiona el CONTEXTO COMPARTIDO del sistema: specs,
-knowledge (ADRs, incidentes, reglas, as-is), skills, agentes y harness.
-El código vive en los repos; el conocimiento del sistema vive aquí.
-Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
+This repo (the workspace) versions the system's SHARED CONTEXT: specs,
+knowledge (ADRs, incidents, rules, as-is), skills, agents and harness.
+Code lives in the repos; system knowledge lives here.
+Current example system: homebanking (3 Bitbucket repos; see repos.yaml).
 
-## Comandos esenciales
-- Ingresar un repo al sistema: `/repo-add <url-o-ruta>` (clona, registra,
-  siembra CLAUDE.md, indexa en codebase-memory y genera el as-is) —
-  script equivalente: `./scripts/repo-add.sh <url-o-ruta>`
-- Contexto profundo (packs cargables): `/repo-map <repo>` genera el pack
-  del repo (`.claude/skills/<prefijo>-<repo>`) y `/system-map` el pack de
-  sistema + índice `mapa-sistemas`. Verificación: `scripts/afirmaciones.sh`
-  y `scripts/frescura.sh comprobar`
-- Preparar workspace en una máquina nueva: `./scripts/setup.sh`
-  (clona/actualiza TODOS los repos del registro; credenciales: .env.example)
-- Mapa as-is del sistema: `./scripts/generate-as-is.sh` (o /as-is-sync)
-- Cada repo tiene sus propios comandos en `repos/<repo>/CLAUDE.md`
+## Essential commands
+- Onboard a repo into the system: `/repo-add <url-or-path>` (clones, registers,
+  seeds CLAUDE.md, indexes it in codebase-memory and generates the as-is) —
+  equivalent script: `./scripts/repo-add.sh <url-or-path>`
+- Deep context (loadable packs): `/repo-map <repo>` generates the repo's
+  pack (`.claude/skills/<prefijo>-<repo>`) and `/system-map` the system
+  pack + the `mapa-sistemas` index. Verification: `scripts/afirmaciones.sh`
+  and `scripts/frescura.sh comprobar`
+- Prepare the workspace on a new machine: `./scripts/setup.sh`
+  (clones/updates ALL repos in the registry; credentials: .env.example)
+- System as-is map: `./scripts/generate-as-is.sh` (or /as-is-sync)
+- Each repo has its own commands in `repos/<repo>/CLAUDE.md`
 
-## Reglas multi-repo
-1. Lanzar Claude Code SIEMPRE desde la raíz del workspace: así carga este
-   contexto, y los CLAUDE.md de cada repo cargan solos al trabajar con sus archivos.
-2. Los commits de código se hacen DENTRO del repo correspondiente
-   (`git -C repos/<repo> …`); los commits de conocimiento, en este workspace.
-3. Una feature que cruza repos = UNA spec aquí, con tareas etiquetadas por el
-   nombre del repo registrado (`- [ ] T1 [<repo>] …`; `[workspace]` para
-   cambios de contexto).
-4. El contrato entre repos es la frontera: cambiar una API que otro repo
-   consume exige actualizar el contrato (OpenAPI) y ADR si rompe compatibilidad.
-5. Orden de despliegue: el `deploy_order` del registro (menor primero;
-   el consumidor nunca se despliega antes que su proveedor).
-6. Perfiles de dominio: un repo con `domain: banking` en el registro activa
-   además `.claude/rules/domain-banking.md`.
+## Multi-repo rules
+1. ALWAYS launch Claude Code from the workspace root: that way this context
+   loads, and each repo's CLAUDE.md loads on its own when working with its files.
+2. Code commits are made INSIDE the corresponding repo
+   (`git -C repos/<repo> …`); knowledge commits, in this workspace.
+3. A feature that crosses repos = ONE spec here, with tasks tagged with the
+   registered repo name (`- [ ] T1 [<repo>] …`; `[workspace]` for
+   context changes).
+4. The contract between repos is the boundary: changing an API that another
+   repo consumes requires updating the contract (OpenAPI) and an ADR if it
+   breaks compatibility.
+5. Deploy order: the registry's `deploy_order` (lowest first;
+   a consumer is never deployed before its provider).
+6. Domain profiles: a repo with `domain: banking` in the registry additionally
+   activates `.claude/rules/domain-banking.md`.
 
-## Flujo de trabajo obligatorio
-0. Todo requerimiento arranca con el TRIAGE (F0 de /spec-create):
-   ¿aplicativo existente o aplicación nueva? Se cargan los packs de
-   contexto vigentes de los repos afectados; dependencias sin contexto →
-   PREGUNTAR su repositorio (nunca asumir); inconsistencias → PREGUNTAR.
-1. Todo cambio no trivial parte de una spec en `specs/` (/spec-create).
-   Ambigüedades: /clarify (máx. 5 preguntas; respuestas trazadas en la
-   sección Clarificaciones de la spec; marcadores [NECESITA CLARIFICACIÓN]
-   pendientes bloquean la DoR).
-2. Fases y gates con /orchestrate; NUNCA saltar un gate. Antes de los gates
-   DoR y Arquitectura: /consistency con veredicto APTO PARA GATE (el
-   criterio de bloqueo lo define esa skill; no lo dupliques aquí).
-3. Construcción con /implement-task: TDD, un commit por tarea EN SU repo.
-4. PROHIBIDO modificar tests para hacerlos pasar.
-5. Al cerrar F6: /converge compara el código real contra la spec y añade
-   las brechas como tareas (append-only) antes del veredicto de calidad.
-6. Ante ambigüedad: escalar al gate más cercano, no suponer.
+## Mandatory workflow
+0. Every requirement starts with the TRIAGE (F0 of /spec-create):
+   existing application or new application? The current context packs of
+   the affected repos are loaded; dependencies without context →
+   ASK for their repository (never assume); inconsistencies → ASK.
+1. Every non-trivial change starts from a spec in `specs/` (/spec-create).
+   Ambiguities: /clarify (max. 5 questions; answers traced in the spec's
+   Clarifications section; pending [NEEDS CLARIFICATION] markers
+   block the DoR).
+2. Phases and gates with /orchestrate; NEVER skip a gate. Before the
+   DoR and Architecture gates: /consistency with a FIT FOR GATE verdict (the
+   blocking criterion is defined by that skill; do not duplicate it here).
+3. Construction with /implement-task: TDD, one commit per task IN ITS repo.
+4. Modifying tests to make them pass is FORBIDDEN.
+5. When closing F6: /converge compares the real code against the spec and
+   appends the gaps as tasks (append-only) before the quality verdict.
+6. When facing ambiguity: escalate to the nearest gate, never assume.
 
-## Mapa AS-IS (estado real derivado del código — nunca editar a mano)
-- Índice: `knowledge/as-is/INDEX.md` · sistema completo: `knowledge/as-is/system.md`
-- Por repo: `knowledge/as-is/<repo>/` · consultar /as-is; sincronizar /as-is-sync
-- Estructura fina (funciones, llamadas, impacto): grafo del MCP
-  codebase-memory (repos indexados por /repo-add)
-- Interpretación de arquitectura: packs de contexto (skills
-  `mapa-sistemas` → `<prefijo>-sistema` → `<prefijo>-<repo>`), con
-  evidencia archivo:línea, sello `generado_desde` y aserciones ejecutables
-- El as-is dice QUÉ HAY; los packs CÓMO ESTÁ ARMADO; los ADRs POR QUÉ;
-  las specs QUÉ DEBERÍA HABER.
+## AS-IS map (real state derived from the code — never edit by hand)
+- Index: `knowledge/as-is/INDEX.md` · full system: `knowledge/as-is/system.md`
+- Per repo: `knowledge/as-is/<repo>/` · query with /as-is; sync with /as-is-sync
+- Fine-grained structure (functions, calls, impact): the codebase-memory
+  MCP graph (repos indexed by /repo-add)
+- Architecture interpretation: context packs (skills
+  `mapa-sistemas` → `<prefijo>-sistema` → `<prefijo>-<repo>`), with
+  file:line evidence, `generado_desde` seal and executable assertions
+- The as-is says WHAT EXISTS; the packs HOW IT IS PUT TOGETHER; the ADRs WHY;
+  the specs WHAT SHOULD EXIST.
 
-## Memoria compartida (leer bajo demanda)
-- Specs: `specs/` · ADRs: `knowledge/decisiones/` · Incidentes: `knowledge/incidentes/`
-- Reglas: `knowledge/reglas-negocio.md` · DORA: `knowledge/uso.md`
-- Estándares: `knowledge/estandares.md`
+## Shared memory (read on demand)
+- Specs: `specs/` · ADRs: `knowledge/decisiones/` · Incidents: `knowledge/incidentes/`
+- Rules: `knowledge/reglas-negocio.md` · DORA: `knowledge/uso.md`
+- Standards: `knowledge/estandares.md`
 
-## Convenciones
-- Idioma de trabajo del workspace: `system.lang` del registro (aquí: es) —
-  specs, knowledge e interacciones con el usuario van en ese idioma y se
-  mantiene consistente. Los NOMBRES de comandos, skills e identificadores
-  de código son SIEMPRE inglés. Documentación PÚBLICA de GitHub (README,
-  CONTRIBUTING, LICENSE, .github, docs/architecture.en.html) en inglés.
-- Conventional Commits + referencia a la spec, en el workspace y en cada repo.
-- Toda decisión de arquitectura → ADR. Todo incidente → postmortem sin culpables.
+## Conventions
+- Working language of the workspace: the registry's `system.lang`
+  (this instance: es) — specs, knowledge and user interactions are written
+  in that language and kept consistent. The NAMES of commands, skills and
+  code identifiers are ALWAYS English. PUBLIC GitHub documentation (README,
+  CONTRIBUTING, LICENSE, .github, docs/architecture.en.html) in English.
+- Conventional Commits + spec reference, in the workspace and in each repo.
+- Every architecture decision → ADR. Every incident → blameless postmortem.

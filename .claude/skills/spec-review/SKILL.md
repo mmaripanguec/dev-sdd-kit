@@ -1,34 +1,34 @@
 ---
 name: spec-review
-description: Valida una spec contra la Definition of Ready de la fábrica. Usar antes del gate DoR o cuando pidan "revisar spec".
+description: Validates a spec against the factory's Definition of Ready. Use before the DoR gate or when asked to "review spec".
 argument-hint: "<ruta-de-la-spec>"
 allowed-tools: Read Glob Grep
 ---
 
-Revisa la spec $ARGUMENTS contra esta Definition of Ready. Por cada punto:
-CUMPLE / NO CUMPLE + evidencia (cita la línea) o qué falta.
+Review spec $ARGUMENTS against this Definition of Ready. For each point:
+PASS / FAIL + evidence (cite the line) or what is missing.
 
-## DoR de la fábrica
-1. Problema y objetivo en lenguaje de negocio, sin solución técnica implícita.
-2. Historias cumplen INVEST; ninguna estimada > 8 puntos sin dividir.
-3. TODO criterio de aceptación es Gherkin verificable (resultado observable
-   y medible; nada de "debe ser robusto/rápido/amigable").
-4. Fuera de alcance explícito y no vacío.
-5. Casos límite enumerados (nulos, concurrencia, errores de terceros, permisos).
-6. Reglas de negocio numeradas y consistentes con knowledge/reglas-negocio.md.
-7. Dependencias y supuestos listados; los bloqueantes marcados.
-8. Requisitos regulatorios/datos personales identificados si aplican.
-9. NFRs con números (SLO, latencia, volumen), no adjetivos.
-10. Sin secretos, credenciales ni datos reales de clientes en el documento.
-11. Sin marcadores `[NECESITA CLARIFICACIÓN]` pendientes (resolver con
-    /clarificar; las decisiones constan en la sección Clarificaciones).
-12. Criterios de éxito SC-xx medibles y agnósticos de tecnología (umbral y
-    plazo; certificables en F7 y contrastables con knowledge/uso.md).
-13. Historias priorizadas [P1]/[P2]/[P3]; las P1 por sí solas constituyen un
-    MVP viable e independientemente testeable.
+## The factory's DoR
+1. Problem and goal in business language, with no implicit technical solution.
+2. Stories meet INVEST; none estimated > 8 points without splitting.
+3. EVERY acceptance criterion is verifiable Gherkin (observable and
+   measurable outcome; no "must be robust/fast/friendly").
+4. Out of scope explicit and non-empty.
+5. Edge cases enumerated (nulls, concurrency, third-party errors, permissions).
+6. Business rules numbered and consistent with knowledge/reglas-negocio.md.
+7. Dependencies and assumptions listed; blockers marked.
+8. Regulatory/personal-data requirements identified where applicable.
+9. NFRs with numbers (SLO, latency, volume), not adjectives.
+10. No secrets, credentials or real customer data in the document.
+11. No pending `[NEEDS CLARIFICATION]` markers (resolve with
+    /clarify; the decisions are recorded in the Clarifications section).
+12. SC-xx success criteria measurable and technology-agnostic (threshold and
+    deadline; certifiable in F7 and checkable against knowledge/uso.md).
+13. Stories prioritized [P1]/[P2]/[P3]; the P1s on their own constitute a
+    viable and independently testable MVP.
 
-Complemento: la consistencia CRUZADA con reglas de negocio, ADRs, as-is y
-plan de tareas la audita /consistencia; recomiéndala si aún no se corrió.
+Complement: the CROSS-consistency with business rules, ADRs, as-is and
+task plan is audited by /consistency; recommend it if it has not been run yet.
 
-Veredicto final: LISTA PARA DoR / REQUIERE CAMBIOS (lista priorizada).
-No edites la spec: reporta; los cambios los aplica el ciclo crear-revisar-mejorar.
+Final verdict: READY FOR DoR / NEEDS CHANGES (prioritized list).
+Do not edit the spec: report; changes are applied by the create-review-improve cycle.

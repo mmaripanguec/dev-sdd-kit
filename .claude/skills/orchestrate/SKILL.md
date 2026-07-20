@@ -1,43 +1,43 @@
 ---
 name: orchestrate
-description: Recorre el ciclo E2E de 9 fases para una feature, delegando en los agentes por fase y deteniéndose en cada gate humano. Solo invocable por humanos.
+description: Walks the E2E 9-phase cycle for a feature, delegating to the per-phase agents and stopping at each human gate. Only invocable by humans.
 disable-model-invocation: true
 argument-hint: "<spec o descripción de la feature>"
 ---
 
-Ejecuta el ciclo E2E para: $ARGUMENTS
+Run the E2E cycle for: $ARGUMENTS
 
-## Reglas globales del orquestador
-- Secuencial: avanza fase por fase; NUNCA saltes un gate humano.
-- Tras cada fase: escribe el artefacto en specs/ o knowledge/ y commitea
-  antes de avanzar (un fallo a mitad de flujo no pierde fases previas).
-- Escalate: ante ambigüedad, contradicción o verificación imposible,
-  detente y pregunta al humano del gate más cercano. No supongas.
-- Rendición de cuentas: registra en el artefacto de cada gate quién aprobó,
-  cuándo y sobre qué versión (commit).
+## Global orchestrator rules
+- Sequential: advance phase by phase; NEVER skip a human gate.
+- After each phase: write the artifact in specs/ or knowledge/ and commit
+  before moving on (a mid-flow failure does not lose previous phases).
+- Escalate: on ambiguity, contradiction or impossible verification,
+  stop and ask the human at the nearest gate. Do not assume.
+- Accountability: record in each gate's artifact who approved,
+  when, and on which version (commit).
 
-## Secuencia
-F0 Triage          → PASO 0 de /spec-create: ¿aplicativo existente o
-                     aplicación nueva? · cargar packs de contexto vigentes ·
-                     dependencias sin contexto => PREGUNTAR (repo, alta,
-                     pack), nunca asumir · inconsistencia => PREGUNTAR ·
-                     ambigüedad detectada => /clarify (máx. 5 preguntas;
-                     las decisiones alimentan /spec-create y, ya creada la
-                     spec, se registran en su sección Clarificaciones)
-F1 Requerimiento   → subagente requisitos   → historias INVEST P1-P3 → GATE PO/TL
-F2 Estimación      → subagente estimacion   → puntos + WSJF
-F3 Refinamiento    → loop /spec-review + correcciones hasta DoR;
-                     /consistency con veredicto APTO PARA GATE      → GATE DoR
-F4 Análisis        → subagente analisis     → reglas, deps, límites
-F5 Diseño          → subagente arquitectura → contratos, C4, ADRs;
-                     /consistency con veredicto APTO PARA GATE      → GATE Arquitectura
-F6 Construcción    → /harness-init si es multi-sesión; luego
-                     /implement-task por cada tarea del plan (TDD)
-F7 Certificación   → /converge (brechas → tareas TC, se implementan
-                     con TDD) + subagente calidad → veredicto         → GATE QA/PR
-F8 Producción      → subagente publicacion  → expediente de riesgo  → GATE Comité CAB
-F9 Operación       → subagente operacion    → monitoreo, postmortem → GATE DevOps/SRE
+## Sequence
+F0 Triage          → STEP 0 of /spec-create: existing application or
+                     new application? · load the current context packs ·
+                     dependencies without context => ASK (repo, onboarding,
+                     pack), never assume · inconsistency => ASK ·
+                     ambiguity detected => /clarify (max. 5 questions;
+                     the decisions feed /spec-create and, once the spec
+                     is created, are recorded in its Clarifications section)
+F1 Requirement     → requirements subagent  → INVEST stories P1-P3 → PO/TL GATE
+F2 Estimation      → estimation subagent    → points + WSJF
+F3 Refinement      → loop /spec-review + fixes until DoR;
+                     /consistency with FIT FOR GATE verdict           → DoR GATE
+F4 Analysis        → analysis subagent      → rules, deps, limits
+F5 Design          → architecture subagent  → contracts, C4, ADRs;
+                     /consistency with FIT FOR GATE verdict           → Architecture GATE
+F6 Construction    → /harness-init if multi-session; then
+                     /implement-task for each task in the plan (TDD)
+F7 Certification   → /converge (gaps → TC tasks, implemented
+                     with TDD) + quality subagent → verdict             → QA/PR GATE
+F8 Production      → release subagent       → risk dossier          → CAB Committee GATE
+F9 Operations      → operations subagent    → monitoring, postmortem → DevOps/SRE GATE
 
-Al terminar F9: verifica que el ciclo cerró — postmortems e incidentes
-alimentaron knowledge/, y la spec quedó en estado "implementada" con su
-trazabilidad completa (spec → ADR → commits → expediente → operación).
+When F9 finishes: verify the cycle closed — postmortems and incidents
+fed knowledge/, and the spec ended in "implemented" state with its
+full traceability (spec → ADR → commits → dossier → operations).

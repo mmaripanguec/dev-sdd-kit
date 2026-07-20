@@ -1,48 +1,48 @@
 ---
 name: repo-add
-description: Da de alta un repositorio en la fábrica (URL git o ruta local): clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el mapa as-is. Usar cuando pidan "agregar/ingresar/onboarding de un repo" o "configurar el análisis de un repositorio".
+description: Onboards a repository into the factory (git URL or local path): clones, registers in repos.yaml, fills its CLAUDE.md with real data, indexes it in codebase-memory and regenerates the as-is map. Use when asked to "add/onboard a repo" or "set up analysis for a repository".
 argument-hint: "<url-o-ruta> [--role \"rol\"] [--entrypoint] [--domain banking] [--system-name s]"
 allowed-tools: Read Glob Grep Edit Write Bash(./scripts/repo-add.sh *) Bash(./scripts/generate-as-is.sh *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *)
 ---
 
-Objetivo: que el repo $ARGUMENTS quede LISTO PARA ESPECIFICAR (/spec-create)
-en una sola pasada. El registro repos.yaml es la única fuente de verdad de
-la topología: nunca escribas nombres de repos en scripts o skills.
+Goal: leave repo $ARGUMENTS READY TO SPECIFY (/spec-create)
+in a single pass. The repos.yaml registry is the single source of truth for
+the topology: never hardcode repo names in scripts or skills.
 
-## 1. Alta en el registro
-- Ejecuta `./scripts/repo-add.sh $ARGUMENTS` (clona/actualiza, registra en
-  repos.yaml, siembra CLAUDE.md). Si falla, diagnostica con el mensaje del
-  script (credenciales → .env, ver .env.example) y detente: no improvises
-  el registro a mano.
-- Si el usuario no dio `--role`, dedúcelo del repo (README, package.json,
-  estructura) y actualiza el campo con
-  `./scripts/repo-add.sh <origen> --role "<rol deducido>"` (es idempotente).
+## 1. Registration in the registry
+- Run `./scripts/repo-add.sh $ARGUMENTS` (clones/updates, registers in
+  repos.yaml, seeds CLAUDE.md). If it fails, diagnose with the script's
+  message (credentials → .env, see .env.example) and stop: do not
+  improvise the registration by hand.
+- If the user did not provide `--role`, infer it from the repo (README,
+  package.json, structure) and update the field with
+  `./scripts/repo-add.sh <origen> --role "<rol deducido>"` (it is idempotent).
 
-## 2. Completar el CLAUDE.md del repo con datos REALES
-Lee el repo recién clonado (README, package.json/Makefile/pom.xml/etc.) y
-reemplaza cada `<completar>` de `repos/<nombre>/CLAUDE.md` que puedas
-respaldar con evidencia: comandos de instalar/dev/test/lint reales, rol,
-convenciones visibles. Lo que no tenga evidencia se deja marcado
-`<completar>` — no inventes comandos. Recuerda: ese archivo se commitea EN
-ESE repo, no en el workspace.
+## 2. Fill the repo's CLAUDE.md with REAL data
+Read the freshly cloned repo (README, package.json/Makefile/pom.xml/etc.) and
+replace every `<completar>` in `repos/<nombre>/CLAUDE.md` that you can
+back with evidence: real install/dev/test/lint commands, role,
+visible conventions. Whatever lacks evidence stays marked
+`<completar>` — do not invent commands. Remember: that file is committed IN
+THAT repo, not in the workspace.
 
-## 3. Indexar en codebase-memory (grafo de código)
-- Invoca `index_repository` del MCP codebase-memory sobre `repos/<nombre>`
-  y verifica con `index_status`/`list_projects`.
-- Si el MCP no está disponible o falla: NO bloquees el alta; dilo
-  explícitamente en el reporte final ("indexación pendiente: correr
-  /repo-add de nuevo o index_repository cuando el MCP esté arriba").
+## 3. Index in codebase-memory (code graph)
+- Invoke `index_repository` from the codebase-memory MCP on `repos/<nombre>`
+  and verify with `index_status`/`list_projects`.
+- If the MCP is unavailable or fails: do NOT block the onboarding; state it
+  explicitly in the final report ("indexing pending: run
+  /repo-add again or index_repository when the MCP is up").
 
-## 4. Mapa as-is
-- Ejecuta `./scripts/generate-as-is.sh` y revisa el resultado.
-- Si hay ≥2 repos registrados y el grafo cross-repo salió vacío o
-  incompleto, recomienda `/as-is-learn` (escribe extractores exactos por
-  repo con evidencia del código).
-- Commitea `repos.yaml` + `knowledge/as-is/` en el workspace:
+## 4. As-is map
+- Run `./scripts/generate-as-is.sh` and review the result.
+- If there are ≥2 registered repos and the cross-repo graph came out empty or
+  incomplete, recommend `/as-is-learn` (writes exact per-repo extractors
+  with evidence from the code).
+- Commit `repos.yaml` + `knowledge/as-is/` in the workspace:
   `chore(repos): alta de <nombre> + mapa as-is`.
 
-## 5. Reporte final (contrato de salida)
-Resume: nombre y rol registrado, stack detectado, estado de indexación MCP,
-estado del mapa as-is (con o sin grafo), y cierra con los siguientes pasos:
-"listo para `/spec-create <feature>`", `/repo-map <repo>` para el mapa
-profundo de arquitectura, y `/as-is <pregunta>` para explorar.
+## 5. Final report (output contract)
+Summarize: registered name and role, detected stack, MCP indexing status,
+as-is map status (with or without graph), and close with the next steps:
+"ready for `/spec-create <feature>`", `/repo-map <repo>` for the deep
+architecture map, and `/as-is <pregunta>` to explore.

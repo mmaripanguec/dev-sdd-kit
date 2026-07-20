@@ -1,10 +1,10 @@
-# Uso y desempeño de la fábrica
-> Métricas DORA (Google/DORA) + aprendizajes. F9 escribe; F1/F2 leen para
-> priorizar y estimar. Actualización: al cierre de cada feature e incidente.
+# Factory usage and performance
+> DORA metrics (Google/DORA) + learnings. F9 writes; F1/F2 read to
+> prioritize and estimate. Updated: at the close of each feature and incident.
 
-## Métricas DORA (por trimestre)
-Derivadas por `scripts/dora.sh` (git de los repos + postmortems); nunca
-editar a mano dentro de los marcadores. Verificación en CI: `dora.sh --check`.
+## DORA metrics (per quarter)
+Derived by `scripts/dora.sh` (git history of the repos + postmortems); never
+edit by hand inside the markers. CI verification: `dora.sh --check`.
 <!-- DORA:BEGIN -->
 [GENERADO v1] 2026-07-19 · período: últimos 90 días · fuentes: ninguna · no editar a mano (scripts/dora.sh)
 
@@ -18,10 +18,10 @@ editar a mano dentro de los marcadores. Verificación en CI: `dora.sh --check`.
 Sin datos de: homebanking-pwa-backend, homebanking-pwa-proxy, homebanking-pwa (no clonado — correr scripts/setup.sh)
 <!-- DORA:END -->
 
-## Estimado vs. real (alimenta a F2)
-| Spec | Puntos estimados | Resultado | Aprendizaje |
+## Estimated vs. actual (feeds F2)
+| Spec | Estimated points | Outcome | Learning |
 |---|---|---|---|
 
-## Uso real de features (alimenta a F1)
-| Feature | Adopción / métrica | Insight |
+## Real feature usage (feeds F1)
+| Feature | Adoption / metric | Insight |
 |---|---|---|

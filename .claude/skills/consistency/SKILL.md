@@ -1,46 +1,47 @@
 ---
 name: consistency
-description: Análisis read-only de consistencia cruzada entre una spec y el resto de artefactos de la fábrica (reglas de negocio, ADRs, as-is, reglas .claude/rules, plan de tareas). Usar antes del gate DoR y del gate de Arquitectura, o cuando pidan "analizar consistencia" de una spec.
-argument-hint: "<ruta-de-la-spec>"
+description: Read-only cross-consistency analysis between a spec and the rest of the factory's artifacts (business rules, ADRs, as-is, .claude/rules rules, task plan). Use before the DoR gate and the Architecture gate, or when asked to "analyze consistency" of a spec.
+argument-hint: "<spec-path>"
 allowed-tools: Read Glob Grep
 ---
 
-Analiza la consistencia de la spec $ARGUMENTS contra el conocimiento de la
-fábrica. ESTRICTAMENTE READ-ONLY: no edites ningún artefacto; solo informa.
+Analyze the consistency of spec $ARGUMENTS against the factory's
+knowledge. STRICTLY READ-ONLY: do not edit any artifact; only report.
 
-## Modelo semántico (construir primero)
-1. Inventario de la spec: historias (Hx, prioridad), CA en Gherkin, SC-xx,
-   RN-xx citadas, tareas del plan (Tx con etiqueta de repo).
-2. Artefactos de contraste: `knowledge/reglas-negocio.md`,
-   `knowledge/decisiones/` (ADRs vigentes), `knowledge/as-is/` (INDEX y repos
-   afectados), `.claude/rules/*.md` (incluido el perfil de dominio si el repo
-   lo declara en repos.yaml), packs de contexto de los repos afectados.
+## Semantic model (build first)
+1. Spec inventory: stories (Hx, priority), ACs in Gherkin, SC-xx,
+   RN-xx cited, plan tasks (Tx with repo label).
+2. Contrast artifacts: `knowledge/reglas-negocio.md`,
+   `knowledge/decisiones/` (current ADRs), `knowledge/as-is/` (INDEX and
+   affected repos), `.claude/rules/*.md` (including the domain profile if the
+   repo declares it in repos.yaml), context packs of the affected repos.
 
-## Seis pases de detección
-- **A · Duplicación**: historias/CA/SC que repiten lo mismo con otras palabras.
-- **B · Ambigüedad**: adjetivos no medibles ("rápido, robusto, escalable,
-  intuitivo, seguro" sin número), pronombres sin referente, marcadores
-  `[NECESITA CLARIFICACIÓN]` pendientes.
-- **C · Subespecificación**: historia sin CA, CA sin resultado observable,
-  SC sin umbral, dependencia mencionada sin registrar en repos.yaml.
-- **D · Alineación con reglas**: contradicciones con `.claude/rules/*` o con
-  `knowledge/reglas-negocio.md` (RN citada que no existe, o vigente que la
-  spec viola). **Todo conflicto de este pase es CRITICAL automáticamente.**
-- **E · Cobertura**: requisitos (CA/SC) sin tarea en el plan y tareas sin
-  requisito que las justifique — en AMBAS direcciones. Etiquetas de REPO de
-  tarea que no son repos registrados ni `[workspace]` (el marcador `[P]` de
-  paralelismo y las prioridades `[P1]`/`[P2]`/`[P3]` de historias no son
-  etiquetas de repo; no los marques). Si la spec aún no tiene plan, omite el
-  pase y decláralo.
-- **F · Contradicciones**: spec vs as-is (afirma algo que el código
-  contradice), spec vs ADR vigente, drift terminológico (misma entidad con
-  dos nombres), tareas cuyo orden viola `deploy_order`.
+## Six detection passes
+- **A · Duplication**: stories/ACs/SCs that repeat the same thing in other words.
+- **B · Ambiguity**: non-measurable adjectives ("fast, robust, scalable,
+  intuitive, secure" without a number), pronouns without a referent, pending
+  `[NEEDS CLARIFICATION]` markers.
+- **C · Underspecification**: story without AC, AC without an observable
+  outcome, SC without a threshold, dependency mentioned but not registered
+  in repos.yaml.
+- **D · Alignment with rules**: contradictions with `.claude/rules/*` or with
+  `knowledge/reglas-negocio.md` (cited RN that does not exist, or a current
+  one the spec violates). **Every conflict in this pass is automatically CRITICAL.**
+- **E · Coverage**: requirements (AC/SC) without a task in the plan and tasks
+  without a requirement justifying them — in BOTH directions. Task REPO
+  labels that are neither registered repos nor `[workspace]` (the `[P]`
+  parallelism marker and the `[P1]`/`[P2]`/`[P3]` story priorities are not
+  repo labels; do not flag them). If the spec has no plan yet, skip the
+  pass and declare it.
+- **F · Contradictions**: spec vs as-is (claims something the code
+  contradicts), spec vs current ADR, terminology drift (same entity with
+  two names), tasks whose order violates `deploy_order`.
 
-## Informe (máximo 50 hallazgos)
-| ID | Pase | Severidad | Ubicación | Hallazgo | Recomendación |
-Severidades: CRITICAL (bloquea gate) / HIGH / MEDIUM / LOW. Después una tabla
-de cobertura CA/SC ↔ tareas. Veredicto final:
-- **APTO PARA GATE** — sin CRITICAL ni HIGH sin justificar.
-- **NO PASAR AL GATE** — hay CRITICAL (o HIGH no justificados); lista
-  priorizada de correcciones. Los cambios los aplica el ciclo
-  crear-revisar-mejorar, nunca esta skill.
+## Report (maximum 50 findings)
+| ID | Pass | Severity | Location | Finding | Recommendation |
+Severities: CRITICAL (blocks gate) / HIGH / MEDIUM / LOW. Then an
+AC/SC ↔ tasks coverage table. Final verdict:
+- **FIT FOR GATE** — no CRITICAL and no unjustified HIGH.
+- **DO NOT PASS THE GATE** — there are CRITICAL (or unjustified HIGH)
+  findings; prioritized list of corrections. The changes are applied by the
+  create-review-improve cycle, never by this skill.

@@ -1,43 +1,44 @@
 ---
 name: clarify
-description: Resuelve las ambigüedades de un requerimiento o spec con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec. Usar entre el triage F0 y F1, cuando pidan "clarificar el requerimiento", o cuando una spec tenga marcadores [NECESITA CLARIFICACIÓN].
-argument-hint: "<ruta-de-la-spec | descripción del requerimiento>"
+description: Resolves the ambiguities of a requirement or spec with structured questions (max. 5) and records the answers in the spec's Clarifications section. Use between the F0 triage and F1, when asked to "clarify the requirement", or when a spec has [NEEDS CLARIFICATION] markers.
+argument-hint: "<spec-path | requirement description>"
 allowed-tools: Read Glob Grep Edit
 ---
 
-Clarifica: $ARGUMENTS
+Clarify: $ARGUMENTS
 
-## Paso 1 — Escaneo de ambigüedad
-Lee el requerimiento (o la spec y sus marcadores `[NECESITA CLARIFICACIÓN]`)
-junto con el contexto de la fábrica (repos.yaml, packs vigentes, as-is,
-knowledge/reglas-negocio.md). Evalúa cobertura por categoría — Clara /
-Parcial / Ausente:
-alcance y fuera de alcance · actores y permisos · flujo principal y
-alternativos · datos y entidades · reglas de negocio · dependencias
-externas · NFRs (volumen, latencia, disponibilidad) · seguridad/privacidad/
-regulatorio · casos límite · criterios de éxito medibles.
+## Step 1 — Ambiguity scan
+Read the requirement (or the spec and its `[NEEDS CLARIFICATION]` markers)
+together with the factory context (repos.yaml, current context packs, as-is,
+knowledge/reglas-negocio.md). Assess coverage per category — Clear /
+Partial / Absent:
+scope and out of scope · actors and permissions · main and alternative
+flows · data and entities · business rules · external dependencies ·
+NFRs (volume, latency, availability) · security/privacy/
+regulatory · edge cases · measurable success criteria.
 
-## Paso 2 — Preguntas (máximo 5)
-Solo pregunta lo que cumpla LAS TRES: (a) categoría Parcial/Ausente,
-(b) la respuesta cambia alcance, diseño o certificación, (c) no hay default
-razonable en el contexto cargado. Prioridad: alcance > seguridad/privacidad >
-UX > detalle técnico. Formato por pregunta: enunciado concreto + tabla de
-opciones (A, B, C… y "Otra") con la implicación de cada opción en una línea.
-Presenta las preguntas de una en una o en bloque según prefiera el usuario;
-lo demás NO se pregunta: se asume el default y se anota como supuesto.
+## Step 2 — Questions (maximum 5)
+Only ask what meets ALL THREE: (a) Partial/Absent category,
+(b) the answer changes scope, design or certification, (c) there is no
+reasonable default in the loaded context. Priority: scope > security/privacy >
+UX > technical detail. Format per question: concrete statement + options
+table (A, B, C… and "Other") with each option's implication in one line.
+Present the questions one at a time or as a block, whichever the user
+prefers; everything else is NOT asked: the default is assumed and noted as
+an assumption.
 
-## Paso 3 — Registrar
-Con las respuestas:
-1. Añade/actualiza en la spec la sección `## Clarificaciones` →
-   `### Sesión <fecha de hoy>` con formato `- P: <pregunta> → R: <respuesta>
-   (decide: <quién>)`.
-2. Integra cada respuesta en la sección de la spec que corresponda
-   (historias, análisis, fuera de alcance…) y elimina su marcador
-   `[NECESITA CLARIFICACIÓN]`.
-3. Ambigüedades detectadas pero no preguntadas (excedían el máximo o tenían
-   default): al bloque Supuestos del § Análisis, o como marcador si bloquean
-   (máximo 3 marcadores vivos en la spec).
+## Step 3 — Record
+With the answers:
+1. Add/update in the spec the section `## Clarifications` →
+   `### Session <today's date>` with format `- Q: <question> → A: <answer>
+   (decides: <who>)`.
+2. Integrate each answer into the corresponding section of the spec
+   (stories, analysis, out of scope…) and remove its
+   `[NEEDS CLARIFICATION]` marker.
+3. Ambiguities detected but not asked (they exceeded the maximum or had a
+   default): into the Assumptions block of the Analysis section, or as a
+   marker if they block (maximum 3 live markers in the spec).
 
-Si aún no existe spec (se clarifica un requerimiento previo a /spec-create),
-entrega el resumen de decisiones para que /spec-create lo incorpore desde F1.
-No modifiques nada fuera de la spec indicada.
+If no spec exists yet (a requirement prior to /spec-create is being
+clarified), deliver the summary of decisions so /spec-create incorporates
+it from F1. Do not modify anything outside the indicated spec.

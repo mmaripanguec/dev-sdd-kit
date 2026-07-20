@@ -1,43 +1,43 @@
 ---
 name: {{PACK}}
 description: >-
-  <qué es este repo en una frase y cuándo usar este pack: temas, módulos y
-  preguntas que responde — esta descripción es el GATILLO que hace que un
-  agente lo cargue cuando un requerimiento menciona el aplicativo>.
-  Lee ANTES el pack {{PREFIJO}}-sistema: el modelo mental y las uniones viven allí.
+  <what this repo is in one sentence and when to use this pack: topics,
+  modules and questions it answers — this description is the TRIGGER that
+  makes an agent load it when a requirement mentions the application>.
+  Read the {{PREFIJO}}-sistema pack FIRST: the mental model and the seams live there.
 version: 1.0.0
 generado_desde:
   {{REPO}}: {{SELLO}}
 verificado: {{FECHA}}
 ---
 
-> **Lee `{{PREFIJO}}-sistema` primero.** <Si otro pack corrigió algo que este
-> repo declara mal, la corrección va aquí arriba.>
+> **Read `{{PREFIJO}}-sistema` first.** <If another pack corrected something
+> this repo declares incorrectly, the correction goes here at the top.>
 
-# {{REPO}} — <nombre real / qué es>
+# {{REPO}} — <real name / what it is>
 
-<Qué es, qué NO es, stack y versión — con evidencia `archivo:línea`.>
+<What it is, what it is NOT, stack and version — with `file:line` evidence.>
 
-## Arranque y estructura
-<Entrypoint del proceso, wiring/registro de rutas, módulos reales — con
-`archivo:línea`. No el árbol de carpetas (eso está en el as-is): el CÓMO.>
+## Startup and structure
+<Process entrypoint, wiring/route registration, real modules — with
+`file:line`. Not the folder tree (that lives in the as-is): the HOW.>
 
-## ⭐ <El mecanismo central del repo>
-<El hallazgo que más cuesta descubrir leyendo, con su cadena de evidencia
-completa paso a paso (`archivo:línea` en cada eslabón).>
+## ⭐ <The repo's core mechanism>
+<The finding that is hardest to discover by reading, with its complete
+step-by-step evidence chain (`file:line` at every link).>
 
-## <Secciones por tema>
-<Endpoints, datos, integraciones, config por ambiente... solo lo que un
-agente necesita para trabajar SIN releer todo el repo.>
+## <Sections by topic>
+<Endpoints, data, integrations, per-environment config... only what an
+agent needs to work WITHOUT re-reading the whole repo.>
 
-## Trampas — no caigas en estas
-| Afirmación falsa | Realidad |
+## Pitfalls — do not fall for these
+| False claim | Reality |
 |---|---|
-| <error que cometería quien no leyó el código, o que este pack cometió antes> | <realidad, con evidencia> |
+| <mistake someone who has not read the code would make, or that this pack made before> | <reality, with evidence> |
 
-## Qué NO sé
-- <límites explícitos: qué no se exploró, qué es inferencia y no hecho>
+## What I do NOT know
+- <explicit limits: what was not explored, what is inference and not fact>
 
-**Este pack no demuestra su completitud.** Si conoces el repo y algo te
-chirría, probablemente el pack esté mal, no tú: corrígelo y convierte la
-corrección en aserción (`scripts/afirmaciones.d/{{SISTEMA}}.sh`).
+**This pack does not prove its own completeness.** If you know the repo and
+something feels off, the pack is probably wrong, not you: fix it and turn
+the correction into an assertion (`scripts/afirmaciones.d/{{SISTEMA}}.sh`).

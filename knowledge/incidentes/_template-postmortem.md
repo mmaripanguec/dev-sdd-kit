@@ -1,26 +1,26 @@
-# Postmortem: <título> (INC-NNNN)
-> Formato: Google SRE — postmortem sin culpables. Las personas no fallan;
-> los sistemas y procesos permiten el fallo.
+# Postmortem: <title> (INC-NNNN)
+> Format: Google SRE — blameless postmortem. People do not fail;
+> systems and processes allow the failure.
 
-- **Fecha / Duración / Severidad:**
-- **Servicios afectados / Impacto a usuarios:** (números, no adjetivos)
-- **Detección:** cómo nos enteramos (alerta, cliente, azar) y cuánto tardó.
-- **MTTR:** __ (registrar también en knowledge/uso.md)
+- **Date / Duration / Severity:**
+- **Affected services / User impact:** (numbers, not adjectives)
+- **Detection:** how we found out (alert, customer, chance) and how long it took.
+- **MTTR:** __ (also record it in knowledge/uso.md)
 
-## Cronología (timestamps)
-- HH:MM — primer síntoma …
-- HH:MM — mitigación aplicada …
+## Timeline (timestamps)
+- HH:MM — first symptom …
+- HH:MM — mitigation applied …
 
-## Causa raíz (5 porqués)
-1. ¿Por qué falló? …
-2. ¿Por qué …? …
-(distinguir causa raíz de factores contribuyentes)
+## Root cause (5 whys)
+1. Why did it fail? …
+2. Why …? …
+(distinguish root cause from contributing factors)
 
-## Qué funcionó / Qué no funcionó
-## Acciones correctivas
-| Acción | Tipo (prevenir/detectar/mitigar) | Dueño | Fecha | Test/regla generada |
+## What worked / What did not work
+## Corrective actions
+| Action | Type (prevent/detect/mitigate) | Owner | Date | Test/rule generated |
 |---|---|---|---|---|
 
-## Cierre del ciclo
-Qué spec, regla (.claude/rules/ o knowledge/reglas-negocio.md) o criterio de
-aceptación futuro se actualiza con lo aprendido.
+## Closing the loop
+Which spec, rule (.claude/rules/ or knowledge/reglas-negocio.md) or future
+acceptance criterion is updated with what was learned.

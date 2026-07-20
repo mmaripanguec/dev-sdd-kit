@@ -3,18 +3,18 @@ paths:
   - "src/api/**"
   - "**/openapi*.{yaml,yml,json}"
 ---
-# Diseño de APIs
-> Base: service domains (capacidades de negocio) · Google AIP (aip.dev) · REST
+# API design
+> Base: service domains (business capabilities) · Google AIP (aip.dev) · REST
 
-- Cada API pertenece a UN dominio de servicio: una capacidad de negocio con
-  límites claros, sin solapamiento con otros dominios. Nombrarla por la capacidad
-  (p.ej. `order-management`, `user-profile`), no por la tabla o el equipo.
-- Contrato primero: OpenAPI versionado en el repo ANTES de implementar; el contrato
-  es parte de la spec y cambia por ADR si rompe compatibilidad.
-- Recursos y verbos según Google AIP: sustantivos en plural, verbos HTTP estándar,
-  errores con formato único (código, mensaje accionable, correlation-id).
-- Versionado explícito (`/v1/`); los cambios incompatibles crean versión nueva,
-  nunca mutan la existente.
-- Idempotencia obligatoria (idempotency-key) en operaciones no reintentables
-  con efectos externos; el perfil del dominio puede ampliar la lista
-  (ver rules/domain-banking.md para repos con `domain: banking`).
+- Every API belongs to ONE service domain: a business capability with clear
+  boundaries, no overlap with other domains. Name it by the capability
+  (e.g. `order-management`, `user-profile`), not by the table or the team.
+- Contract first: versioned OpenAPI in the repo BEFORE implementing; the contract
+  is part of the spec and changes via ADR if it breaks compatibility.
+- Resources and verbs per Google AIP: plural nouns, standard HTTP verbs,
+  errors with a single format (code, actionable message, correlation-id).
+- Explicit versioning (`/v1/`); incompatible changes create a new version,
+  never mutate the existing one.
+- Idempotency mandatory (idempotency-key) on non-retryable operations
+  with external effects; the domain profile may extend the list
+  (see rules/domain-banking.md for repos with `domain: banking`).

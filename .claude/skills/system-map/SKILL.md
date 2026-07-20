@@ -1,46 +1,46 @@
 ---
 name: system-map
-description: Genera o actualiza el PACK DE SISTEMA (<prefijo>-sistema, las uniones y el modelo mental que no viven en ningún repo) y el índice mapa-sistemas. Usar cuando el sistema tenga ≥2 repos con packs, cuando pidan "el mapa del sistema"/"cómo se conectan los repos", o cuando /spec-create detecte que falta el pack de sistema.
+description: Generates or updates the SYSTEM PACK (<prefijo>-sistema, the junctions and the mental model that live in no repo) and the mapa-sistemas index. Use when the system has ≥2 repos with packs, when asked for "the system map"/"how the repos connect", or when /spec-create detects the system pack is missing.
 argument-hint: "[foco opcional]"
 allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/frescura.sh *) Bash(./scripts/afirmaciones.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
-Genera `.claude/skills/<prefijo>-sistema/SKILL.md` (prefijo =
-`registry_pack_prefix` de repo-lib) y actualiza el índice
-`.claude/skills/mapa-sistemas/SKILL.md`. El pack de sistema lleva **lo que
-no vive en ningún repo**: el modelo mental y las uniones.
+Generate `.claude/skills/<prefijo>-sistema/SKILL.md` (prefix =
+`registry_pack_prefix` from repo-lib) and update the index
+`.claude/skills/mapa-sistemas/SKILL.md`. The system pack carries **what
+lives in no repo**: the mental model and the junctions.
 
-## 1. Insumos
-1. Registro completo (repos.yaml) + sellos actuales (`stamp_of_repo`).
-2. as-is del sistema: `knowledge/as-is/system.md` (grafo cross-repo) — 
-   regenerar si está viejo.
-3. Los packs por repo existentes (`<prefijo>-*`): las uniones nacen de
-   cruzar sus dos extremos. Si falta el pack de un repo central, genera
-   primero ese con /repo-map (o pregunta al humano si priorizar).
-4. Verificación de cada unión EN AMBOS EXTREMOS del código: una flecha
-   afirmada por un solo lado es hipótesis, no hecho.
+## 1. Inputs
+1. Full registry (repos.yaml) + current seals (`stamp_of_repo`).
+2. System as-is: `knowledge/as-is/system.md` (cross-repo graph) —
+   regenerate if it is old.
+3. The existing per-repo packs (`<prefijo>-*`): the junctions are born from
+   crossing their two ends. If the pack of a central repo is missing, generate
+   that one first with /repo-map (or ask the human whether to prioritize).
+4. Verification of each junction AT BOTH ENDS of the code: an arrow
+   asserted by only one side is a hypothesis, not a fact.
 
-## 2. Escribir el pack de sistema
-- Plantilla: `templates/pack-sistema.md`; frontmatter `generado_desde:` con
-  TODOS los repos y sus sellos; `verificado:` hoy.
-- El ⭐ modelo mental es LA afirmación que cambia cómo se entiende el
-  sistema (con su cadena de evidencia cross-repo). Si aún no hay una,
-  dilo honestamente: "todavía no encuentro la afirmación central".
-- "Trampas" y "Qué NO sé" nunca vacías. Presupuesto ~150 líneas;
-  detalle a `references/`.
+## 2. Write the system pack
+- Template: `templates/pack-sistema.md`; frontmatter `generado_desde:` with
+  ALL repos and their seals; `verificado:` today.
+- The ⭐ mental model is THE claim that changes how the system is
+  understood (with its cross-repo evidence chain). If there is not one yet,
+  say so honestly: "I have not yet found the central claim".
+- "Pitfalls" and "What I DON'T know" never empty. Budget ~150 lines;
+  detail goes to `references/`.
 
-## 3. Índice mapa-sistemas
-- Plantilla: `templates/pack-indice.md`: tabla de sistemas con estado del
-  contexto REAL (qué packs existen, cuáles vigentes — usa
-  `scripts/frescura.sh comprobar` y `scripts/afirmaciones.sh`), por dónde
-  empezar, y "Qué NO sé".
+## 3. mapa-sistemas index
+- Template: `templates/pack-indice.md`: table of systems with the REAL
+  context state (which packs exist, which are current — use
+  `scripts/frescura.sh comprobar` and `scripts/afirmaciones.sh`), where
+  to start, and "What I DON'T know".
 
-## 4. Aserciones, verificación y cierre
-- Cada unión importante → aserción en `scripts/afirmaciones.d/<sistema>.sh`
-  (idealmente una por extremo). Correr la suite: verde obligatorio.
-- `scripts/frescura.sh comprobar` en verde para los packs tocados.
-- INCONSISTENCIAS (el grafo del as-is contradice un pack, una unión no se
-  confirma en el otro extremo, un ADR queda desmentido): DETENTE Y
-  PREGUNTA. Nunca normalices en silencio.
+## 4. Assertions, verification and closure
+- Each important junction → assertion in `scripts/afirmaciones.d/<sistema>.sh`
+  (ideally one per end). Run the suite: green is mandatory.
+- `scripts/frescura.sh comprobar` green for the touched packs.
+- INCONSISTENCIES (the as-is graph contradicts a pack, a junction is not
+  confirmed at the other end, an ADR is refuted): STOP AND
+  ASK. Never normalize silently.
 - Commit: `docs(packs): pack de sistema <prefijo>-sistema + indice`.
-- Resumen final: modelo mental + mapa de flechas verificadas + qué falta.
+- Final summary: mental model + map of verified arrows + what is missing.

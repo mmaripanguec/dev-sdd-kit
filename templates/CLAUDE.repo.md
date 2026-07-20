@@ -1,22 +1,22 @@
-# {{REPO}} · Contexto del repositorio
+# {{REPO}} · Repository context
 
-> Este archivo carga cuando Claude trabaja con archivos de ESTE repo.
-> El contexto del sistema completo vive en el workspace (../../CLAUDE.md)
-> y su topología en el registro (../../repos.yaml).
+> This file loads when Claude works with files of THIS repo.
+> The full-system context lives in the workspace (../../CLAUDE.md)
+> and its topology in the registry (../../repos.yaml).
 
-## Rol en el sistema
-<completar: qué hace este repo dentro del sistema — debe coincidir con el
-campo `role` de su entrada en repos.yaml del workspace>
+## Role in the system
+<fill in: what this repo does within the system — must match the
+`role` field of its entry in the workspace's repos.yaml>
 
-## Comandos de ESTE repo
-- Instalar: `<completar>`
-- Dev: `<completar>`
-- Tests: `<completar>` — antes de cada commit
-- Lint: `<completar>`
+## Commands of THIS repo
+- Install: `<fill in>`
+- Dev: `<fill in>`
+- Tests: `<fill in>` — before every commit
+- Lint: `<fill in>`
 
-## Convenciones locales
-- <completar: estructura interna, patrones propios de este repo>
+## Local conventions
+- <fill in: internal structure, patterns specific to this repo>
 
-## Contratos que expone / consume
-- Expone: <completar o "ver knowledge/as-is/{{REPO}}/api-surface.md del workspace">
-- Consume: <completar>
+## Contracts it exposes / consumes
+- Exposes: <fill in or "see knowledge/as-is/{{REPO}}/api-surface.md in the workspace">
+- Consumes: <fill in>

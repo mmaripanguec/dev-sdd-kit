@@ -1,22 +1,22 @@
-# Mapa de estándares de la fábrica
-> Qué marco de referencia gobierna cada artefacto, para auditoría y onboarding.
+# Factory standards map
+> Which reference framework governs each artifact, for audit and onboarding.
 
-| Área | Estándar / Fuente | Dónde está aplicado |
+| Area | Standard / Source | Where it is applied |
 |---|---|---|
-| Ciclo agéntico y harness | Anthropic — Effective harnesses for long-running agents; Claude Code (CLAUDE.md, skills, subagents) | CLAUDE.md, .claude/*, harness/ |
-| Desarrollo seguro | NIST SP 800-218 (SSDF: grupos PO/PS/PW/RV) + SP 800-218A (GenAI) | .claude/rules/security.md, agentes calidad y publicacion |
-| Riesgo de IA | NIST AI RMF (govern/map/measure/manage) | gates humanos + settings.json (enforcement) |
-| Seguridad de aplicaciones | OWASP Top 10 / ASVS; Microsoft SDL (threat modeling STRIDE) | rules/security.md, agente arquitectura (F5), agente calidad (F7) |
-| Perfil de dominio bancario (OPCIONAL: repos con `domain: banking` en repos.yaml) | BIAN Service Landscape (service domains, semantic APIs, ISO 20022) | rules/domain-banking.md, agentes requisitos y arquitectura, campo "Dominio de negocio" de la spec |
-| Diseño de APIs | Google AIP / REST | rules/api-design.md |
-| Documentación de decisiones | ADR (Michael Nygard); C4 model (Simon Brown) | knowledge/decisiones/, agente arquitectura |
-| Historias y criterios | INVEST (Bill Wake); Gherkin/BDD | agente requisitos (F1), spec-review (DoR) |
-| Priorización | WSJF (SAFe) | agente estimacion (F2) |
-| Calidad de producto | ISO/IEC 25010 | agente calidad (F7), rules/testing.md |
-| Estilo y revisión de código | Google Style Guides + Google eng-practices | rules/code-style.md |
-| Confiabilidad | Google SRE: señales doradas, SLOs, error budgets, postmortems sin culpables | rules/observability.md, agente operacion, plantilla postmortem |
-| Desempeño de entrega | DORA four keys (DevOps Research & Assessment) | knowledge/uso.md, expediente CAB |
-| Gestión del cambio | ITIL 4 change enablement (CAB) | agente publicacion (F8) |
-| Cadena de suministro | NIST SSDF grupo PS: SBOM, dependencias, firmas | agente publicacion, rules/security.md |
-| Operating model de fábrica | Developer Velocity (McKinsey), SPACE (Microsoft/GitHub), platform engineering (Gartner) | knowledge/uso.md + gobernanza del contexto compartido |
-| Contexto persistente as-is | Docs-as-code + generación derivada (evitar drift); fitness functions (dependency-cruiser/ArchUnit); sello de commit | scripts/generate-as-is.sh, knowledge/as-is/, hook Stop, CI as-is-drift.yml, skills /as-is y /as-is-sync |
+| Agentic cycle and harness | Anthropic — Effective harnesses for long-running agents; Claude Code (CLAUDE.md, skills, subagents) | CLAUDE.md, .claude/*, harness/ |
+| Secure development | NIST SP 800-218 (SSDF: PO/PS/PW/RV groups) + SP 800-218A (GenAI) | .claude/rules/security.md, quality and release agents |
+| AI risk | NIST AI RMF (govern/map/measure/manage) | human gates + settings.json (enforcement) |
+| Application security | OWASP Top 10 / ASVS; Microsoft SDL (STRIDE threat modeling) | rules/security.md, architecture agent (F5), quality agent (F7) |
+| Banking domain profile (OPTIONAL: repos with `domain: banking` in repos.yaml) | BIAN Service Landscape (service domains, semantic APIs, ISO 20022) | rules/domain-banking.md, requirements and architecture agents, the spec's "Business domain" field |
+| API design | Google AIP / REST | rules/api-design.md |
+| Decision documentation | ADR (Michael Nygard); C4 model (Simon Brown) | knowledge/decisiones/, architecture agent |
+| Stories and criteria | INVEST (Bill Wake); Gherkin/BDD | requirements agent (F1), spec-review (DoR) |
+| Prioritization | WSJF (SAFe) | estimation agent (F2) |
+| Product quality | ISO/IEC 25010 | quality agent (F7), rules/testing.md |
+| Code style and review | Google Style Guides + Google eng-practices | rules/code-style.md |
+| Reliability | Google SRE: golden signals, SLOs, error budgets, blameless postmortems | rules/observability.md, operations agent, postmortem template |
+| Delivery performance | DORA four keys (DevOps Research & Assessment) | knowledge/uso.md, CAB dossier |
+| Change management | ITIL 4 change enablement (CAB) | release agent (F8) |
+| Supply chain | NIST SSDF PS group: SBOM, dependencies, signatures | release agent, rules/security.md |
+| Factory operating model | Developer Velocity (McKinsey), SPACE (Microsoft/GitHub), platform engineering (Gartner) | knowledge/uso.md + shared-context governance |
+| Persistent as-is context | Docs-as-code + derived generation (avoid drift); fitness functions (dependency-cruiser/ArchUnit); commit seal | scripts/generate-as-is.sh, knowledge/as-is/, Stop hook, CI as-is-drift.yml, /as-is and /as-is-sync skills |

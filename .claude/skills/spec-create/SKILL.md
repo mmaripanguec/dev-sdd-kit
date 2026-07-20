@@ -1,58 +1,58 @@
 ---
 name: spec-create
-description: Genera una spec de feature por capas (F1-F5) usando la plantilla de la fábrica. Usar cuando alguien pida "crear spec", "especificar feature" o describa funcionalidad nueva antes de implementarla.
+description: Generates a layered feature spec (F1-F5) using the factory template. Use when someone asks to "create spec", "specify feature" or describes new functionality before implementing it.
 argument-hint: "<nombre-feature> [descripción breve]"
 allowed-tools: Read Glob Grep Write
 ---
 
-## Contexto
-- Specs existentes: !`ls specs/ 2>/dev/null`
-- Repos registrados: !`. scripts/repo-lib.sh 2>/dev/null && registry_repos | tr '\n' ' '`
-- Reglas de negocio vigentes: ver knowledge/reglas-negocio.md
+## Context
+- Existing specs: !`ls specs/ 2>/dev/null`
+- Registered repos: !`. scripts/repo-lib.sh 2>/dev/null && registry_repos | tr '\n' ' '`
+- Current business rules: see knowledge/reglas-negocio.md
 
-## PASO 0 — Triage del requerimiento (OBLIGATORIO antes de F1)
+## STEP 0 — Requirement triage (MANDATORY before F1)
 
-**0.1 Clasificar** contra repos.yaml y el índice `mapa-sistemas`:
-- **A · Aplicativo EXISTENTE**: el requerimiento toca repos registrados.
-  Identifica CUÁLES y regístralo en la spec (campo "Tipo de requerimiento").
-- **B · Aplicación NUEVA**: no existe repo. La spec lo declara; el stack y
-  la arquitectura se deciden en F5, y el plan de tareas parte con una T0 de
-  creación (crear repo → /repo-add → scaffolding → as-is y pack al nacer).
-- **Mixto**: combinación; aplica ambos protocolos.
-- Si no puedes clasificar con certeza: PREGUNTA al usuario. No asumas.
+**0.1 Classify** against repos.yaml and the `mapa-sistemas` index:
+- **A · EXISTING application**: the requirement touches registered repos.
+  Identify WHICH ones and record it in the spec ("Requirement type" field).
+- **B · NEW application**: no repo exists. The spec declares it; the stack and
+  the architecture are decided in F5, and the task plan starts with a T0 for
+  creation (create repo → /repo-add → scaffolding → as-is and pack at birth).
+- **Mixed**: a combination; apply both protocols.
+- If you cannot classify with certainty: ASK the user. Do not assume.
 
-**0.2 Cargar contexto (escenario A)**: por cada repo afectado, carga su
-pack (`<prefijo>-<repo>`) y el pack de sistema (`<prefijo>-sistema`).
-- ¿No existe el pack? → génera con /repo-map (o /system-map) ANTES de F1.
-- ¿Existe? → valida vigencia: `scripts/frescura.sh comprobar <pack>` y
-  `scripts/afirmaciones.sh <sistema>`. Caduco → regenerar antes de seguir.
+**0.2 Load context (scenario A)**: for each affected repo, load its
+pack (`<prefijo>-<repo>`) and the system pack (`<prefijo>-sistema`).
+- Pack doesn't exist? → generate it with /repo-map (or /system-map) BEFORE F1.
+- It exists? → validate freshness: `scripts/frescura.sh comprobar <pack>` and
+  `scripts/afirmaciones.sh <sistema>`. Stale → regenerate before continuing.
 
-**0.3 Dependencias — preguntar, NUNCA asumir**: si las historias, el as-is
-o los packs revelan que el aplicativo depende de otro sistema/servicio:
-- ¿Está registrado en repos.yaml? NO → **DETENTE Y PREGUNTA** al usuario
-  cuál es su repositorio (URL/ruta) o si queda explícitamente fuera de
-  alcance. Con la respuesta: /repo-add + /repo-map de la dependencia.
-- SÍ → valida que su pack exista y esté vigente (como en 0.2).
-- Cualquier INCONSISTENCIA (pack contradice código o registro, aserción
-  falsa, dependencia declarada que no aparece en el código o viceversa):
-  **SIEMPRE PREGUNTA**; nunca normalices en silencio.
+**0.3 Dependencies — ask, NEVER assume**: if the stories, the as-is
+or the packs reveal that the application depends on another system/service:
+- Is it registered in repos.yaml? NO → **STOP AND ASK** the user
+  which is its repository (URL/path) or whether it is explicitly out of
+  scope. With the answer: /repo-add + /repo-map for the dependency.
+- YES → validate that its pack exists and is current (as in 0.2).
+- Any INCONSISTENCY (pack contradicts code or registry, false
+  assertion, declared dependency that does not appear in the code or vice
+  versa): **ALWAYS ASK**; never normalize silently.
 
-**0.4 Ambigüedad del requerimiento**: si el pedido admite interpretaciones
-que cambian alcance, diseño o certificación, corre /clarificar ANTES de F1;
-sus decisiones alimentan la spec y quedan en su sección Clarificaciones.
+**0.4 Requirement ambiguity**: if the request admits interpretations
+that change scope, design or certification, run /clarify BEFORE F1;
+its decisions feed the spec and are recorded in its Clarifications section.
 
-## Tarea
-Crea `specs/$(date +%Y-%m)-$0.md` a partir de [specs/_template.md](../../../specs/_template.md):
+## Task
+Create `specs/$(date +%Y-%m)-$0.md` from [specs/_template.md](../../../specs/_template.md):
 
-1. Delega la redacción de historias al subagente `requisitos` (fase 1).
-2. Con las historias aprobadas por PO/TL, delega estimación al subagente
-   `estimacion` (fase 2).
-3. Itera refinamiento con /spec-review hasta cumplir la DoR, y cierra la
-   fase con /consistencia en veredicto APTO PARA GATE (fase 3).
-4. Delega análisis (reglas, dependencias, casos límite) al subagente
-   `analisis` (fase 4).
-5. Delega diseño (contratos, C4, ADRs) al subagente `arquitectura` (fase 5).
+1. Delegate story writing to the `requirements` subagent (phase 1).
+2. With the stories approved by PO/TL, delegate estimation to the
+   `estimation` subagent (phase 2).
+3. Iterate refinement with /spec-review until the DoR is met, and close the
+   phase with /consistency at a FIT FOR GATE verdict (phase 3).
+4. Delegate analysis (rules, dependencies, edge cases) to the
+   `analysis` subagent (phase 4).
+5. Delegate design (contracts, C4, ADRs) to the `architecture` subagent (phase 5).
 
-En cada gate humano: DETENTE, presenta el resumen del agente y espera
-aprobación explícita. Registra en la spec quién aprobó y cuándo.
-No escribas código. No modifiques archivos fuera de specs/ y knowledge/.
+At each human gate: STOP, present the agent's summary and wait for
+explicit approval. Record in the spec who approved and when.
+Do not write code. Do not modify files outside specs/ and knowledge/.

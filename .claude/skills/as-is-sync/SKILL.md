@@ -1,20 +1,20 @@
 ---
 name: as-is-sync
-description: Regenera el mapa as-is desde el código y commitea el resultado. Usar tras cambios estructurales (módulos nuevos, endpoints, migraciones) o cuando /as-is detecte desactualización.
+description: Regenerates the as-is map from the code and commits the result. Use after structural changes (new modules, endpoints, migrations) or when /as-is detects it is out of date.
 allowed-tools: Bash(./scripts/generate-as-is.sh *) Bash(git add knowledge/as-is/*) Bash(git commit *) Bash(git diff *) Read
 ---
 
-1. Ejecuta `./scripts/generate-as-is.sh`.
-2. Revisa `git diff knowledge/as-is/` y resume EN LENGUAJE DE ARQUITECTURA
-   qué cambió realmente: módulo nuevo, dependencia nueva entre dominios,
-   endpoint añadido/retirado, migración de esquema.
-3. VALIDACIÓN CRÍTICA — compara los cambios contra las reglas:
-   - ¿Una dependencia nueva viola límites de service domain
-     (rules/api-design.md) o algún ADR vigente? → repórtalo como drift
-     arquitectónico y ESCALA al gate de Arquitectura. No lo normalices
-     commiteándolo en silencio.
-   - ¿Apareció un endpoint sin contrato OpenAPI? → márcalo como deuda.
-4. Si todo es legítimo: commit
-   `chore(as-is): sincroniza mapa con <commit> — <resumen de 1 línea>`.
-5. Si detectaste drift arquitectónico: commitea el mapa igualmente (el as-is
-   SIEMPRE dice la verdad) pero deja el hallazgo registrado para el gate.
+1. Run `./scripts/generate-as-is.sh`.
+2. Review `git diff knowledge/as-is/` and summarize IN ARCHITECTURE LANGUAGE
+   what actually changed: new module, new dependency between domains,
+   endpoint added/removed, schema migration.
+3. CRITICAL VALIDATION — compare the changes against the rules:
+   - Does a new dependency violate service domain boundaries
+     (rules/api-design.md) or any current ADR? → report it as architectural
+     drift and ESCALATE to the Architecture gate. Do not normalize it
+     by committing it silently.
+   - Did an endpoint appear without an OpenAPI contract? → flag it as debt.
+4. If everything is legitimate: commit
+   `chore(as-is): sync map with <commit> — <1-line summary>`.
+5. If you detected architectural drift: commit the map anyway (the as-is
+   ALWAYS tells the truth) but leave the finding recorded for the gate.

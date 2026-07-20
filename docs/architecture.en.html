@@ -71,11 +71,12 @@
 
 <main>
 
-<div class="lang-note">🌐 The factory's <strong>working language is
-Spanish</strong>: catalog entries injected below (skill descriptions,
-business rules, DORA table) appear verbatim in Spanish, as they are read
-from the live workspace. The structure, labels and prose of this document
-are in English. Spanish edition: <a href="arquitectura.html">arquitectura.html</a>.</div>
+<div class="lang-note">🌐 The factory's machinery is <strong>fully in
+English</strong>; each workspace picks its working language at
+<code>init-system.sh</code> (<code>system.lang</code>). The catalog below is
+read live from this workspace, so instance-authored entries (spec titles,
+DORA rows) appear in the instance's own language. Spanish edition:
+<a href="arquitectura.html">arquitectura.html</a>.</div>
 
 <h2 id="architecture">1 · Architecture</h2>
 
@@ -113,23 +114,23 @@ which commit).</p>
 <tr><th>Phase</th><th>Name</th><th>Executed by</th><th>Produces</th><th>Gate</th></tr>
 <tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarify</code></td>
     <td>Classification (existing / new / mixed), context packs loaded, ambiguities resolved and traced</td><td>—</td></tr>
-<tr><td>F1</td><td>Requirements</td><td><code>requisitos</code> agent</td>
+<tr><td>F1</td><td>Requirements</td><td><code>requirements</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
-<tr><td>F2</td><td>Estimation</td><td><code>estimacion</code> agent</td>
+<tr><td>F2</td><td>Estimation</td><td><code>estimation</code> agent</td>
     <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
-<tr><td>F4</td><td>Analysis</td><td><code>analisis</code> agent</td>
+<tr><td>F4</td><td>Analysis</td><td><code>analysis</code> agent</td>
     <td>Business rules RN-xx, dependencies, edge cases, regulatory</td><td>—</td></tr>
-<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistency</code></td>
+<tr><td>F5</td><td>Design</td><td><code>architecture</code> agent + <code>/consistency</code></td>
     <td>OpenAPI contracts, C4 diagrams, ADRs, STRIDE threat model, NFRs</td><td class="gate">Architecture</td></tr>
 <tr><td>F6</td><td>Construction</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Code built with TDD, one commit per task IN its repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>calidad</code> agent</td>
+<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>quality</code> agent</td>
     <td>Code↔spec convergence + traceable verdict</td><td class="gate">QA/PR</td></tr>
-<tr><td>F8</td><td>Release</td><td><code>publicacion</code> agent</td>
+<tr><td>F8</td><td>Release</td><td><code>release</code> agent</td>
     <td>Risk dossier (ITIL) with tested rollback and SBOM</td><td class="gate">CAB board</td></tr>
-<tr><td>F9</td><td>Operations</td><td><code>operacion</code> agent</td>
+<tr><td>F9</td><td>Operations</td><td><code>operations</code> agent</td>
     <td>Golden signals, blameless postmortems, DORA metrics</td><td class="gate">DevOps/SRE</td></tr>
 </table></div>
 
@@ -166,20 +167,20 @@ the system. No script or skill hardcodes repo names (rule RN-G1).</p>
 description is the auto-load trigger.</p>
 <div class="wide"><table>
 <tr><th>Command</th><th>What it does (frontmatter)</th></tr>
-<tr><td><code>/as-is-learn</code></td><td>Analiza los repos REALES para aprender como se definen y consumen las rutas, escribe extractores exactos por repo y regenera el mapa as-is. Usar cuando el grafo cross-repo salga vacio o incompleto, o cuando cambie el framework de un repo.</td></tr>
-<tr><td><code>/as-is-sync</code></td><td>Regenera el mapa as-is desde el código y commitea el resultado. Usar tras cambios estructurales (módulos nuevos, endpoints, migraciones) o cuando /as-is detecte desactualización.</td></tr>
-<tr><td><code>/as-is</code></td><td>Consulta el mapa as-is real del repositorio (módulos, dependencias, APIs, datos). Usar cuando pregunten cómo está estructurada la aplicación, qué depende de qué, qué APIs existen, o antes de diseñar (F5).</td></tr>
-<tr><td><code>/clarify</code></td><td>Resuelve las ambigüedades de un requerimiento o spec con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec. Usar entre el triage F0 y F1, cuando pidan &quot;clarificar el requerimiento&quot;, o cuando una spec tenga marcadores [NECESITA CLARIFICACIÓN].</td></tr>
-<tr><td><code>/consistency</code></td><td>Análisis read-only de consistencia cruzada entre una spec y el resto de artefactos de la fábrica (reglas de negocio, ADRs, as-is, reglas .claude/rules, plan de tareas). Usar antes del gate DoR y del gate de Arquitectura, o cuando pidan &quot;analizar consistencia&quot; de una spec.</td></tr>
-<tr><td><code>/converge</code></td><td>Cierra la brecha funcional código↔spec al terminar la construcción (F6/F7) — evalúa el código real contra las historias y criterios de la spec y AÑADE el trabajo restante como tareas de convergencia. Usar antes de la certificación F7 o cuando pidan &quot;convergir la spec&quot; / &quot;qué falta de la spec&quot;.</td></tr>
-<tr><td><code>/harness-init</code></td><td>Prepara el harness de una feature grande o multi-sesión, derivado de su spec aprobada (patrón initializer de Anthropic).</td></tr>
-<tr><td><code>/implement-task</code></td><td>Ejecuta UNA tarea del plan de una spec con protocolo TDD estricto (F6 Construcción). Usar para implementar tareas una a una.</td></tr>
-<tr><td><code>/orchestrate</code></td><td>Recorre el ciclo E2E de 9 fases para una feature, delegando en los agentes por fase y deteniéndose en cada gate humano. Solo invocable por humanos.</td></tr>
-<tr><td><code>/repo-add</code></td><td>Da de alta un repositorio en la fábrica (URL git o ruta local): clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el mapa as-is. Usar cuando pidan &quot;agregar/ingresar/onboarding de un repo&quot; o &quot;configurar el análisis de un repositorio&quot;.</td></tr>
-<tr><td><code>/repo-map</code></td><td>Genera o actualiza el PACK DE CONTEXTO de un repositorio (skill cargable .claude/skills/&lt;prefijo&gt;-&lt;repo&gt;) — arquitectura, mecanismos centrales, dependencias y trampas con evidencia archivo:línea — y siembra sus aserciones. Usar cuando pidan &quot;mapear un repo&quot;, &quot;generar el contexto del repo&quot;, cuando /spec-create detecte un repo sin pack o con pack caduco, o después de /repo-add.</td></tr>
-<tr><td><code>/spec-create</code></td><td>Genera una spec de feature por capas (F1-F5) usando la plantilla de la fábrica. Usar cuando alguien pida &quot;crear spec&quot;, &quot;especificar feature&quot; o describa funcionalidad nueva antes de implementarla.</td></tr>
-<tr><td><code>/spec-review</code></td><td>Valida una spec contra la Definition of Ready de la fábrica. Usar antes del gate DoR o cuando pidan &quot;revisar spec&quot;.</td></tr>
-<tr><td><code>/system-map</code></td><td>Genera o actualiza el PACK DE SISTEMA (&lt;prefijo&gt;-sistema, las uniones y el modelo mental que no viven en ningún repo) y el índice mapa-sistemas. Usar cuando el sistema tenga ≥2 repos con packs, cuando pidan &quot;el mapa del sistema&quot;/&quot;cómo se conectan los repos&quot;, o cuando /spec-create detecte que falta el pack de sistema.</td></tr>
+<tr><td><code>/as-is-learn</code></td><td>Analyzes the REAL repos to learn how routes are defined and consumed, writes exact per-repo extractors and regenerates the as-is map. Use when the cross-repo graph comes out empty or incomplete, or when a repo&#x27;s framework changes.</td></tr>
+<tr><td><code>/as-is-sync</code></td><td>Regenerates the as-is map from the code and commits the result. Use after structural changes (new modules, endpoints, migrations) or when /as-is detects it is out of date.</td></tr>
+<tr><td><code>/as-is</code></td><td>Query the repository&#x27;s real as-is map (modules, dependencies, APIs, data). Use when asked how the application is structured, what depends on what, which APIs exist, or before designing (F5).</td></tr>
+<tr><td><code>/clarify</code></td><td>Resolves the ambiguities of a requirement or spec with structured questions (max. 5) and records the answers in the spec&#x27;s Clarifications section. Use between the F0 triage and F1, when asked to &quot;clarify the requirement&quot;, or when a spec has [NEEDS CLARIFICATION] markers.</td></tr>
+<tr><td><code>/consistency</code></td><td>Read-only cross-consistency analysis between a spec and the rest of the factory&#x27;s artifacts (business rules, ADRs, as-is, .claude/rules rules, task plan). Use before the DoR gate and the Architecture gate, or when asked to &quot;analyze consistency&quot; of a spec.</td></tr>
+<tr><td><code>/converge</code></td><td>Closes the functional code↔spec gap at the end of construction (F6/F7) — evaluates the real code against the spec&#x27;s stories and criteria and ADDS the remaining work as convergence tasks. Use before F7 certification or when asked to &quot;converge the spec&quot; / &quot;what is missing from the spec&quot;.</td></tr>
+<tr><td><code>/harness-init</code></td><td>Prepares the harness for a large or multi-session feature, derived from its approved spec (Anthropic&#x27;s initializer pattern).</td></tr>
+<tr><td><code>/implement-task</code></td><td>Executes ONE task from a spec&#x27;s plan with strict TDD protocol (F6 Construction). Use to implement tasks one at a time.</td></tr>
+<tr><td><code>/orchestrate</code></td><td>Walks the E2E 9-phase cycle for a feature, delegating to the per-phase agents and stopping at each human gate. Only invocable by humans.</td></tr>
+<tr><td><code>/repo-add</code></td><td>Onboards a repository into the factory (git URL or local path): clones, registers in repos.yaml, fills its CLAUDE.md with real data, indexes it in codebase-memory and regenerates the as-is map. Use when asked to &quot;add/onboard a repo&quot; or &quot;set up analysis for a repository&quot;.</td></tr>
+<tr><td><code>/repo-map</code></td><td>Generates or updates a repository&#x27;s CONTEXT PACK (loadable skill .claude/skills/&lt;prefijo&gt;-&lt;repo&gt;) — architecture, core mechanisms, dependencies and pitfalls with file:line evidence — and seeds its assertions. Use when asked to &quot;map a repo&quot;, &quot;generate the repo&#x27;s context&quot;, when /spec-create detects a repo without a pack or with a stale pack, or after /repo-add.</td></tr>
+<tr><td><code>/spec-create</code></td><td>Generates a layered feature spec (F1-F5) using the factory template. Use when someone asks to &quot;create spec&quot;, &quot;specify feature&quot; or describes new functionality before implementing it.</td></tr>
+<tr><td><code>/spec-review</code></td><td>Validates a spec against the factory&#x27;s Definition of Ready. Use before the DoR gate or when asked to &quot;review spec&quot;.</td></tr>
+<tr><td><code>/system-map</code></td><td>Generates or updates the SYSTEM PACK (&lt;prefijo&gt;-sistema, the junctions and the mental model that live in no repo) and the mapa-sistemas index. Use when the system has ≥2 repos with packs, when asked for &quot;the system map&quot;/&quot;how the repos connect&quot;, or when /spec-create detects the system pack is missing.</td></tr>
 </table></div>
 
 <h3>Per-phase subagents</h3>
@@ -187,13 +188,13 @@ description is the auto-load trigger.</p>
 context and only the tools its phase needs.</p>
 <div class="wide"><table>
 <tr><th>Agent</th><th>Phase and purpose</th></tr>
-<tr><td><code>analisis</code></td><td>Agente de análisis (F4 · Análisis). Extrae reglas de negocio, mapea dependencias y enumera casos límite antes del diseño.</td></tr>
-<tr><td><code>arquitectura</code></td><td>Agente de arquitectura (F5 · Diseño). Produce contratos entre sistemas, diagramas C4 y ADRs a partir de una spec analizada. Prepara el gate de Arquitectura.</td></tr>
-<tr><td><code>calidad</code></td><td>Agente de calidad (F7 · Certificación). Verifica cobertura, regresión y seguridad contra la spec con contexto limpio. Prepara el gate QA/PR.</td></tr>
-<tr><td><code>estimacion</code></td><td>Agente de estimación (F2 · Estimación). Mide alcance y dificultad de cada historia con story points y prioriza con WSJF.</td></tr>
-<tr><td><code>operacion</code></td><td>Agente de operación (F9 · Operación). Monitorea señales doradas, investiga causa raíz y escribe postmortems sin culpables que cierran el ciclo.</td></tr>
-<tr><td><code>publicacion</code></td><td>Agente de publicación (F8 · Paso a producción). Prepara el expediente de riesgo para el Comité CAB según ITIL y NIST SSDF.</td></tr>
-<tr><td><code>requisitos</code></td><td>Agente de requisitos (F1 · Requerimiento). Convierte una idea de negocio en historias de usuario INVEST con criterios de aceptación Gherkin. Prepara el gate PO/TL.</td></tr>
+<tr><td><code>analysis</code></td><td>Analysis agent (F4 · Analysis). Extracts business rules, maps dependencies and enumerates edge cases before design.</td></tr>
+<tr><td><code>architecture</code></td><td>Architecture agent (F5 · Design). Produces contracts between systems, C4 diagrams and ADRs from an analyzed spec. Prepares the Architecture gate.</td></tr>
+<tr><td><code>estimation</code></td><td>Estimation agent (F2 · Estimation). Measures scope and difficulty of each story with story points and prioritizes with WSJF.</td></tr>
+<tr><td><code>operations</code></td><td>Operations agent (F9 · Operation). Monitors golden signals, investigates root cause and writes blameless postmortems that close the loop.</td></tr>
+<tr><td><code>quality</code></td><td>Quality agent (F7 · Certification). Verifies coverage, regression and security against the spec with a clean context. Prepares the QA/PR gate.</td></tr>
+<tr><td><code>release</code></td><td>Release agent (F8 · Move to production). Prepares the risk dossier for the CAB board following ITIL and NIST SSDF.</td></tr>
+<tr><td><code>requirements</code></td><td>Requirements agent (F1 · Requirement). Turns a business idea into INVEST user stories with Gherkin acceptance criteria. Prepares the PO/TL gate.</td></tr>
 </table></div>
 
 <h3>Cross-cutting rules</h3>
@@ -201,12 +202,12 @@ context and only the tools its phase needs.</p>
 banking) activate only for repos that declare them in the registry.</p>
 <div class="wide"><table>
 <tr><th>File</th><th>Rule</th><th>Base standards</th></tr>
-<tr><td><code>api-design.md</code></td><td>Diseño de APIs</td><td>Base: service domains (capacidades de negocio) · Google AIP (aip.dev) · REST</td></tr>
-<tr><td><code>code-style.md</code></td><td>Estilo de código</td><td>Base: Google Style Guides (google.github.io/styleguide) · Google eng-practices (revisión de código)</td></tr>
-<tr><td><code>domain-banking.md</code></td><td>Perfil de dominio: banca</td><td>Aplica a los repos cuyo registro (`repos.yaml`) declara `domain: banking`.</td></tr>
-<tr><td><code>observability.md</code></td><td>Observabilidad y confiabilidad</td><td>Base: Google SRE (SLOs, error budgets, golden signals) · DORA</td></tr>
-<tr><td><code>security.md</code></td><td>Seguridad</td><td>Base: NIST SP 800-218 (SSDF) y 800-218A (GenAI) · Microsoft SDL · OWASP Top 10 / ASVS</td></tr>
-<tr><td><code>testing.md</code></td><td>Testing</td><td>Base: pirámide de tests (Google Testing Blog) · TDD (Beck) · ISO/IEC 25010</td></tr>
+<tr><td><code>api-design.md</code></td><td>API design</td><td>Base: service domains (business capabilities) · Google AIP (aip.dev) · REST</td></tr>
+<tr><td><code>code-style.md</code></td><td>Code style</td><td>Base: Google Style Guides (google.github.io/styleguide) · Google eng-practices (code review)</td></tr>
+<tr><td><code>domain-banking.md</code></td><td>Domain profile: banking</td><td>Applies to repos whose registry (`repos.yaml`) declares `domain: banking`.</td></tr>
+<tr><td><code>observability.md</code></td><td>Observability and reliability</td><td>Base: Google SRE (SLOs, error budgets, golden signals) · DORA</td></tr>
+<tr><td><code>security.md</code></td><td>Security</td><td>Base: NIST SP 800-218 (SSDF) and 800-218A (GenAI) · Microsoft SDL · OWASP Top 10 / ASVS</td></tr>
+<tr><td><code>testing.md</code></td><td>Testing</td><td>Base: test pyramid (Google Testing Blog) · TDD (Beck) · ISO/IEC 25010</td></tr>
 </table></div>
 
 <h3>Scripts</h3>
@@ -291,12 +292,12 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requirements</text>
-  <text class="sub" x="336" y="70" text-anchor="middle">requisitos agent</text>
+  <text class="sub" x="336" y="70" text-anchor="middle">requirements agent</text>
   <text class="sub" x="336" y="84" text-anchor="middle">INVEST stories P1–P3</text>
 
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
-  <text class="sub" x="540" y="70" text-anchor="middle">estimacion agent</text>
+  <text class="sub" x="540" y="70" text-anchor="middle">estimation agent</text>
   <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
@@ -306,7 +307,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="54" text-anchor="middle">F4 Analysis</text>
-  <text class="sub" x="948" y="70" text-anchor="middle">analisis agent</text>
+  <text class="sub" x="948" y="70" text-anchor="middle">analysis agent</text>
   <text class="sub" x="948" y="84" text-anchor="middle">rules · deps · edge cases</text>
 
   <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
@@ -340,7 +341,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- row B: F5 to F9 (the HOW: they obey and verify the spec) -->
   <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="286" text-anchor="middle">F5 Design</text>
-  <text class="sub" x="132" y="302" text-anchor="middle">arquitectura agent</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">architecture agent</text>
   <text class="sub" x="132" y="316" text-anchor="middle">contracts · C4 · STRIDE</text>
 
   <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
@@ -350,17 +351,17 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/converge · calidad agent</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · quality agent</text>
   <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="286" text-anchor="middle">F8 Release</text>
-  <text class="sub" x="744" y="302" text-anchor="middle">publicacion agent</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">release agent</text>
   <text class="sub" x="744" y="316" text-anchor="middle">risk dossier</text>
 
   <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operations</text>
-  <text class="sub" x="948" y="302" text-anchor="middle">operacion agent</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">operations agent</text>
   <text class="sub" x="948" y="316" text-anchor="middle">postmortems · golden signals</text>
 
   <line class="linea" x1="216" y1="300" x2="248" y2="300"/>
@@ -418,10 +419,11 @@ the DoR (rule RN-F3).</p>
 <h3>Business rules in force</h3>
 <div class="wide"><table>
 <tr><th>ID</th><th>Rule</th><th>Domain</th><th>Origin</th><th>In force since</th></tr>
-<tr><td><code>RN-F1</code></td><td>El peso del proceso es proporcional al riesgo: el triage F0 decide si aplica /clarificar y qué controles carga</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
-<tr><td><code>RN-F2</code></td><td>Ninguna skill edita artefactos que no le pertenecen: /consistencia y /spec-review son read-only; /convergir solo añade al plan de su spec; la garantía se respalda en allowed-tools, no en instrucciones</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
-<tr><td><code>RN-F3</code></td><td>Un marcador [NECESITA CLARIFICACIÓN] pendiente bloquea la DoR (máximo 3 vivos por spec)</td><td>proceso-fábrica</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
-<tr><td><code>RN-F4</code></td><td>Toda métrica publicada en knowledge/ declara fuente y período, o declara &quot;sin datos&quot;; prohibido el valor sin procedencia (DORA se deriva con scripts/dora.sh)</td><td>proceso-fábrica</td><td>specs/2026-07-metricas-dora.md</td><td>2026-07-19</td></tr>
+<tr><td><code>RN-01</code></td><td>&lt;e.g.: a payment order above $X requires a second factor&gt;</td><td>payment-order</td><td>specs/____.md</td></tr>
+<tr><td><code>RN-F1</code></td><td>Process weight is proportional to risk: the F0 triage decides whether /clarify applies and which controls are loaded</td><td>factory-process</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
+<tr><td><code>RN-F2</code></td><td>No skill edits artifacts it does not own: /consistency and /spec-review are read-only; /converge only appends to its own spec&#x27;s plan; the guarantee is enforced by allowed-tools, not by instructions</td><td>factory-process</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
+<tr><td><code>RN-F3</code></td><td>A pending [NEEDS CLARIFICATION] marker blocks the DoR (maximum 3 alive per spec)</td><td>factory-process</td><td>specs/2026-07-mejoras-spec-kit.md</td><td>2026-07-19</td></tr>
+<tr><td><code>RN-F4</code></td><td>Every metric published in knowledge/ declares source and period, or declares &quot;no data&quot;; values without provenance are forbidden (DORA is derived with scripts/dora.sh)</td><td>factory-process</td><td>specs/2026-07-metricas-dora.md</td><td>2026-07-19</td></tr>
 </table></div>
 
 <h3>Workspace specs</h3>
@@ -430,6 +432,7 @@ the DoR (rule RN-F3).</p>
 <tr><td><code>2026-07-customer-assistant-adk.md</code></td><td>Spec: Customer digital assistant (ADK agent + Gemini)</td><td>?</td></tr>
 <tr><td><code>2026-07-docs-html.md</code></td><td>Spec: Documentación HTML derivada de la fábrica (arquitectura, técnica, modelo y uso)</td><td>implementada</td></tr>
 <tr><td><code>2026-07-english-commands.md</code></td><td>Spec: Comandos en inglés e idioma de trabajo configurable</td><td>borrador</td></tr>
+<tr><td><code>2026-07-english-product.md</code></td><td>Spec: Product machinery fully in English</td><td>?</td></tr>
 <tr><td><code>2026-07-generalizacion-workspace.md</code></td><td>Spec: Generalización del workspace — fábrica para CUALQUIER sistema de repos</td><td>implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales)</td></tr>
 <tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>implementada</td></tr>
 <tr><td><code>2026-07-mejoras-spec-kit.md</code></td><td>Spec: Adopción de mecánicas de calidad de GitHub Spec Kit</td><td>implementada</td></tr>

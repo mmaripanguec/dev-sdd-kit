@@ -1,28 +1,28 @@
 ---
 name: implement-task
-description: Ejecuta UNA tarea del plan de una spec con protocolo TDD estricto (F6 Construcción). Usar para implementar tareas una a una.
+description: Executes ONE task from a spec's plan with strict TDD protocol (F6 Construction). Use to implement tasks one at a time.
 argument-hint: "<ruta-spec> <id-tarea>"
 allowed-tools: Read Glob Grep Edit Write Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *)
 ---
 
-Implementa SOLO la tarea $1 de la spec $0. Protocolo:
+Implement ONLY task $1 from spec $0. Protocol:
 
-1. Arranque del harness: lee harness/claude-progress.md y
-   `git log --oneline -10`; ejecuta ./harness/init.sh y verifica con un smoke
-   test que el entorno funciona ANTES de tocar nada.
-2. Lee la spec completa: la tarea se implementa contra sus criterios de
-   aceptación, no contra tu interpretación. Carga además el pack de
-   contexto del repo de la tarea (`<prefijo>-<repo>`; el de sistema si la
-   tarea cruza repos) — sus "Trampas" existen para que no las repitas.
-3. TDD: escribe los tests que codifican los criterios → verifica que FALLAN →
-   commit de los tests → implementa hasta verde SIN tocar los tests → refactor.
-4. Verificación end-to-end de la funcionalidad como lo haría un usuario;
-   solo entonces actualiza "passes" en harness/feature_list.json.
-   PROHIBIDO editar o borrar descripciones de features de ese archivo.
-5. Cierre limpio: lint + typecheck en verde, commit con Conventional Commits
-   referenciando la spec, y entrada en harness/claude-progress.md
-   (qué se hizo, decisiones, qué sigue).
+1. Harness startup: read harness/claude-progress.md and
+   `git log --oneline -10`; run ./harness/init.sh and verify with a smoke
+   test that the environment works BEFORE touching anything.
+2. Read the full spec: the task is implemented against its acceptance
+   criteria, not against your interpretation. Also load the context pack
+   of the task's repo (`<prefijo>-<repo>`; the system one if the task
+   crosses repos) — its "Pitfalls" exist so you don't repeat them.
+3. TDD: write the tests that encode the criteria → verify they FAIL →
+   commit the tests → implement until green WITHOUT touching the tests → refactor.
+4. End-to-end verification of the functionality as a user would do it;
+   only then update "passes" in harness/feature_list.json.
+   FORBIDDEN to edit or delete feature descriptions from that file.
+5. Clean closure: lint + typecheck green, commit with Conventional Commits
+   referencing the spec, and an entry in harness/claude-progress.md
+   (what was done, decisions, what's next).
 
-Si la tarea revela ambigüedad en la spec: DETENTE y escala. No improvises
-alcance. Si descubres trabajo no previsto, anótalo como tarea nueva en la
-spec en vez de hacerlo ahora.
+If the task reveals ambiguity in the spec: STOP and escalate. Do not
+improvise scope. If you discover unplanned work, note it as a new task in
+the spec instead of doing it now.

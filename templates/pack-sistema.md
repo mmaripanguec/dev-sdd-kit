@@ -1,61 +1,61 @@
 ---
 name: {{PREFIJO}}-sistema
 description: >-
-  EMPIEZA POR AQUÍ para cualquier cosa de {{SISTEMA}}. Modelo mental, mapa
-  de los repos y las uniones entre ellos (lo que no vive en ningún repo).
-  Úsalo antes que cualquier pack {{PREFIJO}}-<repo>, y siempre que se pida
-  arquitectura, diseño, análisis de impacto o cambios que crucen componentes.
+  START HERE for anything about {{SISTEMA}}. Mental model, map of the
+  repos and the seams between them (what lives in no repo).
+  Use it before any {{PREFIJO}}-<repo> pack, and whenever architecture,
+  design, impact analysis or changes that cross components are requested.
 version: 1.0.0
 generado_desde:
   {{REPO_1}}: {{SELLO_1}}
 verificado: {{FECHA}}
 ---
 
-# {{SISTEMA}} — el sistema
+# {{SISTEMA}} — the system
 
-**Este pack contiene lo que NO vive en ningún repo: las uniones.** Los packs
-por repo tienen el detalle; aquí está lo que solo se ve mirando dos o más a
-la vez. Léelo primero.
+**This pack contains what lives in NO repo: the seams.** The per-repo packs
+have the detail; here is what can only be seen by looking at two or more at
+once. Read it first.
 
-## Los repos
+## The repos
 
-| Pack | Repo | Qué es |
+| Pack | Repo | What it is |
 |---|---|---|
-| `{{PREFIJO}}-<repo>` | `<repo>` | <una frase: qué es de verdad> |
+| `{{PREFIJO}}-<repo>` | `<repo>` | <one sentence: what it really is> |
 
-## ⭐ El modelo mental
-> **<LA afirmación central del sistema: la que cambia cómo se entiende todo
-> lo demás.>**
+## ⭐ The mental model
+> **<THE system's central claim: the one that changes how everything
+> else is understood.>**
 
-<Desarrollo con la cadena de evidencia completa (`repo/archivo:línea` en
-cada eslabón). Incluir "los errores que comete quien no lo sabe".>
+<Elaboration with the complete evidence chain (`repo/file:line` at
+every link). Include "the mistakes made by whoever does not know it".>
 
-## ⭐ <Uniones y hallazgos cross-repo>
-<Cómo se comunican los repos DE VERDAD (no el diagrama teórico): fan-out,
-contratos, colas, sesión compartida... con evidencia en ambos extremos.>
+## ⭐ <Seams and cross-repo findings>
+<How the repos REALLY communicate (not the theoretical diagram): fan-out,
+contracts, queues, shared session... with evidence at both ends.>
 
-## Trampas — no caigas en estas
-| Afirmación falsa | Realidad |
+## Pitfalls — do not fall for these
+| False claim | Reality |
 |---|---|
-| <lo que este pack o el equipo creyó antes y era falso> | <realidad + evidencia> |
+| <what this pack or the team believed before and was false> | <reality + evidence> |
 
-## Cómo trabajar
-**Orden**: este pack → el pack del repo que tocas → grafo/as-is → leer código.
+## How to work
+**Order**: this pack → the pack of the repo you touch → graph/as-is → read code.
 
-| Necesitas | Pack |
+| You need | Pack |
 |---|---|
-| <tema> | `{{PREFIJO}}-<repo>` |
+| <topic> | `{{PREFIJO}}-<repo>` |
 
-### Verificación mecánica — no dependas de mi criterio
+### Mechanical verification — do not rely on my judgment
 ```bash
-scripts/afirmaciones.sh {{SISTEMA}}   # ¿alguna afirmación ya es falsa?
-scripts/frescura.sh comprobar         # ¿caducó algún pack?
+scripts/afirmaciones.sh {{SISTEMA}}   # is any claim already false?
+scripts/frescura.sh comprobar         # has any pack expired?
 ```
-**Regla**: toda corrección comprobable mecánicamente acaba en
-`scripts/afirmaciones.d/{{SISTEMA}}.sh`. Si no, vuelve.
+**Rule**: every mechanically checkable correction ends up in
+`scripts/afirmaciones.d/{{SISTEMA}}.sh`. Otherwise, it comes back.
 
-## Qué NO sé
-- <límites explícitos del conocimiento del sistema; inferencias marcadas>
+## What I do NOT know
+- <explicit limits of the system knowledge; inferences flagged>
 
-**Este pack no demuestra su completitud.** Si conoces el sistema y algo te
-chirría, probablemente el pack esté mal, no tú.
+**This pack does not prove its own completeness.** If you know the system and
+something feels off, the pack is probably wrong, not you.

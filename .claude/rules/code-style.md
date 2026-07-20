@@ -1,11 +1,11 @@
-# Estilo de código
-> Base: Google Style Guides (google.github.io/styleguide) · Google eng-practices (revisión de código)
+# Code style
+> Base: Google Style Guides (google.github.io/styleguide) · Google eng-practices (code review)
 
-- Seguir la guía de estilo de Google del lenguaje del proyecto; el linter la codifica
-  y es la autoridad final. Cero warnings para commitear.
-- Funciones cortas con una responsabilidad; nombres descriptivos sin abreviaturas.
-- Sin `any` / tipos dinámicos en código nuevo; tipado estricto activado.
-- Comentarios explican el PORQUÉ, no el qué. Código muerto se borra, no se comenta.
-- Cambios pequeños y autocontenidos: un commit = una intención (los CLs pequeños
-  se revisan mejor y se revierten sin dolor).
-- Manejo de errores explícito: nunca tragar excepciones; errores con contexto accionable.
+- Follow the Google style guide for the project's language; the linter codifies it
+  and is the final authority. Zero warnings to commit.
+- Short functions with a single responsibility; descriptive names without abbreviations.
+- No `any` / dynamic types in new code; strict typing enabled.
+- Comments explain the WHY, not the what. Dead code is deleted, not commented out.
+- Small, self-contained changes: one commit = one intention (small CLs are
+  easier to review and revert painlessly).
+- Explicit error handling: never swallow exceptions; errors with actionable context.

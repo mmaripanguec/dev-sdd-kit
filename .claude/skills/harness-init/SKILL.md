@@ -1,24 +1,24 @@
 ---
 name: harness-init
-description: Prepara el harness de una feature grande o multi-sesión, derivado de su spec aprobada (patrón initializer de Anthropic).
-argument-hint: "<ruta-de-la-spec>"
+description: Prepares the harness for a large or multi-session feature, derived from its approved spec (Anthropic's initializer pattern).
+argument-hint: "<spec-path>"
 allowed-tools: Read Glob Grep Write Bash(git *) Bash(chmod *)
 ---
 
-Eres el agente inicializador. A partir de la spec $ARGUMENTS (debe estar en
-estado "aprobada" con diseño de F5 completo):
+You are the initializer agent. From the spec $ARGUMENTS (it must be in
+"approved" state with the F5 design complete):
 
-1. harness/feature_list.json — expande la spec en features end-to-end
-   verificables, TODAS con "passes": false. Formato por entrada:
+1. harness/feature_list.json — expand the spec into verifiable end-to-end
+   features, ALL with "passes": false. Format per entry:
    {"category", "description", "steps": [...], "passes": false}.
-   Cada criterio de aceptación Gherkin de la spec genera al menos una entrada.
-2. harness/init.sh — script idempotente que deja el entorno corriendo:
-   dependencias, variables (desde .env.example, nunca secretos reales),
-   base de datos/migraciones, servidor de desarrollo, y un smoke test final.
-   Pruébalo desde cero antes de darlo por bueno.
-3. harness/claude-progress.md — inicialízalo con el estado actual y el
-   protocolo de sesión.
-4. Commit inicial: "chore(harness): inicializa harness para <feature>".
+   Each Gherkin acceptance criterion in the spec generates at least one entry.
+2. harness/init.sh — idempotent script that leaves the environment running:
+   dependencies, variables (from .env.example, never real secrets),
+   database/migrations, development server, and a final smoke test.
+   Test it from scratch before signing off on it.
+3. harness/claude-progress.md — initialize it with the current state and the
+   session protocol.
+4. Initial commit: "chore(harness): initialize harness for <feature>".
 
-Regla de oro: el siguiente agente debe poder arrancar productivamente en
-menos de 2 minutos leyendo solo progress + git log + feature_list.
+Golden rule: the next agent must be able to start productively in
+less than 2 minutes reading only progress + git log + feature_list.

@@ -101,8 +101,8 @@ dev-sdd-kit/
 │   │   ├── repo-add/  repo-map/  system-map/
 │   │   └── as-is/  as-is-sync/  as-is-learn/
 │   ├── agents/                       # 7 phase agents
-│   │   ├── requisitos.md  estimacion.md  analisis.md  arquitectura.md
-│   │   └── calidad.md  publicacion.md  operacion.md
+│   │   ├── requirements.md  estimation.md  analysis.md  architecture.md
+│   │   └── quality.md  release.md  operations.md
 │   └── rules/                        # 6 rule sets
 │       ├── code-style.md  testing.md  security.md
 │       └── api-design.md  observability.md  domain-banking.md
@@ -114,6 +114,7 @@ dev-sdd-kit/
 │   ├── 2026-07-metricas-dora.md
 │   ├── 2026-07-docs-html.md
 │   ├── 2026-07-github-docs.md
+│   ├── 2026-07-marketing-release.md
 │   └── 2026-07-customer-assistant-adk.md   # Example: new-app flow (demo, EN)
 │
 ├── knowledge/                        # The system's memory
@@ -152,11 +153,13 @@ dev-sdd-kit/
 | [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md) | Español | Step-by-step: onboarding an existing repo up to the first spec |
 | [CHANGELOG.md](CHANGELOG.md) | English | Release history |
 
-> **A note on language**: public-facing documentation is in English; the
-> factory's *working* artifacts (skills, rules, specs, knowledge base) are
-> in Spanish by design — it is a working template and its teams operate in
-> Spanish. Everything is structured markdown; adapting the language for
-> your team is straightforward.
+> **A note on language**: the factory itself — skills, agents, rules,
+> templates and knowledge scaffolding — is fully in English, and command
+> names are always English. Your team picks its *working* language at
+> `init-system.sh` (en/es) and the factory keeps specs and interactions in
+> it. The historical specs under `specs/` come from this project's own
+> Spanish-speaking instance — authentic artifacts of the factory building
+> itself; the demo spec (customer-assistant) is in English.
 
 ## Contributing
 

@@ -1,11 +1,11 @@
-# Reglas de negocio
-> Fuente de verdad del dominio. F4 (análisis) las extrae y consulta; los gates
-> humanos las validan. Una regla nueva o cambiada entra por PR.
+# Business rules
+> Single source of truth for the domain. F4 (analysis) extracts and consults
+> them; human gates validate them. A new or changed rule enters via PR.
 
-| ID | Regla | Service domain | Origen (spec/regulación) | Vigente desde |
+| ID | Rule | Service domain | Origin (spec/regulation) | Effective since |
 |---|---|---|---|---|
-| RN-01 | <ej.: una orden de pago sobre $X requiere segundo factor> | payment-order | specs/____.md | |
-| RN-F1 | El peso del proceso es proporcional al riesgo: el triage F0 decide si aplica /clarificar y qué controles carga | proceso-fábrica | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
-| RN-F2 | Ninguna skill edita artefactos que no le pertenecen: /consistencia y /spec-review son read-only; /convergir solo añade al plan de su spec; la garantía se respalda en allowed-tools, no en instrucciones | proceso-fábrica | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
-| RN-F3 | Un marcador [NECESITA CLARIFICACIÓN] pendiente bloquea la DoR (máximo 3 vivos por spec) | proceso-fábrica | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
-| RN-F4 | Toda métrica publicada en knowledge/ declara fuente y período, o declara "sin datos"; prohibido el valor sin procedencia (DORA se deriva con scripts/dora.sh) | proceso-fábrica | specs/2026-07-metricas-dora.md | 2026-07-19 |
+| RN-01 | <e.g.: a payment order above $X requires a second factor> | payment-order | specs/____.md | |
+| RN-F1 | Process weight is proportional to risk: the F0 triage decides whether /clarify applies and which controls are loaded | factory-process | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
+| RN-F2 | No skill edits artifacts it does not own: /consistency and /spec-review are read-only; /converge only appends to its own spec's plan; the guarantee is enforced by allowed-tools, not by instructions | factory-process | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
+| RN-F3 | A pending [NEEDS CLARIFICATION] marker blocks the DoR (maximum 3 alive per spec) | factory-process | specs/2026-07-mejoras-spec-kit.md | 2026-07-19 |
+| RN-F4 | Every metric published in knowledge/ declares source and period, or declares "no data"; values without provenance are forbidden (DORA is derived with scripts/dora.sh) | factory-process | specs/2026-07-metricas-dora.md | 2026-07-19 |

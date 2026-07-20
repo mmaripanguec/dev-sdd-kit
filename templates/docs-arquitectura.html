@@ -103,23 +103,23 @@ sobre qué commit).</p>
 <tr><th>Fase</th><th>Nombre</th><th>La ejecuta</th><th>Produce</th><th>Gate</th></tr>
 <tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (paso 0) + <code>/clarify</code></td>
     <td>Clasificación (existente / nueva / mixto), packs cargados, ambigüedades resueltas y trazadas</td><td>—</td></tr>
-<tr><td>F1</td><td>Requerimiento</td><td>agente <code>requisitos</code></td>
+<tr><td>F1</td><td>Requerimiento</td><td>agente <code>requirements</code></td>
     <td>Historias INVEST priorizadas P1–P3 con criterios Gherkin</td><td class="gate">PO/TL</td></tr>
-<tr><td>F2</td><td>Estimación</td><td>agente <code>estimacion</code></td>
+<tr><td>F2</td><td>Estimación</td><td>agente <code>estimation</code></td>
     <td>Story points + prioridad WSJF (con datos de uso.md)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinamiento</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec que cumple la DoR de 13 puntos, sin hallazgos que bloqueen</td><td class="gate">DoR</td></tr>
-<tr><td>F4</td><td>Análisis</td><td>agente <code>analisis</code></td>
+<tr><td>F4</td><td>Análisis</td><td>agente <code>analysis</code></td>
     <td>Reglas de negocio RN-xx, dependencias, casos límite, regulatorio</td><td>—</td></tr>
-<tr><td>F5</td><td>Diseño</td><td>agente <code>arquitectura</code> + <code>/consistency</code></td>
+<tr><td>F5</td><td>Diseño</td><td>agente <code>architecture</code> + <code>/consistency</code></td>
     <td>Contratos OpenAPI, C4, ADRs, threat model STRIDE, NFRs</td><td class="gate">Arquitectura</td></tr>
 <tr><td>F6</td><td>Construcción</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Código con TDD, un commit por tarea EN su repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certificación</td><td><code>/converge</code> + agente <code>calidad</code></td>
+<tr><td>F7</td><td>Certificación</td><td><code>/converge</code> + agente <code>quality</code></td>
     <td>Convergencia código↔spec + veredicto trazable</td><td class="gate">QA/PR</td></tr>
-<tr><td>F8</td><td>Paso a producción</td><td>agente <code>publicacion</code></td>
+<tr><td>F8</td><td>Paso a producción</td><td>agente <code>release</code></td>
     <td>Expediente de riesgo (ITIL) con rollback probado y SBOM</td><td class="gate">Comité CAB</td></tr>
-<tr><td>F9</td><td>Operación</td><td>agente <code>operacion</code></td>
+<tr><td>F9</td><td>Operación</td><td>agente <code>operations</code></td>
     <td>Señales doradas, postmortems sin culpables, métricas DORA</td><td class="gate">DevOps/SRE</td></tr>
 </table></div>
 
@@ -231,12 +231,12 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requerimiento</text>
-  <text class="sub" x="336" y="70" text-anchor="middle">agente requisitos</text>
+  <text class="sub" x="336" y="70" text-anchor="middle">agente requirements</text>
   <text class="sub" x="336" y="84" text-anchor="middle">historias INVEST P1–P3</text>
 
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimación</text>
-  <text class="sub" x="540" y="70" text-anchor="middle">agente estimacion</text>
+  <text class="sub" x="540" y="70" text-anchor="middle">agente estimation</text>
   <text class="sub" x="540" y="84" text-anchor="middle">puntos + WSJF con uso.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
@@ -246,7 +246,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="54" text-anchor="middle">F4 Análisis</text>
-  <text class="sub" x="948" y="70" text-anchor="middle">agente analisis</text>
+  <text class="sub" x="948" y="70" text-anchor="middle">agente analysis</text>
   <text class="sub" x="948" y="84" text-anchor="middle">RN · deps · casos límite</text>
 
   <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
@@ -280,7 +280,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
   <!-- fila B: F5 a F9 (el CÓMO: obedecen y verifican la spec) -->
   <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="286" text-anchor="middle">F5 Diseño</text>
-  <text class="sub" x="132" y="302" text-anchor="middle">agente arquitectura</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">agente architecture</text>
   <text class="sub" x="132" y="316" text-anchor="middle">contratos · C4 · STRIDE</text>
 
   <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
@@ -290,17 +290,17 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certificación</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/converge · agente calidad</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · agente quality</text>
   <text class="sub" x="540" y="316" text-anchor="middle">veredicto contra la spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="286" text-anchor="middle">F8 Producción</text>
-  <text class="sub" x="744" y="302" text-anchor="middle">agente publicacion</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">agente release</text>
   <text class="sub" x="744" y="316" text-anchor="middle">expediente de riesgo</text>
 
   <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operación</text>
-  <text class="sub" x="948" y="302" text-anchor="middle">agente operacion</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">agente operations</text>
   <text class="sub" x="948" y="316" text-anchor="middle">postmortems · señales doradas</text>
 
   <line class="linea" x1="216" y1="300" x2="248" y2="300"/>

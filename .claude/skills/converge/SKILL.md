@@ -1,42 +1,43 @@
 ---
 name: converge
-description: Cierra la brecha funcional código↔spec al terminar la construcción (F6/F7) — evalúa el código real contra las historias y criterios de la spec y AÑADE el trabajo restante como tareas de convergencia. Usar antes de la certificación F7 o cuando pidan "convergir la spec" / "qué falta de la spec".
-argument-hint: "<ruta-de-la-spec>"
+description: Closes the functional code↔spec gap at the end of construction (F6/F7) — evaluates the real code against the spec's stories and criteria and ADDS the remaining work as convergence tasks. Use before F7 certification or when asked to "converge the spec" / "what is missing from the spec".
+argument-hint: "<spec-path>"
 allowed-tools: Read Glob Grep Edit
 ---
 
-Converge la spec $ARGUMENTS contra el código real de los repos afectados.
-NO es una herramienta de diff de git: evalúa el ESTADO ACTUAL del código
-contra lo que la spec promete, sin mirar historial ni ramas.
+Converge spec $ARGUMENTS against the real code of the affected repos.
+This is NOT a git diff tool: it evaluates the CURRENT STATE of the code
+against what the spec promises, without looking at history or branches.
 
-## Paso 1 — Contexto
-Lee la spec completa (historias con CA, SC-xx, plan de tareas) e identifica
-los repos afectados por las etiquetas de tarea. Carga el as-is de esos repos
-(`knowledge/as-is/<repo>/`) y usa el grafo MCP codebase-memory
-(search_graph/trace_path) si responde; si no, Grep directo en `repos/<repo>`
-— degradación elegante, decláralo en el informe.
+## Step 1 — Context
+Read the full spec (stories with ACs, SC-xx, task plan) and identify
+the affected repos via the task labels. Load the as-is of those repos
+(`knowledge/as-is/<repo>/`) and use the codebase-memory MCP graph
+(search_graph/trace_path) if it responds; if not, Grep directly in
+`repos/<repo>` — graceful degradation, declare it in the report.
 
-## Paso 2 — Evaluación historia por historia
-Para cada CA (y cada SC verificable en código): busca la evidencia real y
-clasifica con `archivo:línea`:
-- **SATISFECHO** — implementado y con test que lo cubre.
-- **PARCIAL** — implementado sin test, o cubre solo parte del CA.
-- **AUSENTE** — no hay implementación.
-Los CA de historias explícitamente fuera de alcance o P3 no arrancadas se
-listan como NO INICIADO (no son brecha si el plan no los marcaba hechos).
+## Step 2 — Story-by-story evaluation
+For each AC (and each SC verifiable in code): look for the real evidence
+and classify with `file:line`:
+- **SATISFIED** — implemented and covered by a test.
+- **PARTIAL** — implemented without a test, or covers only part of the AC.
+- **ABSENT** — no implementation.
+ACs of stories explicitly out of scope or of P3 stories not started are
+listed as NOT STARTED (they are not a gap if the plan did not mark them done).
 
-## Paso 3 — Registrar (append-only)
-- Si hay brechas (PARCIAL/AUSENTE con tarea marcada `[x]`, o CA sin tarea):
-  AÑADE al final del plan de tareas de la spec la subsección
-  `### Convergencia (<fecha de hoy>)` con una tarea nueva por brecha,
-  etiquetada con su repo y referenciando el CA (`- [ ] TC1 [<repo>] cubrir
-  CA2.3: …`). **NUNCA reescribas, edites ni borres tareas existentes** — si
-  no hay brechas, el plan queda byte a byte igual y el informe lo declara.
-- Re-ejecución idempotente: antes de añadir, revisa las convergencias
-  previas; una brecha ya registrada y aún abierta no se duplica.
+## Step 3 — Record (append-only)
+- If there are gaps (PARTIAL/ABSENT with a task marked `[x]`, or AC without
+  a task): ADD at the end of the spec's task plan the subsection
+  `### Convergence (<today's date>)` with one new task per gap,
+  labeled with its repo and referencing the AC (`- [ ] TC1 [<repo>] cover
+  CA2.3: …`). **NEVER rewrite, edit or delete existing tasks** — if
+  there are no gaps, the plan stays byte-for-byte identical and the report
+  declares it.
+- Idempotent re-run: before adding, review the previous convergences;
+  a gap already recorded and still open is not duplicated.
 
-## Informe final
-Tabla CA/SC → estado → evidencia; resumen de brechas añadidas (o "sin
-brechas"); recordatorio de que las tareas TC se ejecutan con /implement-task
-(TDD) antes del veredicto del agente de calidad. No toques código ni tests:
-esta skill solo lee código y escribe en la sección de plan de la spec.
+## Final report
+Table AC/SC → status → evidence; summary of gaps added (or "no
+gaps"); reminder that TC tasks are executed with /implement-task
+(TDD) before the quality agent's verdict. Do not touch code or tests:
+this skill only reads code and writes to the spec's plan section.

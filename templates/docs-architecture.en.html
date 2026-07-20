@@ -71,11 +71,12 @@
 
 <main>
 
-<div class="lang-note">🌐 The factory's <strong>working language is
-Spanish</strong>: catalog entries injected below (skill descriptions,
-business rules, DORA table) appear verbatim in Spanish, as they are read
-from the live workspace. The structure, labels and prose of this document
-are in English. Spanish edition: <a href="arquitectura.html">arquitectura.html</a>.</div>
+<div class="lang-note">🌐 The factory's machinery is <strong>fully in
+English</strong>; each workspace picks its working language at
+<code>init-system.sh</code> (<code>system.lang</code>). The catalog below is
+read live from this workspace, so instance-authored entries (spec titles,
+DORA rows) appear in the instance's own language. Spanish edition:
+<a href="arquitectura.html">arquitectura.html</a>.</div>
 
 <h2 id="architecture">1 · Architecture</h2>
 
@@ -113,23 +114,23 @@ which commit).</p>
 <tr><th>Phase</th><th>Name</th><th>Executed by</th><th>Produces</th><th>Gate</th></tr>
 <tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarify</code></td>
     <td>Classification (existing / new / mixed), context packs loaded, ambiguities resolved and traced</td><td>—</td></tr>
-<tr><td>F1</td><td>Requirements</td><td><code>requisitos</code> agent</td>
+<tr><td>F1</td><td>Requirements</td><td><code>requirements</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
-<tr><td>F2</td><td>Estimation</td><td><code>estimacion</code> agent</td>
+<tr><td>F2</td><td>Estimation</td><td><code>estimation</code> agent</td>
     <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
-<tr><td>F4</td><td>Analysis</td><td><code>analisis</code> agent</td>
+<tr><td>F4</td><td>Analysis</td><td><code>analysis</code> agent</td>
     <td>Business rules RN-xx, dependencies, edge cases, regulatory</td><td>—</td></tr>
-<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistency</code></td>
+<tr><td>F5</td><td>Design</td><td><code>architecture</code> agent + <code>/consistency</code></td>
     <td>OpenAPI contracts, C4 diagrams, ADRs, STRIDE threat model, NFRs</td><td class="gate">Architecture</td></tr>
 <tr><td>F6</td><td>Construction</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Code built with TDD, one commit per task IN its repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>calidad</code> agent</td>
+<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>quality</code> agent</td>
     <td>Code↔spec convergence + traceable verdict</td><td class="gate">QA/PR</td></tr>
-<tr><td>F8</td><td>Release</td><td><code>publicacion</code> agent</td>
+<tr><td>F8</td><td>Release</td><td><code>release</code> agent</td>
     <td>Risk dossier (ITIL) with tested rollback and SBOM</td><td class="gate">CAB board</td></tr>
-<tr><td>F9</td><td>Operations</td><td><code>operacion</code> agent</td>
+<tr><td>F9</td><td>Operations</td><td><code>operations</code> agent</td>
     <td>Golden signals, blameless postmortems, DORA metrics</td><td class="gate">DevOps/SRE</td></tr>
 </table></div>
 
@@ -240,12 +241,12 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requirements</text>
-  <text class="sub" x="336" y="70" text-anchor="middle">requisitos agent</text>
+  <text class="sub" x="336" y="70" text-anchor="middle">requirements agent</text>
   <text class="sub" x="336" y="84" text-anchor="middle">INVEST stories P1–P3</text>
 
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
-  <text class="sub" x="540" y="70" text-anchor="middle">estimacion agent</text>
+  <text class="sub" x="540" y="70" text-anchor="middle">estimation agent</text>
   <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
@@ -255,7 +256,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="54" text-anchor="middle">F4 Analysis</text>
-  <text class="sub" x="948" y="70" text-anchor="middle">analisis agent</text>
+  <text class="sub" x="948" y="70" text-anchor="middle">analysis agent</text>
   <text class="sub" x="948" y="84" text-anchor="middle">rules · deps · edge cases</text>
 
   <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
@@ -289,7 +290,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- row B: F5 to F9 (the HOW: they obey and verify the spec) -->
   <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="286" text-anchor="middle">F5 Design</text>
-  <text class="sub" x="132" y="302" text-anchor="middle">arquitectura agent</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">architecture agent</text>
   <text class="sub" x="132" y="316" text-anchor="middle">contracts · C4 · STRIDE</text>
 
   <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
@@ -299,17 +300,17 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/converge · calidad agent</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · quality agent</text>
   <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="286" text-anchor="middle">F8 Release</text>
-  <text class="sub" x="744" y="302" text-anchor="middle">publicacion agent</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">release agent</text>
   <text class="sub" x="744" y="316" text-anchor="middle">risk dossier</text>
 
   <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operations</text>
-  <text class="sub" x="948" y="302" text-anchor="middle">operacion agent</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">operations agent</text>
   <text class="sub" x="948" y="316" text-anchor="middle">postmortems · golden signals</text>
 
   <line class="linea" x1="216" y1="300" x2="248" y2="300"/>

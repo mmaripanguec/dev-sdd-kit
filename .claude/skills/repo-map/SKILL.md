@@ -1,52 +1,53 @@
 ---
 name: repo-map
-description: Genera o actualiza el PACK DE CONTEXTO de un repositorio (skill cargable .claude/skills/<prefijo>-<repo>) — arquitectura, mecanismos centrales, dependencias y trampas con evidencia archivo:línea — y siembra sus aserciones. Usar cuando pidan "mapear un repo", "generar el contexto del repo", cuando /spec-create detecte un repo sin pack o con pack caduco, o después de /repo-add.
+description: Generates or updates a repository's CONTEXT PACK (loadable skill .claude/skills/<prefijo>-<repo>) — architecture, core mechanisms, dependencies and pitfalls with file:line evidence — and seeds its assertions. Use when asked to "map a repo", "generate the repo's context", when /spec-create detects a repo without a pack or with a stale pack, or after /repo-add.
 argument-hint: "<nombre-repo-del-registro> [foco opcional]"
 allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/frescura.sh *) Bash(./scripts/afirmaciones.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
-Genera el pack de contexto del repo $ARGUMENTS como skill cargable:
-`.claude/skills/$(pack_name_for_repo <repo>)/SKILL.md` (nombre =
-`<pack_prefix>-<repo>`, o el campo `pack` del registro). El objetivo: que
-cualquier agente que reciba un requerimiento sobre este aplicativo cargue
-el pack y trabaje con el modelo mental correcto sin releer el repo.
+Generate the context pack for repo $ARGUMENTS as a loadable skill:
+`.claude/skills/$(pack_name_for_repo <repo>)/SKILL.md` (name =
+`<pack_prefix>-<repo>`, or the registry's `pack` field). The goal: any
+agent that receives a requirement about this application loads the pack
+and works with the correct mental model without rereading the repo.
 
-## 1. Insumos (del más barato al más caro)
-1. Registro (repos.yaml): rol, dominio, vcs; sello actual con
+## 1. Inputs (from cheapest to most expensive)
+1. Registry (repos.yaml): role, domain, vcs; current seal with
    `. scripts/repo-lib.sh && stamp_of_repo <repo>`.
-2. Hechos del as-is: `knowledge/as-is/<repo>/{modules,api-surface}.md`
-   (regenerar si el sello no coincide).
-3. Grafo MCP codebase-memory si está indexado (get_architecture,
-   search_graph, trace_path). Si no responde, sigue sin él y decláralo en
-   "Qué NO sé".
-4. Lectura dirigida del código: entrypoint, wiring, rutas, capa de datos,
-   clientes externos. Lee lo necesario para respaldar cada afirmación.
+2. As-is facts: `knowledge/as-is/<repo>/{modules,api-surface}.md`
+   (regenerate if the seal does not match).
+3. codebase-memory MCP graph if indexed (get_architecture,
+   search_graph, trace_path). If it does not respond, continue without it and
+   declare it in "What I DON'T know".
+4. Targeted reading of the code: entrypoint, wiring, routes, data layer,
+   external clients. Read what is needed to back each claim.
 
-## 2. Escribir el pack
-- Plantilla: `templates/pack-repo.md` (reemplaza TODOS los placeholders
-  `{{...}}` y `<...>`; frontmatter con `generado_desde: <repo>: <sello>` y
-  `verificado:` con la fecha de hoy).
-- La DESCRIPCIÓN del frontmatter es el gatillo de carga: nómbrala con el
-  aplicativo, sus temas y preguntas típicas.
-- Reglas duras: sin evidencia `archivo:línea` una afirmación no entra al
-  cuerpo (va a "Qué NO sé"); las secciones "Trampas" y "Qué NO sé" nunca
-  quedan vacías (si no hay trampas aún, di qué error sería fácil cometer);
-  presupuesto ~150 líneas — el detalle desborda a `references/` dentro de
-  la carpeta del pack.
-- Secretos: PROHIBIDO copiar tokens, URLs con credenciales o datos de
-  clientes al pack.
+## 2. Write the pack
+- Template: `templates/pack-repo.md` (replace ALL `{{...}}` and `<...>`
+  placeholders; frontmatter with `generado_desde: <repo>: <sello>` and
+  `verificado:` with today's date).
+- The frontmatter DESCRIPTION is the load trigger: name it with the
+  application, its topics and typical questions.
+- Hard rules: without `archivo:línea` evidence a claim does not enter the
+  body (it goes to "What I DON'T know"); the "Pitfalls" and "What I DON'T
+  know" sections are never left empty (if there are no pitfalls yet, say
+  which mistake would be easy to make);
+  budget ~150 lines — detail overflows into `references/` inside
+  the pack's folder.
+- Secrets: FORBIDDEN to copy tokens, URLs with credentials or customer
+  data into the pack.
 
-## 3. Aserciones y verificación
-- Siembra/actualiza `scripts/afirmaciones.d/<sistema>.sh` con 3+ aserciones
-  de las afirmaciones más importantes del pack (formato del README de esa
-  carpeta) y corre `scripts/afirmaciones.sh <sistema>` — debe quedar en verde.
-- Corre `scripts/frescura.sh comprobar <pack>` — debe salir vigente.
-- Si al verificar detectas una INCONSISTENCIA (el código contradice el
-  registro, un ADR o un pack existente): DETENTE Y PREGUNTA al humano.
-  No la normalices en silencio.
+## 3. Assertions and verification
+- Seed/update `scripts/afirmaciones.d/<sistema>.sh` with 3+ assertions
+  from the pack's most important claims (format per that folder's README)
+  and run `scripts/afirmaciones.sh <sistema>` — it must end up green.
+- Run `scripts/frescura.sh comprobar <pack>` — it must come out current.
+- If while verifying you detect an INCONSISTENCY (the code contradicts the
+  registry, an ADR or an existing pack): STOP AND ASK the human.
+  Do not normalize it silently.
 
-## 4. Cierre
-- Actualiza el índice `mapa-sistemas` si cambió el estado del contexto
-  (o pide /system-map si el pack de sistema no existe).
+## 4. Closure
+- Update the `mapa-sistemas` index if the context state changed
+  (or request /system-map if the system pack does not exist).
 - Commit: `docs(packs): pack <pack> @<sello>`.
-- Resumen final: modelo mental en 3 líneas + trampas + qué quedó fuera.
+- Final summary: mental model in 3 lines + pitfalls + what was left out.

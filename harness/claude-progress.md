@@ -1,14 +1,14 @@
-# Bitácora del harness
-> Un agente nuevo debe ser productivo en <2 min leyendo esto + `git log --oneline -20`.
+# Harness log
+> A new agent must be productive in <2 min by reading this + `git log --oneline -20`.
 
-## Protocolo de sesión
-1. `./harness/init.sh` y smoke test ANTES de tocar código.
-2. Leer esta bitácora + git log + feature_list.json; elegir UNA feature pendiente.
-3. Al cerrar: commit descriptivo + entrada aquí (qué, decisiones, qué sigue).
+## Session protocol
+1. `./harness/init.sh` and smoke test BEFORE touching code.
+2. Read this log + git log + feature_list.json; pick ONE pending feature.
+3. On close: descriptive commit + an entry here (what, decisions, what's next).
 
-## Estado actual
-- (sin iniciar — correr /harness-init sobre una spec aprobada)
+## Current state
+- (not started — run /harness-init on an approved spec)
 
-## Registro
-| Fecha | Sesión hizo | Decisiones | Siguiente paso |
+## Record
+| Date | Session did | Decisions | Next step |
 |---|---|---|---|

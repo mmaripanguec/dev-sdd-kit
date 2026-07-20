@@ -2,15 +2,15 @@
 paths:
   - "src/**"
 ---
-# Observabilidad y confiabilidad
+# Observability and reliability
 > Base: Google SRE (SLOs, error budgets, golden signals) · DORA
 
-- Toda API expone las 4 señales doradas: latencia, tráfico, errores, saturación.
-- Cada servicio define SLOs (p.ej. disponibilidad 99.9%, p99 < 300ms) en su spec;
-  el error budget gobierna el ritmo: presupuesto agotado = se congela feature work
-  y se prioriza confiabilidad.
-- Logs estructurados (JSON) con correlation-id de punta a punta; sin datos
-  personales ni secretos en logs.
-- Métricas DORA del equipo se registran en knowledge/uso.md: frecuencia de
-  despliegue, lead time, change failure rate, MTTR.
-- Alertas accionables: cada alerta enlaza a su runbook; alerta sin runbook no se crea.
+- Every API exposes the 4 golden signals: latency, traffic, errors, saturation.
+- Every service defines SLOs (e.g. availability 99.9%, p99 < 300ms) in its spec;
+  the error budget governs the pace: exhausted budget = feature work freezes
+  and reliability is prioritized.
+- Structured logs (JSON) with end-to-end correlation-id; no personal data
+  or secrets in logs.
+- The team's DORA metrics are recorded in knowledge/uso.md: deployment
+  frequency, lead time, change failure rate, MTTR.
+- Actionable alerts: every alert links to its runbook; an alert without a runbook is not created.
