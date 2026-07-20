@@ -80,26 +80,63 @@ T1 commits the **failing tests for the critical rule first** — "a sensitive
 topic can never be auto-answered" — then implements until green. Editing a
 test to make it pass is forbidden by the factory rules.
 
-## 5 · Run it and see the human-in-the-loop
+## 5 · Run it — real recorded session
 
-```bash
-adk run customer_assistant        # or `adk web` for the browser UI
-```
+This is the actual output of the built assistant (offline mode, no API key):
 
 ```text
-› client:    "I think there's a charge I didn't make on my card"
-⚠ sensitive  (possible fraud) → escalated, draft reply queued
-👤 human     reviews the draft → approves ✔
-› assistant  (gemini-2.5-flash): "I've alerted our team — your card is
-             protected. Here's what happens next…"
+$ python3 -m asistente.cli "¿Cuál es el horario de atención?"
+cliente   › ¿Cuál es el horario de atención?
+asistente › Atendemos de lunes a viernes de 9:00 a 18:00 y sábados de
+            10:00 a 14:00… (fuente oficial: FAQ)
+            [faq.md#horario · modo offline]
+
+$ python3 -m asistente.cli "Hay un cargo que no reconozco en mi tarjeta"
+asistente › Tu caso requiere atención de un ejecutivo humano y ya lo
+            derivé con prioridad…
+            [SENSIBLE → caso #1 encolado; borrador listo para aprobación]
 ```
 
-An FAQ question ("what are your opening hours?") is answered instantly with
-the FAQ entry cited; anything not in the curated FAQ gets an honest *"I
-don't have that information — let me connect you"* — the same **"no source →
+**The human validation moment** — nothing is sent until a person decides:
+
+```text
+$ python3 -m asistente.aprobar
+#1 [2026-07-20T00:06:08Z] Hay un cargo que no reconozco en mi tarjeta
+   borrador: Lamento el inconveniente. Tomamos medidas preventivas…
+
+$ python3 -m asistente.aprobar 1 --texto "Bloqueamos preventivamente tu tarjeta…"
+caso #1 APROBADO por mmaripanguec (2026-07-20T00:06:15Z)
+respuesta enviada › Bloqueamos preventivamente tu tarjeta…
+```
+
+Who approved, when, and what they edited is recorded in
+`estado/aprobados.json`. And anything outside the curated FAQ gets an honest
+*"No tengo esa información… prefiero no inventar"* — the same **"no source →
 no answer"** principle the factory applies to its own metrics.
 
-## 6 · Certify and close
+## 6 · Where everything lives · configuration
+
+```
+repos/asistente-clientes/
+├── asistente/            # nucleo.py (FAQ + sensitivity in CODE) · cola.py
+│                         # gemini_adk.py · cli.py · aprobar.py
+├── tests/test_reglas.py  # the 5 RED-first tests (RN-A1 / RN-A2)
+├── faq.md                # curated knowledge — the ONLY answer source
+├── estado/               # pendientes.json · aprobados.json (gitignored)
+└── .env.example          # copy to .env and fill in:
+```
+
+```bash
+cp .env.example .env && chmod 600 .env
+# GOOGLE_API_KEY=<from https://aistudio.google.com/apikey>  — NEVER commit it
+# GEMINI_MODEL=gemini-2.5-flash
+```
+
+Without a key the assistant runs in **offline mode** (official FAQ answers,
+verbatim). With a key, Gemini rewrites the phrasing — but only ever over the
+curated FAQ content: the source rule is enforced in code either way.
+
+## 7 · Certify and close
 
 ```text
 /convergir specs/2026-07-customer-assistant.md    # every criterion vs real code
