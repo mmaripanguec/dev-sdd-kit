@@ -60,4 +60,4 @@ First public release of the spec-driven factory template.
   release; all 10 confirmed findings fixed, including least-privilege
   permission tightening on new skills.
 
-[1.0.0]: https://github.com/marcosmaripangue/dev-sdd-kit/releases/tag/v1.0.0
+[1.0.0]: https://github.com/mmaripanguec/dev-sdd-kit/releases/tag/v1.0.0

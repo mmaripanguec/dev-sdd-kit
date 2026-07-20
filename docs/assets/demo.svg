@@ -18,7 +18,7 @@
 
   <g font-size="15">
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="0.4s" fill="freeze"/>
-      <text x="26" y="70" fill="#5fce96">$ <tspan fill="#e8eaed">git clone &lt;template-url&gt; demo &amp;&amp; cd demo &amp;&amp; ./scripts/init-system.sh assistant-demo</tspan></text></g>
+      <text x="26" y="70" fill="#5fce96">$ <tspan fill="#e8eaed">git clone github.com/mmaripanguec/dev-sdd-kit demo &amp;&amp; cd demo &amp;&amp; ./scripts/init-system.sh assistant-demo</tspan></text></g>
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="1.6s" fill="freeze"/>
       <text x="26" y="100" fill="#66aef0">? Working language for specs and interactions? [en/es]  <tspan fill="#e8eaed">👤 → en</tspan>  <tspan fill="#5a708c">(saved as system.lang — commands are always English)</tspan></text></g>
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="3s" fill="freeze"/>

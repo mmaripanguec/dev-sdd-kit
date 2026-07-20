@@ -21,7 +21,7 @@ humans approve at six permission-backed gates, failing tests are committed
 before code, and every document or metric is derived from the real sources.
 
 ```bash
-git clone <this-repo-url> my-system && cd my-system
+git clone https://github.com/mmaripanguec/dev-sdd-kit.git my-system && cd my-system
 ./scripts/init-system.sh my-system                   # instantiate the template
 claude                                                 # launch from the root
 /repo-add https://github.com/your-org/your-repo.git    # onboard your first repo

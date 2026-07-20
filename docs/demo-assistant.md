@@ -29,7 +29,7 @@ export GOOGLE_API_KEY=<your-key>       # from Google AI Studio — NEVER commit 
 ## 1 · Environment from scratch (~1 minute)
 
 ```bash
-git clone <template-url> demo && cd demo
+git clone https://github.com/mmaripanguec/dev-sdd-kit.git demo && cd demo
 ./scripts/init-system.sh assistant-demo
 # ? Working language for specs and interactions? [en/es] (default en): en
 #   → saved as `system.lang: en` and kept consistent from here on.
