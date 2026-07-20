@@ -47,15 +47,15 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
    contexto vigentes de los repos afectados; dependencias sin contexto →
    PREGUNTAR su repositorio (nunca asumir); inconsistencias → PREGUNTAR.
 1. Todo cambio no trivial parte de una spec en `specs/` (/spec-create).
-   Ambigüedades: /clarificar (máx. 5 preguntas; respuestas trazadas en la
+   Ambigüedades: /clarify (máx. 5 preguntas; respuestas trazadas en la
    sección Clarificaciones de la spec; marcadores [NECESITA CLARIFICACIÓN]
    pendientes bloquean la DoR).
-2. Fases y gates con /orquestar; NUNCA saltar un gate. Antes de los gates
-   DoR y Arquitectura: /consistencia con veredicto APTO PARA GATE (el
+2. Fases y gates con /orchestrate; NUNCA saltar un gate. Antes de los gates
+   DoR y Arquitectura: /consistency con veredicto APTO PARA GATE (el
    criterio de bloqueo lo define esa skill; no lo dupliques aquí).
 3. Construcción con /implement-task: TDD, un commit por tarea EN SU repo.
 4. PROHIBIDO modificar tests para hacerlos pasar.
-5. Al cerrar F6: /convergir compara el código real contra la spec y añade
+5. Al cerrar F6: /converge compara el código real contra la spec y añade
    las brechas como tareas (append-only) antes del veredicto de calidad.
 6. Ante ambigüedad: escalar al gate más cercano, no suponer.
 
@@ -76,8 +76,10 @@ Sistema actual de ejemplo: homebanking (3 repos Bitbucket; ver repos.yaml).
 - Estándares: `knowledge/estandares.md`
 
 ## Convenciones
-- Artefactos internos en español; identificadores de código en inglés.
-  Documentación PÚBLICA de GitHub (README, CONTRIBUTING, LICENSE, .github,
-  docs/architecture.en.html) en inglés.
+- Idioma de trabajo del workspace: `system.lang` del registro (aquí: es) —
+  specs, knowledge e interacciones con el usuario van en ese idioma y se
+  mantiene consistente. Los NOMBRES de comandos, skills e identificadores
+  de código son SIEMPRE inglés. Documentación PÚBLICA de GitHub (README,
+  CONTRIBUTING, LICENSE, .github, docs/architecture.en.html) en inglés.
 - Conventional Commits + referencia a la spec, en el workspace y en cada repo.
 - Toda decisión de arquitectura → ADR. Todo incidente → postmortem sin culpables.

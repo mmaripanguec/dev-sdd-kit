@@ -23,7 +23,7 @@ args = sys.argv[3:]
 PROVIDERS = ("github", "gitlab", "bitbucket", "local")
 REPO_FIELDS = ("name", "url", "provider", "role", "deploy_order", "domain",
                "vcs", "pack")
-SYSTEM_FIELDS = ("name", "entrypoint", "pack_prefix")
+SYSTEM_FIELDS = ("name", "entrypoint", "pack_prefix", "lang")
 
 
 def parse_mini(text):

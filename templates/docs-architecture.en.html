@@ -111,21 +111,21 @@ which commit).</p>
 
 <div class="wide"><table>
 <tr><th>Phase</th><th>Name</th><th>Executed by</th><th>Produces</th><th>Gate</th></tr>
-<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarificar</code></td>
+<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarify</code></td>
     <td>Classification (existing / new / mixed), context packs loaded, ambiguities resolved and traced</td><td>—</td></tr>
 <tr><td>F1</td><td>Requirements</td><td><code>requisitos</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimation</td><td><code>estimacion</code> agent</td>
     <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
-<tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistencia</code></td>
+<tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Analysis</td><td><code>analisis</code> agent</td>
     <td>Business rules RN-xx, dependencies, edge cases, regulatory</td><td>—</td></tr>
-<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistencia</code></td>
+<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistency</code></td>
     <td>OpenAPI contracts, C4 diagrams, ADRs, STRIDE threat model, NFRs</td><td class="gate">Architecture</td></tr>
 <tr><td>F6</td><td>Construction</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Code built with TDD, one commit per task IN its repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certification</td><td><code>/convergir</code> + <code>calidad</code> agent</td>
+<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>calidad</code> agent</td>
     <td>Code↔spec convergence + traceable verdict</td><td class="gate">QA/PR</td></tr>
 <tr><td>F8</td><td>Release</td><td><code>publicacion</code> agent</td>
     <td>Risk dossier (ITIL) with tested rollback and SBOM</td><td class="gate">CAB board</td></tr>
@@ -235,7 +235,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- row A: F0 to F4 (the WHAT: they write the spec) -->
   <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
-  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarificar</text>
+  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarify</text>
   <text class="sub" x="132" y="84" text-anchor="middle">classifies · loads context</text>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
@@ -250,7 +250,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
-  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistencia</text>
+  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistency</text>
   <text class="sub" x="744" y="84" text-anchor="middle">13-point DoR</text>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
@@ -299,7 +299,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · calidad agent</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · calidad agent</text>
   <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
@@ -379,7 +379,7 @@ the postmortems (RN-F4: source and period declared, or "no data").</p>
 
 <h3>Scenario A — Install the factory for a new system</h3>
 <pre>git clone &lt;template-url&gt; my-system && cd my-system
-./scripts/init-sistema.sh my-system   # cleans instance data, creates the registry
+./scripts/init-system.sh my-system   # cleans instance data, creates the registry
 /repo-add &lt;url-or-path&gt;            # once per system repo
 /system-map                        # once ≥2 repos have context packs</pre>
 
@@ -390,12 +390,12 @@ cp .env.example .env               # credentials per git provider
 
 <h3>Scenario C — Specify and build a feature</h3>
 <pre>/spec-create &lt;name&gt; &lt;description&gt;     # F0 triage + F1..F5 with gates
-/clarificar &lt;spec&gt;                    # if ambiguous (max 5 questions)
+/clarify &lt;spec&gt;                    # if ambiguous (max 5 questions)
 /spec-review specs/&lt;spec&gt;.md          # 13-point Definition of Ready
-/consistencia specs/&lt;spec&gt;.md         # cross-check; needs APTO PARA GATE
+/consistency specs/&lt;spec&gt;.md         # cross-check; needs APTO PARA GATE
 /harness-init specs/&lt;spec&gt;.md         # only for multi-session work
 /implement-task specs/&lt;spec&gt;.md T1    # TDD, one commit per task IN its repo
-/convergir specs/&lt;spec&gt;.md            # code↔spec gaps before certifying</pre>
+/converge specs/&lt;spec&gt;.md            # code↔spec gaps before certifying</pre>
 <p class="muted">Golden rule: always launch Claude Code from the workspace
 root; code commits go inside each repo (<code>git -C repos/&lt;repo&gt; …</code>),
 knowledge commits go here.</p>
@@ -404,7 +404,7 @@ knowledge commits go here.</p>
 <pre>/as-is which endpoints does X expose?   # real state (graph + map)
 /as-is-sync                             # after structural changes
 ./scripts/dora.sh                       # recompute metrics (F9, after incidents)
-/orquestar specs/&lt;spec&gt;.md              # full E2E cycle (humans only)</pre>
+/orchestrate specs/&lt;spec&gt;.md              # full E2E cycle (humans only)</pre>
 
 <h3>What humans approve (and what agents cannot do)</h3>
 <div class="wide"><table>

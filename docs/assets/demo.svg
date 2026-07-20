@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" font-family="ui-monospace,Menlo,Consolas,monospace" role="img" aria-label="Real recorded session: the factory builds and runs an ADK plus Gemini customer assistant — commands, red-first TDD, live interaction, a long pause while a human validates the escalated case, and the final result with code location and .env configuration">
-  <rect width="1100" height="780" rx="12" fill="#0d1420"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1000" font-family="ui-monospace,Menlo,Consolas,monospace" role="img" aria-label="Real recorded session: the factory asks your working language, every artifact a human must validate (spec, design, test cases, convergence) with its HITL approval stamp, red-first TDD, the live interaction with a long human-validation pause, and the final result with code location and .env configuration">
+  <rect width="1100" height="1000" rx="12" fill="#0d1420"/>
   <rect width="1100" height="36" rx="12" fill="#182a42"/>
   <rect y="24" width="1100" height="12" fill="#182a42"/>
   <circle cx="24" cy="18" r="6" fill="#ff5f57"/>
@@ -7,52 +7,118 @@
   <circle cx="64" cy="18" r="6" fill="#28c840"/>
   <text x="550" y="23" font-size="13" fill="#8fa4bd" text-anchor="middle">real recorded session — customer assistant (Google ADK + Gemini), built AND run by the factory</text>
 
+  <style>
+    .doc{fill:#13253c;stroke:#2c4364;stroke-width:1.2}
+    .fold{fill:#182a42;stroke:#2c4364;stroke-width:1}
+    .dt{fill:#e8eaed;font-size:13px;font-weight:700}
+    .dl{fill:#8fa4bd;font-size:10.5px}
+    .gl{fill:#e0a458;font-size:11px;font-weight:700}
+    .st{fill:#28c840;font-size:11.5px;font-weight:700}
+  </style>
+
   <g font-size="15">
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="0.4s" fill="freeze"/>
-      <text x="26" y="72" fill="#5fce96">$ <tspan fill="#e8eaed">git clone &lt;template-url&gt; demo &amp;&amp; cd demo &amp;&amp; ./scripts/init-sistema.sh demo</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="1.5s" fill="freeze"/>
-      <text x="26" y="104" fill="#5fce96">$ <tspan fill="#e8eaed">./scripts/repo-add.sh ./asistente-clientes --role "asistente digital" --entrypoint</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="2.6s" fill="freeze"/>
-      <text x="26" y="136" fill="#8fa4bd">✔ OK — 'asistente-clientes' listo · Sistema: demo · entrypoint registrado <tspan fill="#5a708c">(T0 done)</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="3.8s" fill="freeze"/>
-      <text x="26" y="168" fill="#ff6b6b">$ python3 tests/test_reglas.py → ModuleNotFoundError <tspan fill="#8fa4bd">— 5 tests committed RED, before any code</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="5s" fill="freeze"/>
-      <text x="26" y="200" fill="#28c840">✔ implement → Ran 5 tests — OK <tspan fill="#8fa4bd">(escalation rule lives in CODE, not in the prompt · tests untouched)</tspan></text></g>
+      <text x="26" y="70" fill="#5fce96">$ <tspan fill="#e8eaed">git clone &lt;template-url&gt; demo &amp;&amp; cd demo &amp;&amp; ./scripts/init-system.sh assistant-demo</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="1.6s" fill="freeze"/>
+      <text x="26" y="100" fill="#66aef0">? Working language for specs and interactions? [en/es]  <tspan fill="#e8eaed">👤 → en</tspan>  <tspan fill="#5a708c">(saved as system.lang — commands are always English)</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="3s" fill="freeze"/>
+      <text x="26" y="130" fill="#5fce96">$ <tspan fill="#e8eaed">./scripts/repo-add.sh ./customer-assistant --role "customer digital assistant" --entrypoint</tspan>  <tspan fill="#8fa4bd">✔ T0 done</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="4.4s" fill="freeze"/>
+      <text x="26" y="160" fill="#5fce96">$ <tspan fill="#e8eaed">/spec-create customer-assistant "ADK agent on Gemini for customer questions"</tspan></text></g>
 
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="6.4s" fill="freeze"/>
-      <text x="26" y="240" fill="#5a708c">── live interaction ────────────────────────────────────────────────────────────────</text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="7.2s" fill="freeze"/>
-      <text x="26" y="272" fill="#5fce96">$ <tspan fill="#e8eaed">python3 -m asistente.cli "¿Cuál es el horario de atención?"</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="8.4s" fill="freeze"/>
-      <text x="26" y="304" fill="#c3d2e4">asistente › <tspan fill="#e8eaed">"Atendemos de lunes a viernes de 9:00 a 18:00 y sábados de 10:00 a 14:00…"</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="9.3s" fill="freeze"/>
-      <text x="26" y="330" fill="#5a708c">            [faq.md#horario — the curated FAQ is the ONLY source]</text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="10.4s" fill="freeze"/>
-      <text x="26" y="366" fill="#5fce96">$ <tspan fill="#e8eaed">python3 -m asistente.cli "Hay un cargo que no reconozco en mi tarjeta"</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="11.6s" fill="freeze"/>
-      <text x="26" y="398" fill="#c3d2e4">asistente › <tspan fill="#e8eaed">"Tu caso requiere atención de un ejecutivo humano y ya lo derivé con prioridad…"</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="12.8s" fill="freeze"/>
-      <text x="26" y="430" fill="#e0a458">⚠ SENSIBLE (posible fraude) → caso #1 encolado con borrador · NADA se envía todavía</text></g>
+    <!-- artefactos validados por el humano (HITL) -->
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="5.8s" fill="freeze"/>
+      <text x="26" y="198" fill="#5a708c">── every artifact stops at a human (HITL) — approvals recorded: who · when · commit ──</text></g>
 
-    <g opacity="0"><animate attributeName="opacity" values="0;0.35;1;0.35;1" dur="4s" begin="14s" fill="freeze"/>
-      <text x="26" y="474" fill="#e0a458" font-size="16" font-weight="bold">⏸ HUMAN VALIDATION — the assistant waits. Without approval, no reply exists…</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.4s" begin="6.6s" fill="freeze"/>
+      <path class="doc" d="M20 214 h236 l14 14 v106 h-250 z"/>
+      <path class="fold" d="M256 214 l14 14 h-14 z"/>
+      <text class="dt" x="34" y="238">📋 spec.md</text>
+      <text class="dl" x="34" y="258">stories S1–S3 · priorities P1/P2</text>
+      <text class="dl" x="34" y="274">Gherkin acceptance criteria</text>
+      <text class="dl" x="34" y="290">success criteria SC-01..03</text>
+      <text class="gl" x="34" y="312">⏸ GATE PO/TL</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.3s" begin="8.2s" fill="freeze"/>
+      <text class="st" x="140" y="312">👤 approved ✔</text></g>
 
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="18.4s" fill="freeze"/>
-      <text x="26" y="514" fill="#66aef0">👤 $ <tspan fill="#e8eaed">python3 -m asistente.aprobar</tspan>   <tspan fill="#8fa4bd">→ #1 "Hay un cargo que no reconozco…" + borrador propuesto</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="19.8s" fill="freeze"/>
-      <text x="26" y="546" fill="#66aef0">👤 $ <tspan fill="#e8eaed">python3 -m asistente.aprobar 1 --texto "Bloqueamos preventivamente tu tarjeta…"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.4s" begin="9.4s" fill="freeze"/>
+      <path class="doc" d="M290 214 h236 l14 14 v106 h-250 z"/>
+      <path class="fold" d="M526 214 l14 14 h-14 z"/>
+      <text class="dt" x="304" y="238">🔍 readiness review</text>
+      <text class="dl" x="304" y="258">/spec-review — 13-point DoR</text>
+      <text class="dl" x="304" y="274">/clarify — answers recorded</text>
+      <text class="dl" x="304" y="290">/consistency — FIT FOR GATE</text>
+      <text class="gl" x="304" y="312">⏸ GATE DoR</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.3s" begin="11s" fill="freeze"/>
+      <text class="st" x="400" y="312">👤 approved ✔</text></g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.4s" begin="12.2s" fill="freeze"/>
+      <path class="doc" d="M560 214 h236 l14 14 v106 h-250 z"/>
+      <path class="fold" d="M796 214 l14 14 h-14 z"/>
+      <text class="dt" x="574" y="238">📐 design</text>
+      <text class="dl" x="574" y="258">ADR-01: control in CODE, not prompt</text>
+      <text class="dl" x="574" y="274">STRIDE threat model (injection…)</text>
+      <text class="dl" x="574" y="290">typed tool contracts · NFRs p95&lt;5s</text>
+      <text class="gl" x="574" y="312">⏸ GATE Architecture</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.3s" begin="13.8s" fill="freeze"/>
+      <text class="st" x="716" y="312">👤 approved ✔</text></g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.4s" begin="15s" fill="freeze"/>
+      <path class="doc" d="M830 214 h236 l14 14 v106 h-250 z"/>
+      <path class="fold" d="M1066 214 l14 14 h-14 z"/>
+      <text class="dt" x="844" y="238">🧪 test cases &amp; convergence</text>
+      <text class="dl" x="844" y="258">5 cases from the AC — committed RED</text>
+      <text class="dl" x="844" y="274">tests untouchable by the agent</text>
+      <text class="dl" x="844" y="290">/converge: every AC vs real code</text>
+      <text class="gl" x="844" y="312">⏸ GATE QA/PR</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.3s" begin="16.6s" fill="freeze"/>
+      <text class="st" x="950" y="312">👤 approved ✔</text></g>
+
+    <!-- construccion TDD -->
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="18s" fill="freeze"/>
+      <text x="26" y="366" fill="#ff6b6b">$ python3 tests/test_rules.py → ModuleNotFoundError <tspan fill="#8fa4bd">— RED first, before any code exists</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="19.2s" fill="freeze"/>
+      <text x="26" y="396" fill="#28c840">✔ implement → Ran 5 tests — OK <tspan fill="#8fa4bd">(escalation rule lives in CODE, not in the prompt · tests untouched)</tspan></text></g>
+
+    <!-- interaccion real -->
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="20.6s" fill="freeze"/>
+      <text x="26" y="434" fill="#5a708c">── live interaction ─────────────────────────────────────────────────────────────────</text></g>
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="21.4s" fill="freeze"/>
-      <text x="26" y="578" fill="#28c840">✔ caso #1 APROBADO por mmaripanguec (2026-07-20T00:06:15Z) · respuesta enviada — quién, cuándo y qué editó, registrado</text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="23s" fill="freeze"/>
-      <text x="26" y="610" fill="#c3d2e4">› "¿pagar con criptomonedas?" → <tspan fill="#e8eaed">"No tengo esa información… prefiero no inventar"</tspan> <tspan fill="#5a708c">[no source → no answer]</tspan></text></g>
-
+      <text x="26" y="464" fill="#5fce96">$ <tspan fill="#e8eaed">python3 -m assistant.cli "What are your opening hours?"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="22.6s" fill="freeze"/>
+      <text x="26" y="494" fill="#c3d2e4">assistant › <tspan fill="#e8eaed">"We are open Monday to Friday from 9:00 to 18:00 and Saturdays from 10:00 to 14:00…"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="23.5s" fill="freeze"/>
+      <text x="26" y="518" fill="#5a708c">            [faq.md#hours — the curated FAQ is the ONLY source]</text></g>
     <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="24.6s" fill="freeze"/>
-      <text x="26" y="650" fill="#5a708c">── result ──────────────────────────────────────────────────────────────────────────</text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="25.4s" fill="freeze"/>
-      <text x="26" y="682" fill="#e8eaed">code: <tspan fill="#5fce96">repos/asistente-clientes/</tspan> <tspan fill="#8fa4bd">→ asistente/ (nucleo·cola·gemini_adk·cli·aprobar) · tests/ · faq.md · estado/</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="26.6s" fill="freeze"/>
-      <text x="26" y="714" fill="#e8eaed">config: <tspan fill="#5fce96">cp .env.example .env</tspan> <tspan fill="#8fa4bd">→</tspan> <tspan fill="#e0a458">GOOGLE_API_KEY=</tspan><tspan fill="#8fa4bd">&lt;AI Studio&gt;</tspan> · <tspan fill="#e0a458">GEMINI_MODEL=</tspan><tspan fill="#8fa4bd">gemini-2.5-flash</tspan></text></g>
-    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="27.8s" fill="freeze"/>
-      <text x="26" y="748" fill="#5fce96">offline mode runs without a key · with a key, Gemini writes over the curated FAQ only. The human decided. ∎</text></g>
+      <text x="26" y="552" fill="#5fce96">$ <tspan fill="#e8eaed">python3 -m assistant.cli "There's a charge on my card I don't recognize"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="25.8s" fill="freeze"/>
+      <text x="26" y="582" fill="#c3d2e4">assistant › <tspan fill="#e8eaed">"Your case needs a human agent and I have already escalated it with priority…"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="27s" fill="freeze"/>
+      <text x="26" y="612" fill="#e0a458">⚠ SENSITIVE (possible fraud) → case #1 queued with a draft reply · NOTHING is sent yet</text></g>
+
+    <!-- pausa de validacion humana -->
+    <g opacity="0"><animate attributeName="opacity" values="0;0.35;1;0.35;1" dur="4s" begin="28.4s" fill="freeze"/>
+      <text x="26" y="656" fill="#e0a458" font-size="16" font-weight="bold">⏸ HUMAN VALIDATION — the assistant waits. Without approval, no reply exists…</text></g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="32.8s" fill="freeze"/>
+      <text x="26" y="696" fill="#66aef0">👤 $ <tspan fill="#e8eaed">python3 -m assistant.approve</tspan>   <tspan fill="#8fa4bd">→ #1 "There's a charge on my card…" + proposed draft</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="34.2s" fill="freeze"/>
+      <text x="26" y="726" fill="#66aef0">👤 $ <tspan fill="#e8eaed">python3 -m assistant.approve 1 --text "We have preventively blocked your card…"</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="35.8s" fill="freeze"/>
+      <text x="26" y="756" fill="#28c840">✔ case #1 APPROVED by mmaripanguec (2026-07-20T00:18:44Z) · reply sent — who, when, what was edited: recorded</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="37.4s" fill="freeze"/>
+      <text x="26" y="786" fill="#c3d2e4">› "Can I pay with cryptocurrency?" → <tspan fill="#e8eaed">"I don't have that information… I'd rather not make up an answer"</tspan> <tspan fill="#5a708c">[no source → no answer]</tspan></text></g>
+
+    <!-- resultado -->
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="39s" fill="freeze"/>
+      <text x="26" y="826" fill="#5a708c">── result ───────────────────────────────────────────────────────────────────────────</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="39.8s" fill="freeze"/>
+      <text x="26" y="856" fill="#e8eaed">code: <tspan fill="#5fce96">repos/customer-assistant/</tspan> <tspan fill="#8fa4bd">→ assistant/ (core·escalation·gemini_adk·cli·approve) · tests/ · faq.md · state/</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="41s" fill="freeze"/>
+      <text x="26" y="886" fill="#e8eaed">config: <tspan fill="#5fce96">cp .env.example .env</tspan> <tspan fill="#8fa4bd">→</tspan> <tspan fill="#e0a458">GOOGLE_API_KEY=</tspan><tspan fill="#8fa4bd">&lt;AI Studio&gt;</tspan> · <tspan fill="#e0a458">GEMINI_MODEL=</tspan><tspan fill="#8fa4bd">gemini-2.5-flash</tspan></text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="42.2s" fill="freeze"/>
+      <text x="26" y="916" fill="#5fce96">offline mode runs without a key · with a key, Gemini phrases over the curated FAQ only</text></g>
+    <g opacity="0"><animate attributeName="opacity" values="0;1" dur="0.25s" begin="43.4s" fill="freeze"/>
+      <text x="26" y="950" fill="#e8eaed" font-size="15.5" font-weight="bold">Every artifact — spec, design, tests, convergence, and the sensitive reply — was validated by a human. ∎</text></g>
   </g>
 </svg>

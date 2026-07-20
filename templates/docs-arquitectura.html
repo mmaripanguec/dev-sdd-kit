@@ -101,21 +101,21 @@ sobre qué commit).</p>
 
 <div class="wide"><table>
 <tr><th>Fase</th><th>Nombre</th><th>La ejecuta</th><th>Produce</th><th>Gate</th></tr>
-<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (paso 0) + <code>/clarificar</code></td>
+<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (paso 0) + <code>/clarify</code></td>
     <td>Clasificación (existente / nueva / mixto), packs cargados, ambigüedades resueltas y trazadas</td><td>—</td></tr>
 <tr><td>F1</td><td>Requerimiento</td><td>agente <code>requisitos</code></td>
     <td>Historias INVEST priorizadas P1–P3 con criterios Gherkin</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimación</td><td>agente <code>estimacion</code></td>
     <td>Story points + prioridad WSJF (con datos de uso.md)</td><td>—</td></tr>
-<tr><td>F3</td><td>Refinamiento</td><td><code>/spec-review</code> + <code>/consistencia</code></td>
+<tr><td>F3</td><td>Refinamiento</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec que cumple la DoR de 13 puntos, sin hallazgos que bloqueen</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Análisis</td><td>agente <code>analisis</code></td>
     <td>Reglas de negocio RN-xx, dependencias, casos límite, regulatorio</td><td>—</td></tr>
-<tr><td>F5</td><td>Diseño</td><td>agente <code>arquitectura</code> + <code>/consistencia</code></td>
+<tr><td>F5</td><td>Diseño</td><td>agente <code>arquitectura</code> + <code>/consistency</code></td>
     <td>Contratos OpenAPI, C4, ADRs, threat model STRIDE, NFRs</td><td class="gate">Arquitectura</td></tr>
 <tr><td>F6</td><td>Construcción</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Código con TDD, un commit por tarea EN su repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certificación</td><td><code>/convergir</code> + agente <code>calidad</code></td>
+<tr><td>F7</td><td>Certificación</td><td><code>/converge</code> + agente <code>calidad</code></td>
     <td>Convergencia código↔spec + veredicto trazable</td><td class="gate">QA/PR</td></tr>
 <tr><td>F8</td><td>Paso a producción</td><td>agente <code>publicacion</code></td>
     <td>Expediente de riesgo (ITIL) con rollback probado y SBOM</td><td class="gate">Comité CAB</td></tr>
@@ -226,7 +226,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
   <!-- fila A: F0 a F4 (el QUÉ: escriben la spec) -->
   <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
-  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarificar</text>
+  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarify</text>
   <text class="sub" x="132" y="84" text-anchor="middle">clasifica y carga contexto</text>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
@@ -241,7 +241,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinamiento</text>
-  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistencia</text>
+  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistency</text>
   <text class="sub" x="744" y="84" text-anchor="middle">DoR de 13 puntos</text>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
@@ -290,7 +290,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certificación</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · agente calidad</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · agente calidad</text>
   <text class="sub" x="540" y="316" text-anchor="middle">veredicto contra la spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
@@ -370,7 +370,7 @@ postmortems (RN-F4: fuente y período declarados, o «sin datos»).</p>
 
 <h3>Escenario A — Instalar la fábrica para un sistema nuevo</h3>
 <pre>git clone &lt;url-de-la-plantilla&gt; mi-sistema && cd mi-sistema
-./scripts/init-sistema.sh mi-sistema   # limpia datos de instancia, crea registro
+./scripts/init-system.sh mi-sistema   # limpia datos de instancia, crea registro
 /repo-add &lt;url-o-ruta&gt;             # por cada repo del sistema
 /system-map                        # cuando haya ≥2 repos con pack</pre>
 
@@ -381,12 +381,12 @@ cp .env.example .env               # credenciales según proveedor
 
 <h3>Escenario C — Especificar y construir una feature</h3>
 <pre>/spec-create &lt;nombre&gt; &lt;descripción&gt;   # triage F0 + F1..F5 con gates
-/clarificar &lt;spec&gt;                    # si hay ambigüedad (máx. 5 preguntas)
+/clarify &lt;spec&gt;                    # si hay ambigüedad (máx. 5 preguntas)
 /spec-review specs/&lt;spec&gt;.md          # DoR de 13 puntos
-/consistencia specs/&lt;spec&gt;.md         # cruzada; APTO PARA GATE para avanzar
+/consistency specs/&lt;spec&gt;.md         # cruzada; APTO PARA GATE para avanzar
 /harness-init specs/&lt;spec&gt;.md         # solo si es multi-sesión
 /implement-task specs/&lt;spec&gt;.md T1    # TDD, un commit por tarea EN su repo
-/convergir specs/&lt;spec&gt;.md            # brechas código↔spec antes de certificar</pre>
+/converge specs/&lt;spec&gt;.md            # brechas código↔spec antes de certificar</pre>
 <p class="muted">Regla de oro: lanzar Claude Code SIEMPRE desde la raíz del
 workspace; los commits de código van dentro de cada repo
 (<code>git -C repos/&lt;repo&gt; …</code>), los de conocimiento aquí.</p>
@@ -395,7 +395,7 @@ workspace; los commits de código van dentro de cada repo
 <pre>/as-is ¿qué endpoints expone X?    # estado real (grafo + mapa)
 /as-is-sync                        # tras cambios estructurales
 ./scripts/dora.sh                  # recalcular métricas (F9 tras incidente)
-/orquestar specs/&lt;spec&gt;.md         # ciclo E2E completo (solo humano)</pre>
+/orchestrate specs/&lt;spec&gt;.md         # ciclo E2E completo (solo humano)</pre>
 
 <h3>Qué aprueba el humano (y qué no puede hacer el agente)</h3>
 <div class="wide"><table>

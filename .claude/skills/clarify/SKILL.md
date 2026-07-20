@@ -1,5 +1,5 @@
 ---
-name: clarificar
+name: clarify
 description: Resuelve las ambigüedades de un requerimiento o spec con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec. Usar entre el triage F0 y F1, cuando pidan "clarificar el requerimiento", o cuando una spec tenga marcadores [NECESITA CLARIFICACIÓN].
 argument-hint: "<ruta-de-la-spec | descripción del requerimiento>"
 allowed-tools: Read Glob Grep Edit

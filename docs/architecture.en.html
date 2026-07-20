@@ -111,21 +111,21 @@ which commit).</p>
 
 <div class="wide"><table>
 <tr><th>Phase</th><th>Name</th><th>Executed by</th><th>Produces</th><th>Gate</th></tr>
-<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarificar</code></td>
+<tr><td>F0</td><td>Triage</td><td><code>/spec-create</code> (step 0) + <code>/clarify</code></td>
     <td>Classification (existing / new / mixed), context packs loaded, ambiguities resolved and traced</td><td>—</td></tr>
 <tr><td>F1</td><td>Requirements</td><td><code>requisitos</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimation</td><td><code>estimacion</code> agent</td>
     <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
-<tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistencia</code></td>
+<tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Analysis</td><td><code>analisis</code> agent</td>
     <td>Business rules RN-xx, dependencies, edge cases, regulatory</td><td>—</td></tr>
-<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistencia</code></td>
+<tr><td>F5</td><td>Design</td><td><code>arquitectura</code> agent + <code>/consistency</code></td>
     <td>OpenAPI contracts, C4 diagrams, ADRs, STRIDE threat model, NFRs</td><td class="gate">Architecture</td></tr>
 <tr><td>F6</td><td>Construction</td><td><code>/harness-init</code> + <code>/implement-task</code></td>
     <td>Code built with TDD, one commit per task IN its repo</td><td>—</td></tr>
-<tr><td>F7</td><td>Certification</td><td><code>/convergir</code> + <code>calidad</code> agent</td>
+<tr><td>F7</td><td>Certification</td><td><code>/converge</code> + <code>calidad</code> agent</td>
     <td>Code↔spec convergence + traceable verdict</td><td class="gate">QA/PR</td></tr>
 <tr><td>F8</td><td>Release</td><td><code>publicacion</code> agent</td>
     <td>Risk dossier (ITIL) with tested rollback and SBOM</td><td class="gate">CAB board</td></tr>
@@ -169,12 +169,12 @@ description is the auto-load trigger.</p>
 <tr><td><code>/as-is-learn</code></td><td>Analiza los repos REALES para aprender como se definen y consumen las rutas, escribe extractores exactos por repo y regenera el mapa as-is. Usar cuando el grafo cross-repo salga vacio o incompleto, o cuando cambie el framework de un repo.</td></tr>
 <tr><td><code>/as-is-sync</code></td><td>Regenera el mapa as-is desde el código y commitea el resultado. Usar tras cambios estructurales (módulos nuevos, endpoints, migraciones) o cuando /as-is detecte desactualización.</td></tr>
 <tr><td><code>/as-is</code></td><td>Consulta el mapa as-is real del repositorio (módulos, dependencias, APIs, datos). Usar cuando pregunten cómo está estructurada la aplicación, qué depende de qué, qué APIs existen, o antes de diseñar (F5).</td></tr>
-<tr><td><code>/clarificar</code></td><td>Resuelve las ambigüedades de un requerimiento o spec con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec. Usar entre el triage F0 y F1, cuando pidan &quot;clarificar el requerimiento&quot;, o cuando una spec tenga marcadores [NECESITA CLARIFICACIÓN].</td></tr>
-<tr><td><code>/consistencia</code></td><td>Análisis read-only de consistencia cruzada entre una spec y el resto de artefactos de la fábrica (reglas de negocio, ADRs, as-is, reglas .claude/rules, plan de tareas). Usar antes del gate DoR y del gate de Arquitectura, o cuando pidan &quot;analizar consistencia&quot; de una spec.</td></tr>
-<tr><td><code>/convergir</code></td><td>Cierra la brecha funcional código↔spec al terminar la construcción (F6/F7) — evalúa el código real contra las historias y criterios de la spec y AÑADE el trabajo restante como tareas de convergencia. Usar antes de la certificación F7 o cuando pidan &quot;convergir la spec&quot; / &quot;qué falta de la spec&quot;.</td></tr>
+<tr><td><code>/clarify</code></td><td>Resuelve las ambigüedades de un requerimiento o spec con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec. Usar entre el triage F0 y F1, cuando pidan &quot;clarificar el requerimiento&quot;, o cuando una spec tenga marcadores [NECESITA CLARIFICACIÓN].</td></tr>
+<tr><td><code>/consistency</code></td><td>Análisis read-only de consistencia cruzada entre una spec y el resto de artefactos de la fábrica (reglas de negocio, ADRs, as-is, reglas .claude/rules, plan de tareas). Usar antes del gate DoR y del gate de Arquitectura, o cuando pidan &quot;analizar consistencia&quot; de una spec.</td></tr>
+<tr><td><code>/converge</code></td><td>Cierra la brecha funcional código↔spec al terminar la construcción (F6/F7) — evalúa el código real contra las historias y criterios de la spec y AÑADE el trabajo restante como tareas de convergencia. Usar antes de la certificación F7 o cuando pidan &quot;convergir la spec&quot; / &quot;qué falta de la spec&quot;.</td></tr>
 <tr><td><code>/harness-init</code></td><td>Prepara el harness de una feature grande o multi-sesión, derivado de su spec aprobada (patrón initializer de Anthropic).</td></tr>
 <tr><td><code>/implement-task</code></td><td>Ejecuta UNA tarea del plan de una spec con protocolo TDD estricto (F6 Construcción). Usar para implementar tareas una a una.</td></tr>
-<tr><td><code>/orquestar</code></td><td>Recorre el ciclo E2E de 9 fases para una feature, delegando en los agentes por fase y deteniéndose en cada gate humano. Solo invocable por humanos.</td></tr>
+<tr><td><code>/orchestrate</code></td><td>Recorre el ciclo E2E de 9 fases para una feature, delegando en los agentes por fase y deteniéndose en cada gate humano. Solo invocable por humanos.</td></tr>
 <tr><td><code>/repo-add</code></td><td>Da de alta un repositorio en la fábrica (URL git o ruta local): clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el mapa as-is. Usar cuando pidan &quot;agregar/ingresar/onboarding de un repo&quot; o &quot;configurar el análisis de un repositorio&quot;.</td></tr>
 <tr><td><code>/repo-map</code></td><td>Genera o actualiza el PACK DE CONTEXTO de un repositorio (skill cargable .claude/skills/&lt;prefijo&gt;-&lt;repo&gt;) — arquitectura, mecanismos centrales, dependencias y trampas con evidencia archivo:línea — y siembra sus aserciones. Usar cuando pidan &quot;mapear un repo&quot;, &quot;generar el contexto del repo&quot;, cuando /spec-create detecte un repo sin pack o con pack caduco, o después de /repo-add.</td></tr>
 <tr><td><code>/spec-create</code></td><td>Genera una spec de feature por capas (F1-F5) usando la plantilla de la fábrica. Usar cuando alguien pida &quot;crear spec&quot;, &quot;especificar feature&quot; o describa funcionalidad nueva antes de implementarla.</td></tr>
@@ -220,7 +220,8 @@ prerequisite); derived from each <code>scripts/*.sh</code> header.</p>
 <tr><td><code>dora.sh</code></td><td>Deriva las metricas DORA de fuentes verificables y reescribe la</td></tr>
 <tr><td><code>frescura.sh</code></td><td>Detecta si un pack de contexto caduco respecto del codigo.</td></tr>
 <tr><td><code>generate-as-is.sh</code></td><td>Mapa AS-IS real del sistema declarado en repos.yaml.</td></tr>
-<tr><td><code>init-sistema.sh</code></td><td>Convierte un CLON de la plantilla de la fabrica en la</td></tr>
+<tr><td><code>init-sistema.sh</code></td><td>alias de compatibilidad; el nombre oficial es init-system.sh</td></tr>
+<tr><td><code>init-system.sh</code></td><td>Convierte un CLON de la plantilla de la fabrica en la</td></tr>
 <tr><td><code>repo-add.sh</code></td><td>Alta IDEMPOTENTE de un repositorio en la fabrica:</td></tr>
 <tr><td><code>repo-lib.sh</code></td><td>Libreria compartida del registro de repos (repos.yaml).</td></tr>
 <tr><td><code>setup.sh</code></td><td>Clona o actualiza en repos/ TODOS los repositorios declarados en</td></tr>
@@ -285,7 +286,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- row A: F0 to F4 (the WHAT: they write the spec) -->
   <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
-  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarificar</text>
+  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarify</text>
   <text class="sub" x="132" y="84" text-anchor="middle">classifies · loads context</text>
 
   <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
@@ -300,7 +301,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
-  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistencia</text>
+  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistency</text>
   <text class="sub" x="744" y="84" text-anchor="middle">13-point DoR</text>
 
   <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
@@ -349,7 +350,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
-  <text class="sub" x="540" y="302" text-anchor="middle">/convergir · calidad agent</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · calidad agent</text>
   <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
 
   <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
@@ -426,8 +427,9 @@ the DoR (rule RN-F3).</p>
 <h3>Workspace specs</h3>
 <div class="wide"><table>
 <tr><th>File</th><th>Spec</th><th>Status</th></tr>
-<tr><td><code>2026-07-asistente-clientes-adk.md</code></td><td>Spec: Asistente digital de clientes (agente ADK + Gemini)</td><td>borrador — SPEC DE EJEMPLO del flujo &quot;aplicación nueva&quot; (demo de la fábrica)</td></tr>
+<tr><td><code>2026-07-customer-assistant-adk.md</code></td><td>Spec: Customer digital assistant (ADK agent + Gemini)</td><td>?</td></tr>
 <tr><td><code>2026-07-docs-html.md</code></td><td>Spec: Documentación HTML derivada de la fábrica (arquitectura, técnica, modelo y uso)</td><td>implementada</td></tr>
+<tr><td><code>2026-07-english-commands.md</code></td><td>Spec: Comandos en inglés e idioma de trabajo configurable</td><td>borrador</td></tr>
 <tr><td><code>2026-07-generalizacion-workspace.md</code></td><td>Spec: Generalización del workspace — fábrica para CUALQUIER sistema de repos</td><td>implementada (rama feature/generalizacion-workspace; pendiente prueba con repos remotos reales)</td></tr>
 <tr><td><code>2026-07-github-docs.md</code></td><td>Spec: Documentación de publicación en GitHub (inglés) con operación interna en español</td><td>implementada</td></tr>
 <tr><td><code>2026-07-mejoras-spec-kit.md</code></td><td>Spec: Adopción de mecánicas de calidad de GitHub Spec Kit</td><td>implementada</td></tr>
@@ -445,7 +447,7 @@ the postmortems (RN-F4: source and period declared, or "no data").</p>
 
 <h3>Scenario A — Install the factory for a new system</h3>
 <pre>git clone &lt;template-url&gt; my-system && cd my-system
-./scripts/init-sistema.sh my-system   # cleans instance data, creates the registry
+./scripts/init-system.sh my-system   # cleans instance data, creates the registry
 /repo-add &lt;url-or-path&gt;            # once per system repo
 /system-map                        # once ≥2 repos have context packs</pre>
 
@@ -456,12 +458,12 @@ cp .env.example .env               # credentials per git provider
 
 <h3>Scenario C — Specify and build a feature</h3>
 <pre>/spec-create &lt;name&gt; &lt;description&gt;     # F0 triage + F1..F5 with gates
-/clarificar &lt;spec&gt;                    # if ambiguous (max 5 questions)
+/clarify &lt;spec&gt;                    # if ambiguous (max 5 questions)
 /spec-review specs/&lt;spec&gt;.md          # 13-point Definition of Ready
-/consistencia specs/&lt;spec&gt;.md         # cross-check; needs APTO PARA GATE
+/consistency specs/&lt;spec&gt;.md         # cross-check; needs APTO PARA GATE
 /harness-init specs/&lt;spec&gt;.md         # only for multi-session work
 /implement-task specs/&lt;spec&gt;.md T1    # TDD, one commit per task IN its repo
-/convergir specs/&lt;spec&gt;.md            # code↔spec gaps before certifying</pre>
+/converge specs/&lt;spec&gt;.md            # code↔spec gaps before certifying</pre>
 <p class="muted">Golden rule: always launch Claude Code from the workspace
 root; code commits go inside each repo (<code>git -C repos/&lt;repo&gt; …</code>),
 knowledge commits go here.</p>
@@ -470,7 +472,7 @@ knowledge commits go here.</p>
 <pre>/as-is which endpoints does X expose?   # real state (graph + map)
 /as-is-sync                             # after structural changes
 ./scripts/dora.sh                       # recompute metrics (F9, after incidents)
-/orquestar specs/&lt;spec&gt;.md              # full E2E cycle (humans only)</pre>
+/orchestrate specs/&lt;spec&gt;.md              # full E2E cycle (humans only)</pre>
 
 <h3>What humans approve (and what agents cannot do)</h3>
 <div class="wide"><table>

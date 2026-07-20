@@ -1,5 +1,5 @@
 ---
-name: consistencia
+name: consistency
 description: Análisis read-only de consistencia cruzada entre una spec y el resto de artefactos de la fábrica (reglas de negocio, ADRs, as-is, reglas .claude/rules, plan de tareas). Usar antes del gate DoR y del gate de Arquitectura, o cuando pidan "analizar consistencia" de una spec.
 argument-hint: "<ruta-de-la-spec>"
 allowed-tools: Read Glob Grep

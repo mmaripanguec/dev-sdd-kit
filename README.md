@@ -22,7 +22,7 @@ before code, and every document or metric is derived from the real sources.
 
 ```bash
 git clone <this-repo-url> my-system && cd my-system
-./scripts/init-sistema.sh my-system                   # instantiate the template
+./scripts/init-system.sh my-system                   # instantiate the template
 claude                                                 # launch from the root
 /repo-add https://github.com/your-org/your-repo.git    # onboard your first repo
 /spec-create my-feature what you need, in plain words  # specify with gates
@@ -32,7 +32,7 @@ claude                                                 # launch from the root
   <img src="docs/assets/demo.svg" alt="Step-by-step demo: environment from scratch, spec for an ADK + Gemini customer assistant, human gate approvals, TDD, and a live interaction with human-approved escalation" width="100%">
 </p>
 
-<p align="center">▶ <strong><a href="docs/demo-assistant.md">Follow the full demo walkthrough</a></strong> — environment from scratch to a running ADK + Gemini customer assistant, with every command and every human gate. Example spec included: <a href="specs/2026-07-asistente-clientes-adk.md"><code>specs/2026-07-asistente-clientes-adk.md</code></a>.</p>
+<p align="center">▶ <strong><a href="docs/demo-assistant.md">Follow the full demo walkthrough</a></strong> — environment from scratch to a running ADK + Gemini customer assistant, with every command and every human gate. Example spec included: <a href="specs/2026-07-customer-assistant-adk.md"><code>specs/2026-07-customer-assistant-adk.md</code></a>.</p>
 
 📐 **[Architecture & usage guide (EN)](docs/architecture.en.html)** ·
 **[Documento de arquitectura (ES)](docs/arquitectura.html)** — generated
@@ -96,8 +96,8 @@ dev-sdd-kit/
 │
 ├── .claude/
 │   ├── skills/                       # 14 slash commands (one SKILL.md each)
-│   │   ├── spec-create/  spec-review/  clarificar/  consistencia/
-│   │   ├── implement-task/  convergir/  harness-init/  orquestar/
+│   │   ├── spec-create/  spec-review/  clarify/  consistency/
+│   │   ├── implement-task/  converge/  harness-init/  orchestrate/
 │   │   ├── repo-add/  repo-map/  system-map/
 │   │   └── as-is/  as-is-sync/  as-is-learn/
 │   ├── agents/                       # 7 phase agents
@@ -114,7 +114,7 @@ dev-sdd-kit/
 │   ├── 2026-07-metricas-dora.md
 │   ├── 2026-07-docs-html.md
 │   ├── 2026-07-github-docs.md
-│   └── 2026-07-asistente-clientes-adk.md   # Example: new-app flow (demo)
+│   └── 2026-07-customer-assistant-adk.md   # Example: new-app flow (demo, EN)
 │
 ├── knowledge/                        # The system's memory
 │   ├── reglas-negocio.md             # Business rules in force (RN-xx)

@@ -8,8 +8,8 @@ deliberately simple — the point is the *process* around it: every decision
 that matters stops at a human.
 
 The example spec produced by this flow ships in this repo:
-[`specs/2026-07-asistente-clientes-adk.md`](../specs/2026-07-asistente-clientes-adk.md)
-(Spanish — the factory's working language; structure is self-explanatory).
+[`specs/2026-07-customer-assistant-adk.md`](../specs/2026-07-customer-assistant-adk.md)
+(English — the demo chose `--lang en` at instantiation).
 
 ## 0 · Prerequisites
 
@@ -30,7 +30,10 @@ export GOOGLE_API_KEY=<your-key>       # from Google AI Studio — NEVER commit 
 
 ```bash
 git clone <template-url> demo && cd demo
-./scripts/init-sistema.sh demo         # clean instance: registry, skills, rules
+./scripts/init-system.sh assistant-demo
+# ? Working language for specs and interactions? [en/es] (default en): en
+#   → saved as `system.lang: en` and kept consistent from here on.
+#   Command names are ALWAYS English, whatever language you pick.
 claude                                 # always launch from the workspace root
 ```
 
@@ -41,7 +44,7 @@ claude                                 # always launch from the workspace root
 ```
 
 The F0 triage classifies this as a **new application** (no repo exists yet →
-task T0 will create it). Ambiguity triggers `/clarificar` — max 5 targeted
+task T0 will create it). Ambiguity triggers `/clarify` — max 5 targeted
 questions, answers recorded in the spec:
 
 ```text
@@ -61,7 +64,7 @@ mechanism.
 ```text
 ⏸ GATE PO/TL        stories & priorities            👤 you: "aprobado"
 ⏸ GATE DoR          /spec-review (13-point check)
-                    /consistencia (cross-artifact)   👤 you: "aprobado"
+                    /consistency (cross-artifact)   👤 you: "aprobado"
 ⏸ GATE Architecture contracts · STRIDE threat model  👤 you: "aprobado"
 ```
 
@@ -85,44 +88,45 @@ test to make it pass is forbidden by the factory rules.
 This is the actual output of the built assistant (offline mode, no API key):
 
 ```text
-$ python3 -m asistente.cli "¿Cuál es el horario de atención?"
-cliente   › ¿Cuál es el horario de atención?
-asistente › Atendemos de lunes a viernes de 9:00 a 18:00 y sábados de
-            10:00 a 14:00… (fuente oficial: FAQ)
-            [faq.md#horario · modo offline]
+$ python3 -m assistant.cli "What are your opening hours?"
+customer  › What are your opening hours?
+assistant › We are open Monday to Friday from 9:00 to 18:00 and Saturdays
+            from 10:00 to 14:00… (official source: FAQ)
+            [faq.md#hours · offline mode]
 
-$ python3 -m asistente.cli "Hay un cargo que no reconozco en mi tarjeta"
-asistente › Tu caso requiere atención de un ejecutivo humano y ya lo
-            derivé con prioridad…
-            [SENSIBLE → caso #1 encolado; borrador listo para aprobación]
+$ python3 -m assistant.cli "There's a charge on my card I don't recognize"
+assistant › Your case needs a human agent and I have already escalated it
+            with priority…
+            [SENSITIVE → case #1 queued; draft awaiting human approval]
 ```
 
 **The human validation moment** — nothing is sent until a person decides:
 
 ```text
-$ python3 -m asistente.aprobar
-#1 [2026-07-20T00:06:08Z] Hay un cargo que no reconozco en mi tarjeta
-   borrador: Lamento el inconveniente. Tomamos medidas preventivas…
+$ python3 -m assistant.approve
+#1 [2026-07-20T00:18:36Z] There's a charge on my card I don't recognize
+   draft: We're sorry about the trouble. We have taken preventive action…
 
-$ python3 -m asistente.aprobar 1 --texto "Bloqueamos preventivamente tu tarjeta…"
-caso #1 APROBADO por mmaripanguec (2026-07-20T00:06:15Z)
-respuesta enviada › Bloqueamos preventivamente tu tarjeta…
+$ python3 -m assistant.approve 1 --text "We have preventively blocked your card…"
+case #1 APPROVED by mmaripanguec (2026-07-20T00:18:44Z)
+reply sent › We have preventively blocked your card…
 ```
 
 Who approved, when, and what they edited is recorded in
-`estado/aprobados.json`. And anything outside the curated FAQ gets an honest
-*"No tengo esa información… prefiero no inventar"* — the same **"no source →
-no answer"** principle the factory applies to its own metrics.
+`state/approved.json`. And anything outside the curated FAQ gets an honest
+*"I don't have that information… I'd rather not make up an answer"* — the
+same **"no source → no answer"** principle the factory applies to its own
+metrics.
 
 ## 6 · Where everything lives · configuration
 
 ```
-repos/asistente-clientes/
-├── asistente/            # nucleo.py (FAQ + sensitivity in CODE) · cola.py
-│                         # gemini_adk.py · cli.py · aprobar.py
-├── tests/test_reglas.py  # the 5 RED-first tests (RN-A1 / RN-A2)
+repos/customer-assistant/
+├── assistant/            # core.py (FAQ + sensitivity in CODE) · escalation.py
+│                         # gemini_adk.py · cli.py · approve.py
+├── tests/test_rules.py   # the 5 RED-first tests (BR-A1 / BR-A2)
 ├── faq.md                # curated knowledge — the ONLY answer source
-├── estado/               # pendientes.json · aprobados.json (gitignored)
+├── state/                # pending.json · approved.json (gitignored)
 └── .env.example          # copy to .env and fill in:
 ```
 
@@ -139,7 +143,7 @@ curated FAQ content: the source rule is enforced in code either way.
 ## 7 · Certify and close
 
 ```text
-/convergir specs/2026-07-customer-assistant.md    # every criterion vs real code
+/converge specs/2026-07-customer-assistant.md    # every criterion vs real code
 ⏸ GATE QA/PR                                      👤 you: "aprobado" → shipped
 ```
 
