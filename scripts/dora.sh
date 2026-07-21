@@ -33,7 +33,7 @@ DATA=$(mktemp)
 trap 'rm -f "${DATA}"' EXIT
 
 # ---- recolectar despliegues y lead times por repo registrado ----
-for name in $(registry_repos); do
+for name in $(registry_repos 2>/dev/null); do
   dir="repos/${name}"
   if [ -d "${dir}/.git" ]; then
     sello=$(git -C "${dir}" rev-parse --short HEAD 2>/dev/null || echo "?")

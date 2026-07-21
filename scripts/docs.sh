@@ -29,7 +29,7 @@ mkdir -p docs
 # ---- topologia: derivada del registro via repo-lib (RN-G1) ----
 DATA=$(mktemp)
 trap 'rm -f "${DATA}"' EXIT
-for name in $(registry_repos); do
+for name in $(registry_repos 2>/dev/null); do
   prov=$(registry_get "${name}" provider 2>/dev/null || echo "")
   role=$(registry_get "${name}" role 2>/dev/null || echo "")
   orden=$(registry_get "${name}" deploy_order 2>/dev/null || echo "")

@@ -49,8 +49,12 @@ assert_eq "orden de despliegue: back primero" "repo-back" \
 unset REGISTRY_FILE
 
 echo "== registro real del workspace (repos.yaml) valida =="
-assert_eq "repos.yaml del workspace valida" "0" \
-  "$(bash -c '. scripts/repo-lib.sh; registry_validate' >/dev/null 2>&1; echo $?)"
+if [ -f repos.yaml ]; then
+  assert_eq "repos.yaml del workspace valida" "0" \
+    "$(bash -c '. scripts/repo-lib.sh; registry_validate' >/dev/null 2>&1; echo $?)"
+else
+  ok "repos.yaml del workspace valida (ausente: estado plantilla, lo crea init-system.sh)"
+fi
 
 echo "== registro ausente (CA2.4: error accionable) =="
 OUT=$(REGISTRY_FILE="${TMP}/no-existe.yaml" bash -c '. scripts/repo-lib.sh; registry_validate' 2>&1)

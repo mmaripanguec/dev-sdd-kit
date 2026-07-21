@@ -99,7 +99,7 @@ Full detail — every phase, gate, mechanism and the live catalog — in the
 dev-sdd-kit/
 ├── README.md · CONTRIBUTING.md · CHANGELOG.md · LICENSE
 ├── CLAUDE.md                         # Shared context — loaded every session
-├── repos.yaml                        # System topology — the single source of truth
+├── repos.yaml                        # System topology (created by ./scripts/init-system.sh)
 │
 ├── .claude/
 │   ├── skills/                       # 14 slash commands (one SKILL.md each)
@@ -121,7 +121,6 @@ dev-sdd-kit/
 │   ├── 2026-07-metricas-dora.md
 │   ├── 2026-07-docs-html.md
 │   ├── 2026-07-github-docs.md
-│   ├── 2026-07-marketing-release.md
 │   └── 2026-07-customer-assistant-adk.md   # Example: new-app flow (demo, EN)
 │
 ├── knowledge/                        # The system's memory
