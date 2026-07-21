@@ -13,7 +13,7 @@
 - Threat modeling (STRIDE) mandatory for features that touch money,
   in addition to the base triggers (auth, personal data).
 - Transactional and personal data: encryption in transit and at rest;
-  financial regulatory requirements identified in the spec ("Análisis"
+  financial regulatory requirements identified in the spec ("Analysis"
   section) as non-negotiable.
 - Amounts are handled with exact types (decimal/integer cents),
   never floating point; every operation records an explicit currency.

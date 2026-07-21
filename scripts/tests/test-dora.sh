@@ -155,5 +155,5 @@ assert_contains "explica la causa (not cloned)" "cloned"    "$GEN3"
 assert_not_contains "no inventa un MTTR"        "MTTR: 45"  "$GEN3"
 
 echo ""
-echo "RESULTADO: ${PASS} ok, ${FAIL} fallos"
+echo "Result: ${PASS} ok, ${FAIL} failures"
 [ "${FAIL}" -eq 0 ]

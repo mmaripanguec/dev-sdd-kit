@@ -2,7 +2,7 @@
 name: orchestrate
 description: Walks the E2E 9-phase cycle for a feature, delegating to the per-phase agents and stopping at each human gate. Only invocable by humans.
 disable-model-invocation: true
-argument-hint: "<spec o descripción de la feature>"
+argument-hint: "<spec or feature description>"
 ---
 
 Run the E2E cycle for: $ARGUMENTS

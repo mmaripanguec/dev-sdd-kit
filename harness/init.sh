@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 echo "[1/4] Dependencies…"
 # e.g.: pnpm install --frozen-lockfile
 
-echo "[2/4] Configuración…"
+echo "[2/4] Configuration…"
 [ -f .env ] || { [ -f .env.example ] && cp .env.example .env && echo "  .env creado desde ejemplo"; }
 
 echo "[3/4] Base de datos / migraciones…"

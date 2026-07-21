@@ -6,8 +6,8 @@
       "description": "EJEMPLO — reemplazar al correr /harness-init sobre una spec",
       "steps": [
         "Navegar a la interfaz",
-        "Ejecutar la acción principal",
-        "Verificar el resultado observable del criterio de aceptación"
+        "Run the main action",
+        "Verify the acceptance criterion's observable result"
       ],
       "passes": false
     }

@@ -183,5 +183,5 @@ assert_not_contains "landing sin scripts externos"    "script src=\"http"    "$L
 assert_not_contains "landing sin css externo"         "stylesheet\" href=\"http" "$LANDING"
 
 echo ""
-echo "RESULTADO: ${PASS} ok, ${FAIL} fallos"
+echo "Result: ${PASS} ok, ${FAIL} failures"
 [ "${FAIL}" -eq 0 ]

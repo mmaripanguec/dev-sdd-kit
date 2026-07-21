@@ -1,7 +1,7 @@
 ---
 name: spec-review
 description: Validates a spec against the factory's Definition of Ready. Use before the DoR gate or when asked to "review spec".
-argument-hint: "<ruta-de-la-spec>"
+argument-hint: "<spec-path>"
 allowed-tools: Read Glob Grep
 ---
 

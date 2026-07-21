@@ -1,7 +1,7 @@
 ---
 name: repo-map
 description: Generates or updates a repository's CONTEXT PACK (loadable skill .claude/skills/<prefijo>-<repo>) — architecture, core mechanisms, dependencies and pitfalls with file:line evidence — and seeds its assertions. Use when asked to "map a repo", "generate the repo's context", when /spec-create detects a repo without a pack or with a stale pack, or after /repo-add.
-argument-hint: "<nombre-repo-del-registro> [foco opcional]"
+argument-hint: "<registry-repo-name> [optional focus]"
 allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/freshness.sh *) Bash(./scripts/assertions.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
@@ -28,7 +28,7 @@ and works with the correct mental model without rereading the repo.
   `verificado:` with today's date).
 - The frontmatter DESCRIPTION is the load trigger: name it with the
   application, its topics and typical questions.
-- Hard rules: without `archivo:línea` evidence a claim does not enter the
+- Hard rules: without `file:line` evidence a claim does not enter the
   body (it goes to "What I DON'T know"); the "Pitfalls" and "What I DON'T
   know" sections are never left empty (if there are no pitfalls yet, say
   which mistake would be easy to make);

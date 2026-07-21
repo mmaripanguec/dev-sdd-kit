@@ -1,7 +1,7 @@
 ---
 name: repo-add
 description: Onboards a repository into the factory (git URL or local path): clones, registers in repos.yaml, fills its CLAUDE.md with real data, indexes it in codebase-memory and regenerates the as-is map. Use when asked to "add/onboard a repo" or "set up analysis for a repository".
-argument-hint: "<url-o-ruta> [--role \"rol\"] [--entrypoint] [--domain banking] [--system-name s]"
+argument-hint: "<url-or-path> [--role \"role\"] [--entrypoint] [--domain banking] [--system-name s]"
 allowed-tools: Read Glob Grep Edit Write Bash(./scripts/repo-add.sh *) Bash(./scripts/generate-as-is.sh *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *)
 ---
 

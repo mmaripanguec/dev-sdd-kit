@@ -1,7 +1,7 @@
 ---
 name: spec-create
 description: Generates a layered feature spec (F1-F5) using the factory template. Use when someone asks to "create spec", "specify feature" or describes new functionality before implementing it.
-argument-hint: "<nombre-feature> [descripción breve]"
+argument-hint: "<feature-name> [short description]"
 allowed-tools: Read Glob Grep Write
 ---
 

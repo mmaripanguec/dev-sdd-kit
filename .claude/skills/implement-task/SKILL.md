@@ -1,7 +1,7 @@
 ---
 name: implement-task
 description: Executes ONE task from a spec's plan with strict TDD protocol (F6 Construction). Use to implement tasks one at a time.
-argument-hint: "<ruta-spec> <id-tarea>"
+argument-hint: "<spec-path> <task-id>"
 allowed-tools: Read Glob Grep Edit Write Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *)
 ---
 

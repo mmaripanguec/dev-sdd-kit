@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
+| Estado | implementada |
 | Tipo de requerimiento | existente `[workspace]` (estándar de idioma de la fábrica) |
 | Contexto cargado | inventario de skills/scripts; demo del asistente; convención de idioma vigente |
 | Autor / Fecha | Claude + Marcos Maripangue / 2026-07-19 |

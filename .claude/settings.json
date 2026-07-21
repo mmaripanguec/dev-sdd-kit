@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -f .claude/.as-is-dirty ]; then ./scripts/generate-as-is.sh && rm -f .claude/.as-is-dirty && echo 'as-is regenerado (había cambios en src/ o db/)'; fi"
+            "command": "if [ -f .claude/.as-is-dirty ]; then ./scripts/generate-as-is.sh && rm -f .claude/.as-is-dirty && echo 'as-is regenerated (src/ or db/ had changes)'; fi"
           }
         ]
       }
