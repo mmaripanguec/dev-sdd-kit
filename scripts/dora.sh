@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # dora.sh - Deriva las metricas DORA de fuentes verificables y reescribe la
-# tabla de knowledge/uso.md SOLO entre <!-- DORA:BEGIN --> y <!-- DORA:END -->.
+# tabla de knowledge/usage.md SOLO entre <!-- DORA:BEGIN --> y <!-- DORA:END -->.
 # Fuentes: historial git de los repos registrados (tags v* o merges a la rama
 # por defecto = despliegues; primer commit de la rama -> merge = lead time) y
 # postmortems INC-*.md (fecha y campo MTTR). Nunca inventa: sin fuente => la
@@ -22,7 +22,7 @@ done
 cd "${ROOT}"
 . scripts/repo-lib.sh
 
-USO="knowledge/uso.md"
+USO="knowledge/usage.md"
 DIAS=90
 [ -f "${USO}" ] || { echo "ERROR: no existe ${USO}" >&2; exit 1; }
 grep -q 'DORA:BEGIN' "${USO}" || { echo "ERROR: ${USO} sin marcadores <!-- DORA:BEGIN/END -->" >&2; exit 1; }
@@ -58,7 +58,7 @@ for name in $(registry_repos 2>/dev/null); do
 done
 
 # ---- recolectar incidentes del periodo ----
-for f in knowledge/incidentes/INC-*.md; do
+for f in knowledge/incidents/INC-*.md; do
   [ -f "${f}" ] || continue
   fecha=$(grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' "${f}" | head -1)
   mttr=$(grep -i 'MTTR' "${f}" | head -1)
@@ -66,12 +66,14 @@ for f in knowledge/incidentes/INC-*.md; do
 done
 
 # ---- calcular, componer el bloque y escribir/comparar ----
-python3 - "${DATA}" "${USO}" "${SINCE}" "${DIAS}" "${CHECK}" <<'PYEOF'
+LANG_WS="$(registry_system lang 2>/dev/null || true)"; LANG_WS="${LANG_WS:-en}"
+python3 - "${DATA}" "${USO}" "${SINCE}" "${DIAS}" "${CHECK}" "${LANG_WS}" <<'PYEOF' 
 import re, sys
 from datetime import date
 from statistics import median
 
-data_path, uso_path, since, dias, check = sys.argv[1:6]
+data_path, uso_path, since, dias, check, lang = sys.argv[1:7]
+lang = lang if lang in ("en", "es") else "en"
 dias = int(dias)
 
 repos, missing, leads, incs = [], [], [], []
@@ -99,32 +101,57 @@ mttrs = [v for v in (mttr_minutos(t) for _, t in inc_periodo) if v is not None]
 deploys = sum(d for _, d, _ in repos)
 sin_repos = not repos
 
+S = {
+  "en": {"nd": "no data ({})", "nd_repos": "no repos cloned — run scripts/setup.sh",
+         "freq": "{} deployments in {} days ({:.1f}/week)",
+         "med": "median {}m ({} postmortems)", "lead": "median {}d ({} merges)",
+         "nd_merges": "no merges in the period",
+         "cfr": "{}% ({} incidents / {} deployments)",
+         "nd_deploys": "no deployments in the period",
+         "nd_mttr": "no postmortems with MTTR in the period"},
+  "es": {"nd": "sin datos ({})", "nd_repos": "ningún repo clonado — correr scripts/setup.sh",
+         "freq": "{} despliegues en {} días ({:.1f}/semana)",
+         "med": "mediana {}m ({} postmortems)", "lead": "mediana {}d ({} merges)",
+         "nd_merges": "sin merges en el período",
+         "cfr": "{}% ({} incidentes / {} despliegues)",
+         "nd_deploys": "sin despliegues en el período",
+         "nd_mttr": "sin postmortems con MTTR en el período"},
+}[lang]
 if sin_repos:
-    causa = "sin datos (ningún repo clonado — correr scripts/setup.sh)"
+    causa = S["nd"].format(S["nd_repos"])
     freq = lead = cfr = causa
-    mttr = causa if not mttrs else f"mediana {int(median(mttrs))}m ({len(mttrs)} postmortems)"
+    mttr = causa if not mttrs else S["med"].format(int(median(mttrs)), len(mttrs))
 else:
-    freq = f"{deploys} despliegues en {dias} días ({deploys / (dias / 7):.1f}/semana)"
-    lead = (f"mediana {int(median(leads))}d ({len(leads)} merges)"
-            if leads else "sin datos (sin merges en el período)")
-    cfr = (f"{round(100 * len(inc_periodo) / deploys)}% ({len(inc_periodo)} incidentes / {deploys} despliegues)"
-           if deploys else "sin datos (sin despliegues en el período)")
-    mttr = (f"mediana {int(median(mttrs))}m ({len(mttrs)} postmortems)"
-            if mttrs else "sin datos (sin postmortems con MTTR en el período)")
+    freq = S["freq"].format(deploys, dias, deploys / (dias / 7))
+    lead = (S["lead"].format(int(median(leads)), len(leads))
+            if leads else S["nd"].format(S["nd_merges"]))
+    cfr = (S["cfr"].format(round(100 * len(inc_periodo) / deploys), len(inc_periodo), deploys)
+           if deploys else S["nd"].format(S["nd_deploys"]))
+    mttr = (S["med"].format(int(median(mttrs)), len(mttrs))
+            if mttrs else S["nd"].format(S["nd_mttr"]))
 
 fuentes = " ".join(f"{n}@{s}" for n, _, s in repos) or "ninguna"
-sello = (f"[GENERADO v1] {date.today().isoformat()} · período: últimos {dias} días "
-         f"· fuentes: {fuentes} · no editar a mano (scripts/dora.sh)")
-filas = [
-    ("Frecuencia de despliegue", freq, "≥ 1/día", "tags v* o merges a rama por defecto"),
-    ("Lead time (commit→prod)", lead, "< 1 día", "primer commit de la rama → merge"),
-    ("Change failure rate", cfr, "< 15%", "knowledge/incidentes vs despliegues"),
-    ("MTTR", mttr, "< 1 hora", "campo MTTR de los postmortems"),
-]
-bloque = [sello, "", "| Métrica | Actual | Objetivo | Fuente |", "|---|---|---|---|"]
+SEAL = {"en": ("[GENERATED v1] {} · period: last {} days · sources: {} · do not edit by hand (scripts/dora.sh)"),
+        "es": ("[GENERADO v1] {} · período: últimos {} días · fuentes: {} · no editar a mano (scripts/dora.sh)")}[lang]
+CAB = {"en": ["Metric", "Current", "Target", "Source"],
+       "es": ["Métrica", "Actual", "Objetivo", "Fuente"]}[lang]
+FILAS_N = {"en": [("Deployment frequency", "≥ 1/day", "v* tags or merges to default branch"),
+                  ("Lead time (commit→prod)", "< 1 day", "first branch commit → merge"),
+                  ("Change failure rate", "< 15%", "knowledge/incidents vs deployments"),
+                  ("MTTR", "< 1 hour", "MTTR field of the postmortems")],
+           "es": [("Frecuencia de despliegue", "≥ 1/día", "tags v* o merges a rama por defecto"),
+                  ("Lead time (commit→prod)", "< 1 día", "primer commit de la rama → merge"),
+                  ("Change failure rate", "< 15%", "knowledge/incidents vs despliegues"),
+                  ("MTTR", "< 1 hora", "campo MTTR de los postmortems")]}[lang]
+sello = SEAL.format(date.today().isoformat(), dias, fuentes)
+valores = [freq, lead, cfr, mttr]
+filas = [(n, valores[i], o, fu) for i, (n, o, fu) in enumerate(FILAS_N)]
+bloque = [sello, "", "| " + " | ".join(CAB) + " |", "|---|---|---|---|"]
 bloque += [f"| {a} | {b} | {c} | {d} |" for a, b, c, d in filas]
 if missing:
-    bloque += ["", "Sin datos de: " + ", ".join(missing) + " (no clonado — correr scripts/setup.sh)"]
+    FALTA = {"en": "No data from: {} (not cloned — run scripts/setup.sh)",
+             "es": "Sin datos de: {} (no clonado — correr scripts/setup.sh)"}[lang]
+    bloque += ["", FALTA.format(", ".join(missing))]
 nuevo = "\n".join(bloque)
 
 contenido = open(uso_path, encoding="utf-8").read()
@@ -134,7 +161,7 @@ if not actual:
     sys.exit("ERROR: marcadores DORA malformados en " + uso_path)
 
 def sin_fecha(texto):  # el dia de generacion no cuenta como drift
-    return re.sub(r"\[GENERADO v1\] \d{4}-\d{2}-\d{2}", "[GENERADO v1]", texto)
+    return re.sub(r"\[GENERA(?:DO|TED) v1\] \d{4}-\d{2}-\d{2}", "[SEAL]", texto)
 
 vigente = actual.group(2).strip("\n")
 if check == "1":

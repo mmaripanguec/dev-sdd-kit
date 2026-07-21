@@ -1,17 +1,17 @@
-# Workflow equivalente a bitbucket-pipelines.yml para workspaces alojados en
-# GitHub: sincroniza el mapa as-is del sistema declarado en repos.yaml.
-# Instalar: copiar a .github/workflows/as-is-sync.yml en el workspace.
-# Secrets segun los proveedores del registro (Settings > Secrets and variables):
+# Workflow equivalent to bitbucket-pipelines.yml for workspaces hosted on
+# GitHub: syncs the as-is map of the system declared in repos.yaml.
+# Install: copy to .github/workflows/as-is-sync.yml in the workspace.
+# Secrets according to the registry providers (Settings > Secrets and variables):
 #   BITBUCKET_USER / BITBUCKET_TOKEN · GITLAB_TOKEN · GH_REPOS_TOKEN (si los
-#   repos de github son privados; el GITHUB_TOKEN implicito solo ve ESTE repo).
-# Variable opcional FACTORY_BOT_EMAIL para el email de los commits del bot.
+#   github repos are private; the implicit GITHUB_TOKEN only sees THIS repo).
+# Optional FACTORY_BOT_EMAIL variable for the bot's commit email.
 name: as-is-sync
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: "0 6 * * *"   # diario: captura cambios de los repos del sistema
+    - cron: "0 6 * * *"   # daily: captures changes from the system repos
   workflow_dispatch: {}
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clonar/actualizar repos del registro
+      - name: Clone/update registry repos
         env:
           BITBUCKET_USER: ${{ secrets.BITBUCKET_USER }}
           BITBUCKET_TOKEN: ${{ secrets.BITBUCKET_TOKEN }}
@@ -30,19 +30,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_REPOS_TOKEN }}
         run: ./scripts/setup.sh
 
-      - name: Regenerar mapa as-is
+      - name: Regenerate as-is map
         run: ./scripts/generate-as-is.sh
 
-      - name: Derivar metricas DORA (repos clonados; RN-F4)
+      - name: Derive DORA metrics (repos cloned; RN-F4)
         run: ./scripts/dora.sh
 
-      - name: Regenerar documentacion derivada
+      - name: Regenerate derived documentation
         run: ./scripts/docs.sh
 
-      - name: Commitear si cambio
+      - name: Commit if changed
         run: |
-          if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html; then
-            git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html
+          if ! git diff --quiet knowledge/as-is/ knowledge/usage.md docs/arquitectura.html docs/architecture.en.html; then
+            git add knowledge/as-is/ knowledge/usage.md docs/arquitectura.html docs/architecture.en.html
             git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" \
                 -c user.name=fabrica-bot \
               commit -m "chore(sync): as-is + DORA + documentacion [skip ci]"

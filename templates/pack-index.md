@@ -38,8 +38,8 @@ repo; that is why it disappears if only per-repo packs exist.
 ## Verification status
 
 ```bash
-scripts/afirmaciones.sh        # is any claim in the packs already false?
-scripts/frescura.sh comprobar  # has any pack expired?
+scripts/assertions.sh        # is any claim in the packs already false?
+scripts/freshness.sh check  # has any pack expired?
 ```
 Today: {{ESTADO_VERIFICACION}}
 

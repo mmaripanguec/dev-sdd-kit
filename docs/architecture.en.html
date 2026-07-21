@@ -117,7 +117,7 @@ which commit).</p>
 <tr><td>F1</td><td>Requirements</td><td><code>requirements</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimation</td><td><code>estimation</code> agent</td>
-    <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
+    <td>Story points + WSJF priority (using usage.md data)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Analysis</td><td><code>analysis</code> agent</td>
@@ -144,7 +144,7 @@ memory:</p>
   <div><strong>Context packs</strong> (loadable skills) — <em>HOW IT IS
       BUILT</em>: mental model per repo and per system, with file:line
       evidence, freshness seal and executable assertions.</div>
-  <div><strong>ADRs</strong> (<code>knowledge/decisiones/</code>) — <em>WHY</em>:
+  <div><strong>ADRs</strong> (<code>knowledge/decisions/</code>) — <em>WHY</em>:
       architecture decisions with context and consequences.</div>
   <div><strong>Specs</strong> (<code>specs/</code>) — <em>WHAT SHOULD
       EXIST</em>: each feature's contract, with its gates recorded.</div>
@@ -213,17 +213,19 @@ banking) activate only for repos that declare them in the registry.</p>
 prerequisite); derived from each <code>scripts/*.sh</code> header.</p>
 <div class="wide"><table>
 <tr><th>Script</th><th>What it does</th></tr>
-<tr><td><code>afirmaciones.sh</code></td><td>Suite de aserciones de los packs de contexto.</td></tr>
-<tr><td><code>diag-bitbucket.sh</code></td><td>Diagnostica por que Bitbucket rechaza las credenciales.</td></tr>
+<tr><td><code>afirmaciones.sh</code></td><td>compatibility alias; the official name is assertions.sh</td></tr>
+<tr><td><code>assertions.sh</code></td><td>Assertion suite for the context packs.</td></tr>
+<tr><td><code>diag-bitbucket.sh</code></td><td>Diagnoses why Bitbucket rejects the credentials.</td></tr>
 <tr><td><code>docs.sh</code></td><td>Genera la documentacion HTML derivada del workspace en sus dos</td></tr>
 <tr><td><code>dora.sh</code></td><td>Deriva las metricas DORA de fuentes verificables y reescribe la</td></tr>
-<tr><td><code>frescura.sh</code></td><td>Detecta si un pack de contexto caduco respecto del codigo.</td></tr>
-<tr><td><code>generate-as-is.sh</code></td><td>Mapa AS-IS real del sistema declarado en repos.yaml.</td></tr>
+<tr><td><code>frescura.sh</code></td><td>compatibility alias; the official name is freshness.sh</td></tr>
+<tr><td><code>freshness.sh</code></td><td>Detects whether a context pack went stale relative to the code.</td></tr>
+<tr><td><code>generate-as-is.sh</code></td><td>Real AS-IS map of the system declared in repos.yaml.</td></tr>
 <tr><td><code>init-sistema.sh</code></td><td>alias de compatibilidad; el nombre oficial es init-system.sh</td></tr>
-<tr><td><code>init-system.sh</code></td><td>Convierte un CLON de la plantilla de la fabrica en la</td></tr>
-<tr><td><code>repo-add.sh</code></td><td>Alta IDEMPOTENTE de un repositorio en la fabrica:</td></tr>
-<tr><td><code>repo-lib.sh</code></td><td>Libreria compartida del registro de repos (repos.yaml).</td></tr>
-<tr><td><code>setup.sh</code></td><td>Clona o actualiza en repos/ TODOS los repositorios declarados en</td></tr>
+<tr><td><code>init-system.sh</code></td><td>Turns a CLONE of the factory template into the clean</td></tr>
+<tr><td><code>repo-add.sh</code></td><td>IDEMPOTENT onboarding of a repository into the factory:</td></tr>
+<tr><td><code>repo-lib.sh</code></td><td>Shared library for the repo registry (repos.yaml).</td></tr>
+<tr><td><code>setup.sh</code></td><td>Clones or updates in repos/ ALL repositories declared in</td></tr>
 </table></div>
 
 <h3>Enforcement and CI</h3>
@@ -237,8 +239,8 @@ prerequisite); derived from each <code>scripts/*.sh</code> header.</p>
       Actions template): on every merge to main and on a daily schedule it
       clones the registry's repos, regenerates as-is + DORA metrics + this
       document, and commits if anything changed.</li>
-  <li><strong>Context verification</strong>: <code>frescura.sh</code> detects
-      stale packs by commit seal; <code>afirmaciones.sh</code> runs each
+  <li><strong>Context verification</strong>: <code>freshness.sh</code> detects
+      stale packs by commit seal; <code>assertions.sh</code> runs each
       pack's assertions (detects WHICH claim became false).</li>
 </ul>
 </div>
@@ -296,7 +298,7 @@ operations feeds the next feature — the loop closes:</p>
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
   <text class="sub" x="540" y="70" text-anchor="middle">estimation agent</text>
-  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
+  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from usage.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
@@ -373,7 +375,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- knowledge layer: aligned under the phase that writes it -->
   <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
-  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisions</text>
   <text class="sub" x="132" y="429" text-anchor="middle">the why behind decisions</text>
 
   <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
@@ -383,7 +385,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
-  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidents · usage.md</text>
   <text class="sub" x="948" y="429" text-anchor="middle">F9 records, blameless</text>
 
   <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
@@ -400,11 +402,11 @@ operations feeds the next feature — the loop closes:</p>
 <p>Every feature leaves a verifiable end-to-end chain:</p>
 <div class="flujo">
   <span>Spec <code>specs/*.md</code></span><b>→</b>
-  <span>ADRs <code>knowledge/decisiones/</code></span><b>→</b>
+  <span>ADRs <code>knowledge/decisions/</code></span><b>→</b>
   <span>Commits (one per task, in its repo)</span><b>→</b>
   <span>CAB dossier</span><b>→</b>
-  <span>Postmortems <code>knowledge/incidentes/</code></span><b>→</b>
-  <span>uso.md (DORA) → feeds F1/F2</span>
+  <span>Postmortems <code>knowledge/incidents/</code></span><b>→</b>
+  <span>usage.md (DORA) → feeds F1/F2</span>
 </div>
 <p>Specs use the 12-section template (<code>specs/_template.md</code>):
 problem · objective · measurable success criteria SC-xx · out of scope ·
@@ -440,9 +442,9 @@ the DoR (rule RN-F3).</p>
 <h3>Current DORA metrics</h3>
 <p>Derived by <code>scripts/dora.sh</code> from the repos' git history and
 the postmortems (RN-F4: source and period declared, or "no data").</p>
-<p class="muted">[GENERADO v1] 2026-07-19 · período: últimos 90 días · fuentes: ninguna · no editar a mano (scripts/dora.sh)</p>
-<p class="muted">Sin datos de: homebanking-pwa-backend, homebanking-pwa-proxy, homebanking-pwa (no clonado — correr scripts/setup.sh)</p>
-<div class="wide"><table><tr><th>Métrica</th><th>Actual</th><th>Objetivo</th><th>Fuente</th></tr><tr><td>Frecuencia de despliegue</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>≥ 1/día</td><td>tags v* o merges a rama por defecto</td></tr><tr><td>Lead time (commit→prod)</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 1 día</td><td>primer commit de la rama → merge</td></tr><tr><td>Change failure rate</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 15%</td><td>knowledge/incidentes vs despliegues</td></tr><tr><td>MTTR</td><td>sin datos (ningún repo clonado — correr scripts/setup.sh)</td><td>&lt; 1 hora</td><td>campo MTTR de los postmortems</td></tr></table></div>
+<p class="muted">[GENERATED v1] 2026-07-20 · period: last 90 days · sources: ninguna · do not edit by hand (scripts/dora.sh)</p>
+<p class="muted">No data from: REGISTRY_MISSING (not cloned — run scripts/setup.sh)</p>
+<div class="wide"><table><tr><th>Metric</th><th>Current</th><th>Target</th><th>Source</th></tr><tr><td>Deployment frequency</td><td>no data (no repos cloned — run scripts/setup.sh)</td><td>≥ 1/day</td><td>v* tags or merges to default branch</td></tr><tr><td>Lead time (commit→prod)</td><td>no data (no repos cloned — run scripts/setup.sh)</td><td>&lt; 1 day</td><td>first branch commit → merge</td></tr><tr><td>Change failure rate</td><td>no data (no repos cloned — run scripts/setup.sh)</td><td>&lt; 15%</td><td>knowledge/incidents vs deployments</td></tr><tr><td>MTTR</td><td>no data (no repos cloned — run scripts/setup.sh)</td><td>&lt; 1 hour</td><td>MTTR field of the postmortems</td></tr></table></div>
 
 <h2 id="usage">4 · Usage guide</h2>
 
@@ -490,7 +492,7 @@ knowledge commits go here.</p>
 <div class="wide"><table>
 <tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr>
 <tr><td>A context pack "lies" about the code</td><td>Stale pack</td>
-    <td><code>scripts/frescura.sh comprobar</code>, then regenerate with <code>/repo-map</code></td></tr>
+    <td><code>scripts/freshness.sh check</code>, then regenerate with <code>/repo-map</code></td></tr>
 <tr><td>DORA table says "sin datos"</td><td>Repos not cloned</td>
     <td><code>./scripts/setup.sh</code> with credentials, then <code>./scripts/dora.sh</code></td></tr>
 <tr><td>Cross-repo graph comes out empty</td><td>Framework not recognized</td>

@@ -69,10 +69,10 @@ S = {
     "scripts_h": ["Script", "Qué hace"],
     "scripts_v": "sin scripts",
     "rn_h": ["ID", "Regla", "Dominio", "Origen", "Vigente desde"],
-    "rn_v": "sin reglas registradas en knowledge/reglas-negocio.md",
+    "rn_v": "sin reglas registradas en knowledge/business-rules.md",
     "specs_h": ["Archivo", "Spec", "Estado"],
     "specs_v": "sin specs en specs/",
-    "dora_v": "knowledge/uso.md sin bloque DORA — correr scripts/dora.sh",
+    "dora_v": "knowledge/usage.md sin bloque DORA — correr scripts/dora.sh",
   },
   "en": {
     "sello": "[GENERATED v1] {} · scripts/docs.sh — do not edit by hand",
@@ -92,10 +92,10 @@ S = {
     "scripts_h": ["Script", "What it does"],
     "scripts_v": "no scripts",
     "rn_h": ["ID", "Rule", "Domain", "Origin", "In force since"],
-    "rn_v": "no rules registered in knowledge/reglas-negocio.md",
+    "rn_v": "no rules registered in knowledge/business-rules.md",
     "specs_h": ["File", "Spec", "Status"],
     "specs_v": "no specs under specs/",
-    "dora_v": "knowledge/uso.md has no DORA block — run scripts/dora.sh",
+    "dora_v": "knowledge/usage.md has no DORA block — run scripts/dora.sh",
   },
 }
 
@@ -153,7 +153,7 @@ for f in sorted(glob.glob("scripts/*.sh")):
 
 rn = []
 try:
-    for linea in open("knowledge/reglas-negocio.md", encoding="utf-8"):
+    for linea in open("knowledge/business-rules.md", encoding="utf-8"):
         m = re.match(r"\|\s*(RN-[\w-]+)\s*\|(.*)", linea)
         if m and "<ej" not in m.group(2):
             celdas = [c.strip() for c in m.group(2).split("|") if c.strip() != ""]
@@ -178,7 +178,7 @@ for f in sorted(glob.glob("specs/*.md")):
 
 dora_md = None
 try:
-    uso = open("knowledge/uso.md", encoding="utf-8").read()
+    uso = open("knowledge/usage.md", encoding="utf-8").read()
     m = re.search(r"<!-- DORA:BEGIN -->\n?(.*?)\n?<!-- DORA:END -->", uso, re.S)
     if m and m.group(1).strip():
         dora_md = m.group(1).strip()

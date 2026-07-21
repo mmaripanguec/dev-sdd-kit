@@ -18,8 +18,8 @@ First public release of the spec-driven factory template.
 - Derived as-is map (`scripts/generate-as-is.sh`) with provenance seals,
   drift detection (`--check`) and per-repo extractor hooks.
 - Context packs per repo and per system (loadable skills) with file:line
-  evidence, freshness seals (`scripts/frescura.sh`) and executable
-  assertions (`scripts/afirmaciones.sh`).
+  evidence, freshness seals (`scripts/freshness.sh`) and executable
+  assertions (`scripts/assertions.sh`).
 - Multi-session agent harness (Anthropic initializer pattern).
 - Template distribution: `scripts/init-sistema.sh` instantiates a clean
   system workspace; instances update via `git pull upstream main`.

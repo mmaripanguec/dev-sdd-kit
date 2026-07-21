@@ -2,7 +2,7 @@
 name: system-map
 description: Generates or updates the SYSTEM PACK (<prefijo>-sistema, the junctions and the mental model that live in no repo) and the mapa-sistemas index. Use when the system has ≥2 repos with packs, when asked for "the system map"/"how the repos connect", or when /spec-create detects the system pack is missing.
 argument-hint: "[foco opcional]"
-allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/frescura.sh *) Bash(./scripts/afirmaciones.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
+allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/freshness.sh *) Bash(./scripts/assertions.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
 Generate `.claude/skills/<prefijo>-sistema/SKILL.md` (prefix =
@@ -21,7 +21,7 @@ lives in no repo**: the mental model and the junctions.
    asserted by only one side is a hypothesis, not a fact.
 
 ## 2. Write the system pack
-- Template: `templates/pack-sistema.md`; frontmatter `generado_desde:` with
+- Template: `templates/pack-system.md`; frontmatter `generado_desde:` with
   ALL repos and their seals; `verificado:` today.
 - The ⭐ mental model is THE claim that changes how the system is
   understood (with its cross-repo evidence chain). If there is not one yet,
@@ -30,15 +30,15 @@ lives in no repo**: the mental model and the junctions.
   detail goes to `references/`.
 
 ## 3. mapa-sistemas index
-- Template: `templates/pack-indice.md`: table of systems with the REAL
+- Template: `templates/pack-index.md`: table of systems with the REAL
   context state (which packs exist, which are current — use
-  `scripts/frescura.sh comprobar` and `scripts/afirmaciones.sh`), where
+  `scripts/freshness.sh check` and `scripts/assertions.sh`), where
   to start, and "What I DON'T know".
 
 ## 4. Assertions, verification and closure
-- Each important junction → assertion in `scripts/afirmaciones.d/<sistema>.sh`
+- Each important junction → assertion in `scripts/assertions.d/<sistema>.sh`
   (ideally one per end). Run the suite: green is mandatory.
-- `scripts/frescura.sh comprobar` green for the touched packs.
+- `scripts/freshness.sh check` green for the touched packs.
 - INCONSISTENCIES (the as-is graph contradicts a pack, a junction is not
   confirmed at the other end, an ADR is refuted): STOP AND
   ASK. Never normalize silently.

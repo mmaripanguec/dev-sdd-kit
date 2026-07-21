@@ -69,13 +69,13 @@ cat > "${WS}/.claude/rules/demo-regla.md" <<'EOF'
 > Base: estandar de prueba
 - contenido
 EOF
-cat > "${WS}/knowledge/reglas-negocio.md" <<'EOF'
+cat > "${WS}/knowledge/business-rules.md" <<'EOF'
 # Reglas de negocio
 | ID | Regla | Service domain | Origen (spec/regulación) | Vigente desde |
 |---|---|---|---|---|
 | RN-T1 | Regla sintetica de prueba | test | specs/demo.md | 2026-01-01 |
 EOF
-cat > "${WS}/knowledge/uso.md" <<'EOF'
+cat > "${WS}/knowledge/usage.md" <<'EOF'
 # Uso
 <!-- DORA:BEGIN -->
 [GENERADO v1] 2026-07-19 · período: últimos 90 días · fuentes: ninguna

@@ -1,11 +1,12 @@
-# Extractores de rutas por repositorio
+# Per-repository route extractors
 
-Si el extractor generico de `generate-as-is.sh` no captura las rutas de un repo
-(framework raro, rutas en config, gRPC), se escribe aqui un extractor EXACTO:
+If the generic extractor in `generate-as-is.sh` does not capture a repo's
+routes (unusual framework, routes in config, gRPC), an EXACT extractor is
+written here:
 
-- Nombre: `<nombre-del-repo>.sh` (ej. `homebanking-pwa-proxy.sh`), ejecutable.
-- Contrato: recibe la ruta del repo como `$1`; imprime una ruta por linea
-  con formato `/segmento[/...]`.
-- Quien los escribe: la skill `/as-is-learn` (Claude Code analiza el codigo
-  real y deja aqui el extractor con la evidencia citada en comentarios).
-- Se commitean al workspace: son conocimiento del sistema.
+- Name: `<repo-name>.sh` (e.g. `homebanking-pwa-proxy.sh`), executable.
+- Contract: it receives the repo path as `$1`; prints one route per line
+  in the format `/segment[/...]`.
+- Who writes them: the `/as-is-learn` skill (Claude Code analyzes the real
+  code and leaves the extractor here with the evidence cited in comments).
+- They are committed to the workspace: they are system knowledge.

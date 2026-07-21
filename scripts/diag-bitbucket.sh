@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# diag-bitbucket.sh - Diagnostica por que Bitbucket rechaza las credenciales.
-# Seguro de compartir: NUNCA imprime el token (solo prefijo y largo).
-# Compatible con bash 3.2 (macOS).
+# diag-bitbucket.sh - Diagnoses why Bitbucket rejects the credentials.
+# Safe to share: it NEVER prints the token (only prefix and length).
+# Compatible with bash 3.2 (macOS).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 . scripts/repo-lib.sh
 
-echo "=== Diagnostico Bitbucket ==="
+echo "=== Bitbucket diagnosis ==="
 
-# Objetivo de las pruebas: el PRIMER repo con provider bitbucket del registro
+# Test target: the FIRST repo with provider bitbucket in the registry
 BB_URL=""
 for _n in $(registry_repos 2>/dev/null); do
   if [ "$(registry_get "${_n}" provider)" = "bitbucket" ]; then
@@ -17,11 +17,11 @@ for _n in $(registry_repos 2>/dev/null); do
   fi
 done
 if [ -z "${BB_URL}" ]; then
-  echo "No hay repos con provider: bitbucket en repos.yaml - nada que diagnosticar."
-  echo "(este script aplica SOLO a Bitbucket; github/gitlab usan token simple en .env)"
+  echo "No repos with provider: bitbucket in repos.yaml - nothing to diagnose."
+  echo "(this script applies ONLY to Bitbucket; github/gitlab use a simple token in .env)"
   exit 0
 fi
-# workspace/slug del repo, p.ej. mi-workspace/mi-repo
+# workspace/slug of the repo, e.g. my-workspace/my-repo
 BB_SLUG="${BB_URL#*bitbucket.org}"
 BB_SLUG="${BB_SLUG#[:/]}"
 BB_SLUG="${BB_SLUG%.git}"
@@ -29,16 +29,16 @@ BB_WS="${BB_SLUG%%/*}"
 
 # ---------- 1. .env ----------
 if [ ! -f .env ]; then
-  echo "[1] .env: NO EXISTE en $(pwd)  ->  cp .env.example .env && chmod 600 .env"
+  echo "[1] .env: DOES NOT EXIST in $(pwd)  ->  cp .env.example .env && chmod 600 .env"
   exit 1
 fi
-echo "[1] .env: existe"
+echo "[1] .env: exists"
 
 CR_COUNT=$(grep -c "$(printf '\r')" .env 2>/dev/null || true)
 if [ -z "${CR_COUNT}" ]; then CR_COUNT=0; fi
 if [ "${CR_COUNT}" != "0" ]; then
-  echo "    PROBLEMA: .env tiene retornos de carro (\\r) - tipico al pegar desde"
-  echo "    Windows/HTML. Eso corrompe el token de forma invisible. Arreglo:"
+  echo "    PROBLEM: .env has carriage returns (\\r) - typical when pasting from"
+  echo "    Windows/HTML. That corrupts the token invisibly. Fix:"
   echo "       perl -pi -e 's/\\r//g' .env"
   exit 1
 fi
@@ -48,94 +48,94 @@ set -a; . ./.env; set +a
 USER_VAL="${BITBUCKET_USER:-}"
 TOKEN_VAL="${BITBUCKET_TOKEN:-}"
 if [ -z "${USER_VAL}" ] || [ -z "${TOKEN_VAL}" ]; then
-  echo "    PROBLEMA: falta BITBUCKET_USER o BITBUCKET_TOKEN en .env"
+  echo "    PROBLEM: BITBUCKET_USER or BITBUCKET_TOKEN missing in .env"
   exit 1
 fi
 
-# Espacios accidentales al inicio/fin del token
+# Accidental leading/trailing spaces in the token
 TRIMMED=$(printf '%s' "${TOKEN_VAL}" | sed 's/^ *//;s/ *$//')
 if [ "${TRIMMED}" != "${TOKEN_VAL}" ]; then
-  echo "    PROBLEMA: el token tiene espacios al inicio o final. Corrigelo en .env"
+  echo "    PROBLEM: the token has leading or trailing spaces. Fix it in .env"
   exit 1
 fi
 
 PREFIX=$(printf '%s' "${TOKEN_VAL}" | cut -c1-5)
 LEN=${#TOKEN_VAL}
 echo "    BITBUCKET_USER=${USER_VAL}"
-echo "    BITBUCKET_TOKEN=${PREFIX}... (largo ${LEN}, no se muestra completo)"
+echo "    BITBUCKET_TOKEN=${PREFIX}... (length ${LEN}, not shown in full)"
 
-# ---------- 2. Coherencia tipo de token <-> usuario (heuristica por prefijo) ----------
-echo "[2] Tipo de token (heuristica por prefijo):"
+# ---------- 2. Consistency token type <-> user (heuristic by prefix) ----------
+echo "[2] Token type (heuristic by prefix):"
 case "${PREFIX}" in
   ATATT)
-    echo "    -> parece API TOKEN de Atlassian: el usuario debe ser tu EMAIL de la cuenta."
+    echo "    -> looks like an Atlassian API TOKEN: the user must be your account EMAIL."
     case "${USER_VAL}" in
-      *@*) echo "       usuario contiene @ : coherente" ;;
-      *)   echo "       PROBLEMA PROBABLE: usuario '${USER_VAL}' no es un email."
-           echo "       En .env pon BITBUCKET_USER=tu_email_de_atlassian" ;;
+      *@*) echo "       user contains @ : consistent" ;;
+      *)   echo "       LIKELY PROBLEM: user '${USER_VAL}' is not an email."
+           echo "       In .env set BITBUCKET_USER=your_atlassian_email" ;;
     esac ;;
   ATCTT)
-    echo "    -> parece ACCESS TOKEN de repo/proyecto/workspace: usuario = x-token-auth."
+    echo "    -> looks like a repo/project/workspace ACCESS TOKEN: user = x-token-auth."
     if [ "${USER_VAL}" != "x-token-auth" ]; then
-      echo "       PROBLEMA PROBABLE: en .env pon BITBUCKET_USER=x-token-auth"
+      echo "       LIKELY PROBLEM: in .env set BITBUCKET_USER=x-token-auth"
     else
-      echo "       coherente"
+      echo "       consistent"
     fi ;;
   ATBB*)
-    echo "    -> parece APP PASSWORD: usuario = tu usuario Bitbucket (no el email)." ;;
+    echo "    -> looks like an APP PASSWORD: user = your Bitbucket username (not the email)." ;;
   *)
-    echo "    -> prefijo no reconocido (${PREFIX}); continuo con las pruebas de red." ;;
+    echo "    -> unrecognized prefix (${PREFIX}); continuing with the network tests." ;;
 esac
 
-# ---------- 3. Red y autenticacion contra la API ----------
-echo "[3] Prueba de red + auth (repo ${BB_SLUG}):"
+# ---------- 3. Network and authentication against the API ----------
+echo "[3] Network + auth test (repo ${BB_SLUG}):"
 HTTP=$(curl -sS -o /tmp/bb-diag.json -w "%{http_code}" --connect-timeout 10 \
   --user "${USER_VAL}:${TOKEN_VAL}" \
   "https://api.bitbucket.org/2.0/repositories/${BB_SLUG}" 2>/tmp/bb-diag.err || echo "000")
 
 case "${HTTP}" in
   200)
-    echo "    HTTP 200 - credenciales VALIDAS y con acceso al repo." ;;
+    echo "    HTTP 200 - credentials VALID and with access to the repo." ;;
   401)
-    echo "    HTTP 401 - Bitbucket NO reconoce el par usuario/token."
-    echo "    Causas: usuario del tipo equivocado (ver [2]), token mal copiado,"
-    echo "    o token revocado. Regenera el token y pega de nuevo con cuidado." ;;
+    echo "    HTTP 401 - Bitbucket does NOT recognize the user/token pair."
+    echo "    Causes: user of the wrong type (see [2]), badly copied token,"
+    echo "    or revoked token. Regenerate the token and paste it again carefully." ;;
   403)
-    echo "    HTTP 403 - el token ES valido pero SIN PERMISO sobre este repo."
-    echo "    Falta scope 'Repositories: Read' o tu cuenta no tiene acceso al"
-    echo "    workspace ${BB_WS} / a este repo. Pide acceso al admin." ;;
+    echo "    HTTP 403 - the token IS valid but has NO PERMISSION on this repo."
+    echo "    Missing 'Repositories: Read' scope or your account has no access to"
+    echo "    the ${BB_WS} workspace / this repo. Ask the admin for access." ;;
   404)
-    echo "    HTTP 404 - autenticado pero el repo no es visible con esas credenciales"
-    echo "    (Bitbucket devuelve 404 para repos privados sin acceso)."
-    echo "    Pide al admin acceso de lectura a ${BB_SLUG}." ;;
+    echo "    HTTP 404 - authenticated but the repo is not visible with those credentials"
+    echo "    (Bitbucket returns 404 for private repos without access)."
+    echo "    Ask the admin for read access to ${BB_SLUG}." ;;
   000)
-    echo "    SIN CONEXION a api.bitbucket.org - problema de red/VPN/proxy:"
+    echo "    NO CONNECTION to api.bitbucket.org - network/VPN/proxy problem:"
     sed 's/^/      /' /tmp/bb-diag.err 2>/dev/null | head -3
-    echo "    Si tu red corporativa usa proxy HTTPS, configura:"
-    echo "      export HTTPS_PROXY=http://proxy.tuempresa:puerto" ;;
+    echo "    If your corporate network uses an HTTPS proxy, configure:"
+    echo "      export HTTPS_PROXY=http://proxy.yourcompany:port" ;;
   *)
-    echo "    HTTP ${HTTP} - respuesta inesperada:"
+    echo "    HTTP ${HTTP} - unexpected response:"
     head -c 300 /tmp/bb-diag.json 2>/dev/null; echo "" ;;
 esac
 
-# ---------- 4. Configuracion local de git que puede interferir ----------
+# ---------- 4. Local git configuration that may interfere ----------
 echo "[4] git --version: $(git --version)"
-echo "    Config relevante (credential / insteadOf / proxy):"
+echo "    Relevant config (credential / insteadOf / proxy):"
 GIT_CFG=$(git config --show-origin --get-regexp '^(credential|url\..*insteadof|http\.proxy|https\.proxy|http\.https)' 2>/dev/null || true)
 if [ -n "${GIT_CFG}" ]; then
   printf '%s\n' "${GIT_CFG}" | sed 's/^/      /'
   if printf '%s' "${GIT_CFG}" | grep -qi 'insteadof'; then
-    echo "    ATENCION: hay reescrituras de URL (insteadOf). Si alguna convierte"
-    echo "    https://bitbucket.org/... en git@... , git termina yendo por SSH"
-    echo "    aunque le pases HTTPS - y por eso la API acepta pero git falla."
+    echo "    ATTENTION: there are URL rewrites (insteadOf). If any of them turns"
+    echo "    https://bitbucket.org/... into git@... , git ends up going over SSH"
+    echo "    even when you pass HTTPS - hence the API accepts but git fails."
   fi
 else
-  echo "      (ninguna - limpio)"
+  echo "      (none - clean)"
 fi
 
-# ---------- 5. Prueba final con git, MOSTRANDO el error real ----------
+# ---------- 5. Final test with git, SHOWING the real error ----------
 if [ "${HTTP}" = "200" ]; then
-  echo "[5] Prueba git ls-remote (mismo mecanismo de setup.sh):"
+  echo "[5] git ls-remote test (same mechanism as setup.sh):"
   export BITBUCKET_USER="${USER_VAL}" BITBUCKET_TOKEN="${TOKEN_VAL}"
   GIT_ERR=$(GIT_TERMINAL_PROMPT=0 git \
       -c credential.helper= \
@@ -143,13 +143,13 @@ if [ "${HTTP}" = "200" ]; then
       -c url."https://bitbucket.org/${BB_WS}/".insteadOf="https://bitbucket.org/${BB_WS}/" \
       ls-remote --heads "https://bitbucket.org/${BB_SLUG}.git" 2>&1 > /dev/null) || true
   if [ -z "${GIT_ERR}" ]; then
-    echo "    OK - git autentica. Ya puedes correr ./scripts/setup.sh"
+    echo "    OK - git authenticates. You can now run ./scripts/setup.sh"
   else
-    # Token ATATT largo (con scopes): git exige el usuario magico
-    # x-bitbucket-api-token-auth en lugar del email. Reintento automatico.
+    # Long ATATT token (with scopes): git requires the magic user
+    # x-bitbucket-api-token-auth instead of the email. Automatic retry.
     if [ "${PREFIX}" = "ATATT" ]; then
-      echo "    Fallo con usuario '${USER_VAL}'. Reintentando con el usuario especial"
-      echo "    de git para API tokens con scopes: x-bitbucket-api-token-auth ..."
+      echo "    Failed with user '${USER_VAL}'. Retrying with the special git"
+      echo "    user for scoped API tokens: x-bitbucket-api-token-auth ..."
       GIT_ERR2=$(GIT_TERMINAL_PROMPT=0 git \
           -c credential.helper= \
           -c credential.helper='!f() { printf "username=%s\npassword=%s\n" "x-bitbucket-api-token-auth" "${BITBUCKET_TOKEN}"; }; f' \
@@ -157,36 +157,36 @@ if [ "${HTTP}" = "200" ]; then
           ls-remote --heads "https://bitbucket.org/${BB_SLUG}.git" 2>&1 > /dev/null) || true
       if [ -z "${GIT_ERR2}" ]; then
         echo ""
-        echo "    RESUELTO: git autentica con el usuario especial."
-        echo "    ARREGLO -> en .env cambia:  BITBUCKET_USER=x-bitbucket-api-token-auth"
-        echo "    (la API REST seguira aceptando el token; setup.sh v5 ya usa el"
-        echo "     usuario correcto para cada cosa automaticamente)"
+        echo "    SOLVED: git authenticates with the special user."
+        echo "    FIX -> in .env change:  BITBUCKET_USER=x-bitbucket-api-token-auth"
+        echo "    (the REST API will keep accepting the token; setup.sh v5 already"
+        echo "     uses the right user for each thing automatically)"
         exit 0
       fi
-      echo "    Tambien fallo con x-bitbucket-api-token-auth."
+      echo "    Also failed with x-bitbucket-api-token-auth."
       echo ""
-      echo "    CAUSA MAS PROBABLE: el token con scopes NO incluye los scopes de git."
-      echo "    Arreglo (elige uno):"
-      echo "      a) Crear un API token SIN scopes (id.atlassian.com > Security >"
-      echo "         API tokens > 'Create API token' simple) - funciona como antes."
-      echo "      b) Crear uno CON scopes seleccionando el producto Bitbucket e"
-      echo "         incluyendo al menos: Account:Read + Repositories:Read (Write"
-      echo "         si haras push)."
+      echo "    MOST LIKELY CAUSE: the scoped token does NOT include the git scopes."
+      echo "    Fix (choose one):"
+      echo "      a) Create an API token WITHOUT scopes (id.atlassian.com > Security >"
+      echo "         API tokens > simple 'Create API token') - works as before."
+      echo "      b) Create one WITH scopes selecting the Bitbucket product and"
+      echo "         including at least: Account:Read + Repositories:Read (Write"
+      echo "         if you will push)."
     fi
-    echo "    git fallo. Error real (sin token):"
+    echo "    git failed. Real error (token redacted):"
     printf '%s\n' "${GIT_ERR}" | sed "s/${TOKEN_VAL}/***TOKEN***/g" | sed 's/^/      /' | head -8
     echo ""
-    echo "    Interpretacion:"
-    echo "      - 'Permission denied (publickey)' -> un insteadOf de [4] esta"
-    echo "        reescribiendo HTTPS a SSH. Arreglo: borrar esa regla o dejar que"
-    echo "        setup.sh la neutralice (version v4, ya incluida)."
-    echo "      - 'Authentication failed' -> un helper global (osxkeychain) con"
-    echo "        credenciales viejas gana. Limpia la entrada de bitbucket.org en"
-    echo "        Acceso a Llaveros (Keychain Access) o: "
+    echo "    Interpretation:"
+    echo "      - 'Permission denied (publickey)' -> an insteadOf from [4] is"
+    echo "        rewriting HTTPS to SSH. Fix: delete that rule or let setup.sh"
+    echo "        neutralize it (version v4, already included)."
+    echo "      - 'Authentication failed' -> a global helper (osxkeychain) with"
+    echo "        stale credentials wins. Clear the bitbucket.org entry in"
+    echo "        Keychain Access or: "
     echo "          printf 'protocol=https\nhost=bitbucket.org\n' | git credential-osxkeychain erase"
-    echo "      - 'Could not resolve host' / timeout -> proxy solo-git: revisa"
-    echo "        http.proxy en [4]."
+    echo "      - 'Could not resolve host' / timeout -> git-only proxy: check"
+    echo "        http.proxy in [4]."
   fi
 fi
 rm -f /tmp/bb-diag.json /tmp/bb-diag.err
-echo "=== Fin del diagnostico ==="
+echo "=== End of diagnosis ==="

@@ -48,11 +48,11 @@ contracts, queues, shared session... with evidence at both ends.>
 
 ### Mechanical verification — do not rely on my judgment
 ```bash
-scripts/afirmaciones.sh {{SISTEMA}}   # is any claim already false?
-scripts/frescura.sh comprobar         # has any pack expired?
+scripts/assertions.sh {{SISTEMA}}   # is any claim already false?
+scripts/freshness.sh check         # has any pack expired?
 ```
 **Rule**: every mechanically checkable correction ends up in
-`scripts/afirmaciones.d/{{SISTEMA}}.sh`. Otherwise, it comes back.
+`scripts/assertions.d/{{SISTEMA}}.sh`. Otherwise, it comes back.
 
 ## What I do NOT know
 - <explicit limits of the system knowledge; inferences flagged>

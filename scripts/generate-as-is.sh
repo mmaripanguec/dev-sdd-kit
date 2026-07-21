@@ -1,14 +1,36 @@
 #!/usr/bin/env bash
-# generate-as-is.sh - Mapa AS-IS real del sistema declarado en repos.yaml.
-# Detecta stack por repo, extrae endpoints (Express/Nest/Spring/JAX-RS/.NET) y
-# deriva el grafo cross-repo. Compatible con bash 3.2 (macOS).
-# La topologia (nombre del sistema, repos, entrypoint, orden de despliegue)
-# sale SIEMPRE del registro repos.yaml (ver scripts/repo-lib.sh).
-# Uso:  ./scripts/generate-as-is.sh          -> regenera knowledge/as-is/
-#       ./scripts/generate-as-is.sh --check  -> exit 1 si hay drift
+# generate-as-is.sh - Real AS-IS map of the system declared in repos.yaml.
+# Detects the stack per repo, extracts endpoints (Express/Nest/Spring/JAX-RS/.NET)
+# and derives the cross-repo graph. Compatible with bash 3.2 (macOS).
+# The topology (system name, repos, entrypoint, deploy order) ALWAYS comes
+# from the repos.yaml registry (see scripts/repo-lib.sh).
+# Usage:  ./scripts/generate-as-is.sh          -> regenerates knowledge/as-is/
+#         ./scripts/generate-as-is.sh --check  -> exit 1 if there is drift
 set -euo pipefail
 cd "$(dirname "$0")/.."
 . scripts/repo-lib.sh
+LANG_WS="$(registry_system lang 2>/dev/null || true)"; LANG_WS="${LANG_WS:-en}"
+
+if [ "${LANG_WS}" = "es" ]; then
+  T_GEN="GENERADO"; T_NOEDIT="NO EDITAR A MANO"; T_FROM="desde"; T_ON="el"
+  T_REGEN="Regenerar"; T_MAP="Mapa AS-IS del sistema"; T_MODS="modulos y tecnologia (as-is)"
+  T_API="superficie de API (as-is)"; T_SYS="vista cross-repo (as-is)"
+  T_STRUCT="Estructura"; T_EXT="Servicios externos detectados"; T_DEPS="Dependencias directas"
+  T_DATA="Datos"; T_INFRA="Infraestructura y CI"; T_CMDS="Comandos del repo"
+  T_OPENAPI="Contratos OpenAPI"; T_NOHTTP="Comunicacion no-HTTP detectada"
+  T_ROUTES="Rutas expuestas detectadas"; T_REPOS="Repositorios"
+  T_COMM="Comunicacion entre repos"; T_COMMH="Comunicacion entre repos (heuristica: rutas expuestas vs. consumidas)"
+else
+  T_GEN="GENERATED"; T_NOEDIT="DO NOT EDIT BY HAND"; T_FROM="from"; T_ON="on"
+  T_REGEN="Regenerate"; T_MAP="AS-IS map of system"; T_MODS="modules and technology (as-is)"
+  T_API="API surface (as-is)"; T_SYS="cross-repo view (as-is)"
+  T_STRUCT="Structure"; T_EXT="Detected external services"; T_DEPS="Direct dependencies"
+  T_DATA="Data"; T_INFRA="Infrastructure and CI"; T_CMDS="Repo commands"
+  T_OPENAPI="OpenAPI contracts"; T_NOHTTP="Detected non-HTTP communication"
+  T_ROUTES="Detected exposed routes"; T_REPOS="Repositories"
+  T_COMM="Cross-repo communication"; T_COMMH="Cross-repo communication (heuristic: exposed vs. consumed routes)"
+fi
+
 
 OUT="knowledge/as-is"
 GEN_VERSION="v8"
@@ -18,7 +40,7 @@ registry_validate || exit 1
 SYSTEM_NAME="$(registry_system name)"
 ENTRYPOINT="$(registry_system entrypoint)"
 
-# Repos del registro presentes en disco (los ausentes se reportan, no rompen)
+# Registry repos present on disk (absent ones are reported, they do not break)
 REPO_LIST=""
 MISSING_LIST=""
 for _name in $(registry_repos); do
@@ -26,7 +48,7 @@ for _name in $(registry_repos); do
     REPO_LIST="${REPO_LIST} ${_name}"
   else
     MISSING_LIST="${MISSING_LIST} ${_name}"
-    echo "AVISO - repos/${_name} no esta clonado (./scripts/setup.sh); se omite del mapa."
+    echo "WARNING - repos/${_name} is not cloned (./scripts/setup.sh); skipping it from the map."
   fi
 done
 REPO_COUNT=$(echo ${REPO_LIST} | wc -w | tr -d ' ')
@@ -35,21 +57,21 @@ if [ "${1:-}" = "--check" ]; then
   TMP=$(mktemp -d); cp -r "${OUT}" "${TMP}/before" 2>/dev/null || true
   "$0"
   if ! diff -r -I '\[GENERADO' "${TMP}/before" "${OUT}" > /dev/null 2>&1; then
-    echo "ERROR - DRIFT: knowledge/as-is/ no refleja el codigo actual de repos/."
+    echo "ERROR - DRIFT: knowledge/as-is/ does not reflect the current code in repos/."
     diff -r -I '\[GENERADO' "${TMP}/before" "${OUT}" 2>/dev/null | head -30 || true
     rm -rf "${OUT}"; cp -r "${TMP}/before" "${OUT}"
     exit 1
   fi
   rm -rf "${OUT}"; cp -r "${TMP}/before" "${OUT}"
-  echo "OK - as-is sincronizado."; exit 0
+  echo "OK - as-is in sync."; exit 0
 fi
 
 mkdir -p "${OUT}"
 
-# Extensiones de codigo fuente consideradas
+# Source code extensions considered
 SRC_FIND='-name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx -o -name *.mjs -o -name *.py -o -name *.go -o -name *.java -o -name *.kt -o -name *.cs -o -name *.php -o -name *.rb -o -name *.scala -o -name *.dart'
 
-# Patron de endpoints (extendido): Express/Koa/Fastify, NestJS, Spring, JAX-RS, .NET
+# Endpoint pattern (extended): Express/Koa/Fastify, NestJS, Spring, JAX-RS, .NET
 ROUTE_RX="(\.| )(get|post|put|patch|delete|all|use)\(['\"]/[A-Za-z0-9/_:.{}-]{2,}|@(Get|Post|Put|Patch|Delete|All|Controller)\(['\"][A-Za-z0-9/_:.{}-]{2,}|@(Get|Post|Put|Patch|Delete|Request)Mapping\(( *value *= *)?\"/[A-Za-z0-9/_:.{}-]{2,}|@Path\(\"/[A-Za-z0-9/_:.{}-]{2,}|\[Http(Get|Post|Put|Delete|Patch)\(\"|\[Route\(\"[A-Za-z0-9/_:.{}-]{2,}|\.(Get|Post|Put|Patch|Delete|Head|GET|POST|PUT|PATCH|DELETE|Handle|HandleFunc|Group|Route|Mount|PathPrefix|Any|Static)\(\"/[A-Za-z0-9/_:.{}*-]{2,}|\.(Path|Prefix)\(\"/[A-Za-z0-9/_:.{}*-]{2,}|http\.Method(Get|Post|Put|Patch|Delete), *\"/[A-Za-z0-9/_:.{}*-]{2,}"
 
 detect_stack() {
@@ -69,30 +91,30 @@ detect_stack() {
   if [ -f "${r}/composer.json" ]; then st="${st}php "; fi
   if [ -f "${r}/Gemfile" ]; then st="${st}ruby "; fi
   if ls "${r}"/*.csproj >/dev/null 2>&1 || ls "${r}"/*/*.csproj >/dev/null 2>&1; then st="${st}dotnet "; fi
-  if [ -z "${st}" ]; then st="desconocido"; fi
+  if [ -z "${st}" ]; then st="unknown"; fi
   printf '%s' "${st}" | sed 's/ *$//'
 }
 
 extract_routes() {
-  # Hook por repo: si existe scripts/as-is.d/<repo>.sh, ese extractor manda.
-  # Lo escribe Claude Code (skill /as-is-learn) tras analizar el codigo REAL,
-  # en vez de depender de patrones genericos. Contrato: recibe la ruta del
-  # repo como $1 e imprime una ruta por linea (formato /segmento[/...]).
+  # Per-repo hook: if scripts/as-is.d/<repo>.sh exists, that extractor rules.
+  # Claude Code writes it (skill /as-is-learn) after analyzing the REAL code,
+  # instead of relying on generic patterns. Contract: it receives the repo
+  # path as $1 and prints one route per line (format /segment[/...]).
   rname=$(basename "$1")
   if [ -x "scripts/as-is.d/${rname}.sh" ]; then
     "scripts/as-is.d/${rname}.sh" "$1" | sort -u | head -60
     return 0
   fi
-  # Rutas/paths expuestos por un repo, normalizados a /segmento[/...]
+  # Routes/paths exposed by a repo, normalized to /segment[/...]
   grep -rhoE --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=build --exclude-dir=www --exclude-dir=platforms \
     "${ROUTE_RX}" "$1" 2>/dev/null > /tmp/asis-routes.$$ || true
   grep -rhoE --exclude-dir=node_modules --exclude-dir=.git \
     "@Router +/[A-Za-z0-9/_:.{}*-]{2,}" "$1" 2>/dev/null >> /tmp/asis-routes.$$ || true
-  # Rutas en tablas/structs de codigo:  Path: "/x", Route: "/x", Endpoint: "/x"
+  # Routes in code tables/structs:  Path: "/x", Route: "/x", Endpoint: "/x"
   grep -rhoE --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www \
     "(Path|Prefix|Route|Endpoint|Url|URL)[\"']? *[:=] *[\"']/[A-Za-z0-9/_:.{}*-]{2,}" \
     "$1" 2>/dev/null >> /tmp/asis-routes.$$ || true
-  # Rutas en configuracion:  path:/prefix:/route: en yml/yaml/json/toml
+  # Routes in configuration:  path:/prefix:/route: in yml/yaml/json/toml
   find "$1" -path "*/node_modules" -prune -o -type f \( -name "*.yml" -o -name "*.yaml" -o -name "*.json" -o -name "*.toml" \) -print 2>/dev/null \
     | grep -vE "(package(-lock)?\.json|tsconfig|angular\.json)" | head -40 \
     | while IFS= read -r cf; do
@@ -105,7 +127,7 @@ extract_routes() {
   rm -f /tmp/asis-routes.$$
 }
 
-# Dependencias directas declaradas en los manifiestos del repo (con version).
+# Direct dependencies declared in the repo's manifests (with version).
 extract_deps() {
   r="$1"
   if [ -f "${r}/package.json" ]; then
@@ -144,8 +166,8 @@ PY
   fi
 }
 
-# Servicios externos inferidos de dependencias y esquemas de conexion en
-# config (solo el TIPO de servicio; jamas se copian URLs/credenciales).
+# External services inferred from dependencies and connection schemes in
+# config (only the service TYPE; URLs/credentials are never copied).
 detect_services() {
   r="$1"; deps="$2"; svc=""
   add_svc() { case " ${svc} " in *" $1 "*) : ;; *) svc="${svc}${svc:+ }$1" ;; esac; }
@@ -163,7 +185,7 @@ detect_services() {
     dep="${pair%%:*}"; label="${pair##*:}"
     if printf '%s\n' "${deps}" | grep -qiE "^${dep}([ @/]|$)"; then add_svc "${label}"; fi
   done
-  # Esquemas de conexion en archivos de config (indican el servicio, no la URL)
+  # Connection schemes in config files (they indicate the service, not the URL)
   SCHEMES=$(grep -rhoE --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
       --include="*.yml" --include="*.yaml" --include="*.env.example" --include="*.properties" --include="*.toml" \
       "(postgres|postgresql|mysql|mongodb|redis|amqp|kafka)://" "${r}" 2>/dev/null | sort -u || true)
@@ -180,7 +202,7 @@ detect_services() {
   printf '%s' "${svc}"
 }
 
-# Comandos del repo (scripts npm / targets de Makefile)
+# Repo commands (npm scripts / Makefile targets)
 extract_commands() {
   r="$1"
   if [ -f "${r}/package.json" ]; then
@@ -196,7 +218,7 @@ PY
 }
 
 detect_rpc() {
-  # Señales de comunicacion NO-HTTP que el grafo de rutas no puede ver
+  # Signs of NON-HTTP communication that the route graph cannot see
   r="$1"; notes=""
   protos=$(find "${r}" -name "*.proto" -not -path "*/node_modules/*" 2>/dev/null | wc -l | tr -d ' ')
   if [ "${protos}" != "0" ]; then notes="${notes}gRPC(${protos} .proto) "; fi
@@ -224,51 +246,51 @@ for name in ${REPO_LIST}; do
   COMMANDS=$(extract_commands "${repo}")
   SVC_CELL=$(printf '%s' "${SERVICES}" | tr ' ' ',')
   SYSTEM_ROWS="${SYSTEM_ROWS}| [${name}](${name}/) | ${role:--} | ${stack} | ${SVC_CELL:--} | \`${commit}\` | ${branch} | ${last} | ${files} | ${loc} |\n"
-  STAMP="> [GENERADO ${GEN_VERSION}] desde ${name}@\`${commit}\` el ${FECHA} - NO EDITAR A MANO."
+  STAMP="> [${T_GEN} ${GEN_VERSION}] ${T_FROM} ${name}@\`${commit}\` ${T_ON} ${FECHA} - ${T_NOEDIT}."
 
   mkdir -p "${OUT}/${name}"
 
-  { echo "# ${name} - modulos y tecnologia (as-is)"; echo "${STAMP}"; echo
-    echo "**Stack detectado:** ${stack}"
-    if [ -n "${role}" ]; then echo "**Rol declarado (repos.yaml):** ${role}"; fi
+  { echo "# ${name} - ${T_MODS}"; echo "${STAMP}"; echo
+    echo "**Detected stack:** ${stack}"
+    if [ -n "${role}" ]; then echo "**Declared role (repos.yaml):** ${role}"; fi
     if [ "${files}" = "0" ]; then
       echo ""
-      echo "AVISO: 0 archivos fuente con los filtros actuales. Posibles causas:"
-      echo "codigo en un lenguaje no listado, o solo configuracion/artefactos."
+      echo "WARNING: 0 source files with the current filters. Possible causes:"
+      echo "code in a language not listed, or configuration/artifacts only."
     fi
-    echo; echo "## Estructura"; echo '```'
+    echo; echo "## ${T_STRUCT}"; echo '```'
     find "${repo}" -maxdepth 3 -path "*/node_modules" -prune -o -path "*/.git" -prune -o -type d -print 2>/dev/null | sed "s|^${repo}||" | grep -v '^$' | sort | head -60
     echo '```'
-    echo; echo "## Servicios externos detectados"
+    echo; echo "## ${T_EXT}"
     if [ -n "${SERVICES}" ]; then
       for s in ${SERVICES}; do echo "- ${s}"; done
       echo
-      echo "_(inferidos de dependencias y esquemas de conexion en config;_"
-      echo "_indican con que habla el repo ademas de sus rutas HTTP)_"
+      echo "_(inferred from dependencies and connection schemes in config;_"
+      echo "_they indicate what the repo talks to besides its HTTP routes)_"
     else
-      echo "- (ninguno detectado)"
+      echo "- (none detected)"
     fi
-    echo; echo "## Dependencias directas"
+    echo; echo "## ${T_DEPS}"
     if [ -n "${DEPS}" ]; then
       printf '%s\n' "${DEPS}" | head -40 | sed 's/^/- `/;s/$/`/'
       DEPS_TOTAL=$(printf '%s\n' "${DEPS}" | wc -l | tr -d ' ')
-      if [ "${DEPS_TOTAL}" -gt 40 ]; then echo "- ... (${DEPS_TOTAL} en total; ver manifiestos del repo)"; fi
+      if [ "${DEPS_TOTAL}" -gt 40 ]; then echo "- ... (${DEPS_TOTAL} in total; see the repo's manifests)"; fi
     else
-      echo "- (sin manifiesto de dependencias reconocido)"
+      echo "- (no recognized dependency manifest)"
     fi
-    echo; echo "## Datos"
+    echo; echo "## ${T_DATA}"
     DATA_HITS=""
     for d in migrations migration alembic prisma db/migrate; do
       if [ -d "${repo}/${d}" ]; then
         n_sql=$(find "${repo}/${d}" -type f 2>/dev/null | wc -l | tr -d ' ')
-        DATA_HITS="si"; echo "- \`${d}/\` (${n_sql} archivos de migracion/esquema)"
+        DATA_HITS="si"; echo "- \`${d}/\` (${n_sql} migration/schema files)"
       fi
     done
     for f in prisma/schema.prisma schema.sql; do
       if [ -f "${repo}/${f}" ]; then DATA_HITS="si"; echo "- \`${f}\`"; fi
     done
-    if [ -z "${DATA_HITS}" ]; then echo "- (sin migraciones/esquemas detectados)"; fi
-    echo; echo "## Infraestructura y CI"
+    if [ -z "${DATA_HITS}" ]; then echo "- (no migrations/schemas detected)"; fi
+    echo; echo "## ${T_INFRA}"
     INFRA_HITS=""
     for f in Dockerfile docker-compose.yml docker-compose.yaml Jenkinsfile \
              bitbucket-pipelines.yml .gitlab-ci.yml serverless.yml; do
@@ -278,65 +300,65 @@ for name in ${REPO_LIST}; do
       INFRA_HITS="si"
       echo "- \`.github/workflows/\` ($(ls "${repo}/.github/workflows" 2>/dev/null | wc -l | tr -d ' ') workflows)"
     fi
-    if [ -z "${INFRA_HITS}" ]; then echo "- (sin Dockerfile/CI detectados)"; fi
-    echo; echo "## Comandos del repo"
+    if [ -z "${INFRA_HITS}" ]; then echo "- (no Dockerfile/CI detected)"; fi
+    echo; echo "## ${T_CMDS}"
     if [ -n "${COMMANDS}" ]; then
       printf '%s\n' "${COMMANDS}" | head -20 | sed 's/^/- `/;s/$/`/'
     else
-      echo "- (sin scripts npm/Makefile detectados; ver CLAUDE.md del repo)"
+      echo "- (no npm scripts/Makefile detected; see the repo's CLAUDE.md)"
     fi
   } > "${OUT}/${name}/modules.md"
 
-  { echo "# ${name} - superficie de API (as-is)"; echo "${STAMP}"; echo
-    echo "## Contratos OpenAPI"
+  { echo "# ${name} - ${T_API}"; echo "${STAMP}"; echo
+    echo "## ${T_OPENAPI}"
     found=$(find "${repo}" -path "*/node_modules" -prune -o \( -name "openapi*.y*ml" -o -name "openapi*.json" -o -name "swagger*.y*ml" -o -name "swagger*.json" \) -print 2>/dev/null || true)
-    if [ -n "${found}" ]; then printf '%s\n' "${found}" | sed "s|^${repo}|- \`|;s|$|\`|"; else echo "- (ninguno - toda API nueva exige contrato primero, ver rules/api-design.md)"; fi
+    if [ -n "${found}" ]; then printf '%s\n' "${found}" | sed "s|^${repo}|- \`|;s|$|\`|"; else echo "- (none - every new API requires a contract first, see rules/api-design.md)"; fi
     rpc=$(detect_rpc "${repo}")
     if [ -n "${rpc}" ]; then
-      echo; echo "## Comunicacion no-HTTP detectada"
+      echo; echo "## ${T_NOHTTP}"
       echo "- ${rpc}"
-      echo "  (gRPC y reverse-proxy no se mapean por rutas HTTP: si este repo"
-      echo "  habla gRPC o reenvia por prefijo, el grafo de rutas puede salir"
-      echo "  vacio siendo correcto. Ver system.md.)"
+      echo "  (gRPC and reverse-proxy are not mapped via HTTP routes: if this repo"
+      echo "  speaks gRPC or forwards by prefix, the route graph may come out"
+      echo "  empty and still be correct. See system.md.)"
     fi
-    echo; echo "## Rutas expuestas detectadas"
+    echo; echo "## ${T_ROUTES}"
     routes=$(extract_routes "${repo}")
-    if [ -n "${routes}" ]; then printf '%s\n' "${routes}" | sed 's/^/- `/;s/$/`/'; else echo "- (ninguna con los patrones actuales)"; fi
+    if [ -n "${routes}" ]; then printf '%s\n' "${routes}" | sed 's/^/- `/;s/$/`/'; else echo "- (none with the current patterns)"; fi
   } > "${OUT}/${name}/api-surface.md"
 done
 
-# ---------- Vista de SISTEMA ----------
+# ---------- SYSTEM view ----------
 {
-  echo "# Sistema ${SYSTEM_NAME} - vista cross-repo (as-is)"
-  echo "> [GENERADO ${GEN_VERSION}] el ${FECHA} - NO EDITAR A MANO. Regenerar: \`./scripts/generate-as-is.sh\`"
+  echo "# ${SYSTEM_NAME} - ${T_SYS}"
+  echo "> [${T_GEN} ${GEN_VERSION}] ${T_ON} ${FECHA} - ${T_NOEDIT}. ${T_REGEN}: \`./scripts/generate-as-is.sh\`"
   echo
-  echo "## Repositorios"
-  echo "| Repo | Rol | Stack | Servicios externos | Commit | Rama | Ultimo cambio | Archivos | Lineas |"
+  echo "## ${T_REPOS}"
+  echo "| Repo | Role | Stack | External services | Commit | Branch | Last change | Files | Lines |"
   echo "|---|---|---|---|---|---|---|---|---|"
   printf '%b' "${SYSTEM_ROWS}"
   if [ -n "${MISSING_LIST}" ]; then
     echo
-    echo "AVISO: repos registrados sin clonar (correr ./scripts/setup.sh):${MISSING_LIST}"
+    echo "WARNING: registered repos not cloned (run ./scripts/setup.sh):${MISSING_LIST}"
   fi
   echo
-  # Orden de despliegue declarado en el registro (proveedor antes que consumidor)
+  # Deploy order declared in the registry (provider before consumer)
   DEPLOY_LINE=""
   for n in $(registry_repos_by_deploy); do
     DEPLOY_LINE="${DEPLOY_LINE:+${DEPLOY_LINE} -> }${n}"
   done
-  echo "**Orden de despliegue declarado (repos.yaml):** ${DEPLOY_LINE}"
+  echo "**Declared deploy order (repos.yaml):** ${DEPLOY_LINE}"
   echo
   if [ "${REPO_COUNT}" -lt 2 ]; then
-    echo "## Comunicacion entre repos"
-    echo "_(sistema de un solo repositorio: no aplica grafo cross-repo)_"
+    echo "## ${T_COMM}"
+    echo "_(single-repository system: the cross-repo graph does not apply)_"
   else
-  echo "## Comunicacion entre repos (heuristica: rutas expuestas vs. consumidas)"
+  echo "## ${T_COMMH}"
   echo '```mermaid'
   echo 'graph LR'
   case " ${REPO_LIST} " in
-    *" ${ENTRYPOINT} "*) echo "  usuario((Usuario)) --> ${ENTRYPOINT}" ;;
+    *" ${ENTRYPOINT} "*) echo "  user((User)) --> ${ENTRYPOINT}" ;;
   esac
-  # Precalcular rutas expuestas por repo (para el filtro anti-falsos-positivos)
+  # Precompute exposed routes per repo (for the anti-false-positive filter)
   RDIR=$(mktemp -d)
   for name in ${REPO_LIST}; do
     extract_routes "repos/${name}/" > "${RDIR}/${name}"
@@ -349,8 +371,8 @@ done
       hits=""; n=0
       for rt in ${routes}; do
         if [ ${#rt} -lt 5 ]; then continue; fi
-        # Anti-falso-positivo: si rt es subcadena de una ruta EXPUESTA por el
-        # consumidor, la coincidencia es su propia definicion, no consumo.
+        # Anti-false-positive: if rt is a substring of a route EXPOSED by the
+        # consumer, the match is its own definition, not consumption.
         if grep -qF -- "${rt}" "${RDIR}/${cname}" 2>/dev/null; then continue; fi
         if grep -rq --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www -F "${rt}" "repos/${cname}/" 2>/dev/null; then
           hits="${hits:+${hits},}${rt}"
@@ -364,26 +386,26 @@ done
   echo '```'
   for rn in ${REPO_LIST}; do
     rr=$(detect_rpc "repos/${rn}/")
-    if [ -n "${rr}" ]; then echo "- ${rn}: ${rr} (comunicacion no visible en el grafo de rutas HTTP)"; fi
+    if [ -n "${rr}" ]; then echo "- ${rn}: ${rr} (communication not visible in the HTTP route graph)"; fi
   done
   echo
-  echo "_Heuristica por coincidencia de rutas. El detalle por repo esta en_"
-  echo "_<repo>/api-surface.md. Para precision total: contratos OpenAPI por repo._"
+  echo "_Heuristic based on route matching. Per-repo detail lives in_"
+  echo "_<repo>/api-surface.md. For full precision: OpenAPI contracts per repo._"
   fi
 } > "${OUT}/system.md"
 
-# ---------- Indice ----------
+# ---------- Index ----------
 {
-  echo "# Mapa AS-IS del sistema ${SYSTEM_NAME}"
-  echo "> [GENERADO ${GEN_VERSION}] el ${FECHA} - NO EDITAR A MANO."
+  echo "# ${T_MAP} ${SYSTEM_NAME}"
+  echo "> [${T_GEN} ${GEN_VERSION}] ${T_ON} ${FECHA} - ${T_NOEDIT}."
   echo
-  echo "- **[system.md](system.md)** - inventario + stack + grafo cross-repo"
+  echo "- **[system.md](system.md)** - inventory + stack + cross-repo graph"
   for n in ${REPO_LIST}; do
     echo "- **${n}/** - [modules](./${n}/modules.md) - [api-surface](./${n}/api-surface.md)"
   done
   echo
-  echo "El as-is dice QUE HAY; los ADRs (knowledge/decisiones/) POR QUE;"
-  echo "las specs (specs/) QUE DEBERIA HABER."
+  echo "The as-is says WHAT EXISTS; the ADRs (knowledge/decisions/) WHY;"
+  echo "the specs (specs/) WHAT SHOULD EXIST."
 } > "${OUT}/INDEX.md"
 
-echo "OK - as-is del sistema regenerado en ${OUT}/"
+echo "OK - system as-is regenerated in ${OUT}/"

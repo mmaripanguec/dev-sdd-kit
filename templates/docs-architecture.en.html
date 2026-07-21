@@ -117,7 +117,7 @@ which commit).</p>
 <tr><td>F1</td><td>Requirements</td><td><code>requirements</code> agent</td>
     <td>INVEST user stories prioritized P1–P3 with Gherkin criteria</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimation</td><td><code>estimation</code> agent</td>
-    <td>Story points + WSJF priority (using uso.md data)</td><td>—</td></tr>
+    <td>Story points + WSJF priority (using usage.md data)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinement</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec meeting the 13-point Definition of Ready, no blocking findings</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Analysis</td><td><code>analysis</code> agent</td>
@@ -144,7 +144,7 @@ memory:</p>
   <div><strong>Context packs</strong> (loadable skills) — <em>HOW IT IS
       BUILT</em>: mental model per repo and per system, with file:line
       evidence, freshness seal and executable assertions.</div>
-  <div><strong>ADRs</strong> (<code>knowledge/decisiones/</code>) — <em>WHY</em>:
+  <div><strong>ADRs</strong> (<code>knowledge/decisions/</code>) — <em>WHY</em>:
       architecture decisions with context and consequences.</div>
   <div><strong>Specs</strong> (<code>specs/</code>) — <em>WHAT SHOULD
       EXIST</em>: each feature's contract, with its gates recorded.</div>
@@ -188,8 +188,8 @@ prerequisite); derived from each <code>scripts/*.sh</code> header.</p>
       Actions template): on every merge to main and on a daily schedule it
       clones the registry's repos, regenerates as-is + DORA metrics + this
       document, and commits if anything changed.</li>
-  <li><strong>Context verification</strong>: <code>frescura.sh</code> detects
-      stale packs by commit seal; <code>afirmaciones.sh</code> runs each
+  <li><strong>Context verification</strong>: <code>freshness.sh</code> detects
+      stale packs by commit seal; <code>assertions.sh</code> runs each
       pack's assertions (detects WHICH claim became false).</li>
 </ul>
 </div>
@@ -247,7 +247,7 @@ operations feeds the next feature — the loop closes:</p>
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
   <text class="sub" x="540" y="70" text-anchor="middle">estimation agent</text>
-  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
+  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from usage.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
@@ -324,7 +324,7 @@ operations feeds the next feature — the loop closes:</p>
   <!-- knowledge layer: aligned under the phase that writes it -->
   <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
-  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisions</text>
   <text class="sub" x="132" y="429" text-anchor="middle">the why behind decisions</text>
 
   <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
@@ -334,7 +334,7 @@ operations feeds the next feature — the loop closes:</p>
 
   <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
-  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidents · usage.md</text>
   <text class="sub" x="948" y="429" text-anchor="middle">F9 records, blameless</text>
 
   <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
@@ -351,11 +351,11 @@ operations feeds the next feature — the loop closes:</p>
 <p>Every feature leaves a verifiable end-to-end chain:</p>
 <div class="flujo">
   <span>Spec <code>specs/*.md</code></span><b>→</b>
-  <span>ADRs <code>knowledge/decisiones/</code></span><b>→</b>
+  <span>ADRs <code>knowledge/decisions/</code></span><b>→</b>
   <span>Commits (one per task, in its repo)</span><b>→</b>
   <span>CAB dossier</span><b>→</b>
-  <span>Postmortems <code>knowledge/incidentes/</code></span><b>→</b>
-  <span>uso.md (DORA) → feeds F1/F2</span>
+  <span>Postmortems <code>knowledge/incidents/</code></span><b>→</b>
+  <span>usage.md (DORA) → feeds F1/F2</span>
 </div>
 <p>Specs use the 12-section template (<code>specs/_template.md</code>):
 problem · objective · measurable success criteria SC-xx · out of scope ·
@@ -422,7 +422,7 @@ knowledge commits go here.</p>
 <div class="wide"><table>
 <tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr>
 <tr><td>A context pack "lies" about the code</td><td>Stale pack</td>
-    <td><code>scripts/frescura.sh comprobar</code>, then regenerate with <code>/repo-map</code></td></tr>
+    <td><code>scripts/freshness.sh check</code>, then regenerate with <code>/repo-map</code></td></tr>
 <tr><td>DORA table says "sin datos"</td><td>Repos not cloned</td>
     <td><code>./scripts/setup.sh</code> with credentials, then <code>./scripts/dora.sh</code></td></tr>
 <tr><td>Cross-repo graph comes out empty</td><td>Framework not recognized</td>

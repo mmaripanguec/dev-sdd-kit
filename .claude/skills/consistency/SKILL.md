@@ -11,8 +11,8 @@ knowledge. STRICTLY READ-ONLY: do not edit any artifact; only report.
 ## Semantic model (build first)
 1. Spec inventory: stories (Hx, priority), ACs in Gherkin, SC-xx,
    RN-xx cited, plan tasks (Tx with repo label).
-2. Contrast artifacts: `knowledge/reglas-negocio.md`,
-   `knowledge/decisiones/` (current ADRs), `knowledge/as-is/` (INDEX and
+2. Contrast artifacts: `knowledge/business-rules.md`,
+   `knowledge/decisions/` (current ADRs), `knowledge/as-is/` (INDEX and
    affected repos), `.claude/rules/*.md` (including the domain profile if the
    repo declares it in repos.yaml), context packs of the affected repos.
 
@@ -25,7 +25,7 @@ knowledge. STRICTLY READ-ONLY: do not edit any artifact; only report.
   outcome, SC without a threshold, dependency mentioned but not registered
   in repos.yaml.
 - **D · Alignment with rules**: contradictions with `.claude/rules/*` or with
-  `knowledge/reglas-negocio.md` (cited RN that does not exist, or a current
+  `knowledge/business-rules.md` (cited RN that does not exist, or a current
   one the spec violates). **Every conflict in this pass is automatically CRITICAL.**
 - **E · Coverage**: requirements (AC/SC) without a task in the plan and tasks
   without a requirement justifying them — in BOTH directions. Task REPO

@@ -10,7 +10,7 @@ Clarify: $ARGUMENTS
 ## Step 1 — Ambiguity scan
 Read the requirement (or the spec and its `[NEEDS CLARIFICATION]` markers)
 together with the factory context (repos.yaml, current context packs, as-is,
-knowledge/reglas-negocio.md). Assess coverage per category — Clear /
+knowledge/business-rules.md). Assess coverage per category — Clear /
 Partial / Absent:
 scope and out of scope · actors and permissions · main and alternative
 flows · data and entities · business rules · external dependencies ·

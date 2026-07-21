@@ -29,5 +29,5 @@ allowed-tools: Read Glob Grep
 4. Answer citing the source (file and seal, or graph query) —
    traceability always.
 5. If the question is about INTENT (why it is this way, where it is heading),
-   complement with specs/ and knowledge/decisiones/ — the as-is says WHAT
+   complement with specs/ and knowledge/decisions/ — the as-is says WHAT
    THERE IS, the ADRs say WHY and the to-be WHAT THERE SHOULD BE. Point out gaps.

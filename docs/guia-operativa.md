@@ -201,16 +201,16 @@ git -c credential.helper= \
 │   │   ├── harness-init/ orquestar/
 │   │   └── as-is/  as-is-sync/  as-is-learn/
 │   └── agents/                      # Subagentes por fase del ciclo E2E (§6)
-│       ├── requisitos.md  estimacion.md  analisis.md  arquitectura.md
-│       ├── calidad.md  publicacion.md  operacion.md
+│       ├── requirements.md  estimation.md  analysis.md  architecture.md
+│       ├── quality.md  release.md  operations.md
 │
 ├── specs/                           # ══ Fuente de verdad del QUÉ ══
 │   └── _template.md                 # Plantilla (tareas etiquetadas [<repo-registrado>])
 │
 ├── knowledge/                       # ══ Memoria compartida del sistema ══
-│   ├── estandares.md                # Mapa estándar → archivo donde se aplica
-│   ├── reglas-negocio.md            # Reglas de dominio numeradas (RN-xx)
-│   ├── uso.md                       # Métricas DORA · estimado vs. real · adopción
+│   ├── standards.md                # Mapa estándar → archivo donde se aplica
+│   ├── business-rules.md            # Reglas de dominio numeradas (RN-xx)
+│   ├── usage.md                       # Métricas DORA · estimado vs. real · adopción
 │   ├── decisiones/                  # ADRs (Nygard) + expedientes CAB
 │   ├── incidentes/                  # Postmortems sin culpables (Google SRE)
 │   └── as-is/                       # ══ Estado REAL derivado del código (§7) ══
@@ -225,7 +225,7 @@ git -c credential.helper= \
 │   ├── repo-add.sh                  # Alta idempotente de un repo en el sistema
 │   ├── setup.sh                     # Clona/actualiza TODOS los repos del registro
 │   ├── generate-as-is.sh            # Mapa as-is del sistema · --check
-│   ├── dora.sh                      # Métricas DORA en knowledge/uso.md · --check
+│   ├── dora.sh                      # Métricas DORA en knowledge/usage.md · --check
 │   ├── docs.sh                      # docs/arquitectura.html derivado · --check
 │   └── tests/                       # test-repo-lib.sh · test-dora.sh (bash 3.2)
 │
@@ -248,24 +248,24 @@ commitea **en este workspace**.
 |---|---|---|
 | `/repo-add <url-o-ruta>` | Ingresa un repo al sistema: clona, registra en repos.yaml, completa su CLAUDE.md con datos reales, lo indexa en codebase-memory y regenera el as-is. Deja el repo listo para `/spec-create` | Humano o Claude |
 | `/repo-map <repo>` | Genera el **pack de contexto** del repo (skill cargable `<prefijo>-<repo>`): arquitectura, mecanismos, trampas — con evidencia archivo:línea, sello y aserciones. Es el contexto que los agentes cargan al especificar sobre ese aplicativo | Humano o Claude |
-| `/system-map` | Pack de sistema (`<prefijo>-sistema`: modelo mental y uniones entre repos) + índice `mapa-sistemas`. Verificación: `scripts/afirmaciones.sh` y `scripts/frescura.sh` | Humano o Claude |
+| `/system-map` | Pack de sistema (`<prefijo>-sistema`: modelo mental y uniones entre repos) + índice `mapa-sistemas`. Verificación: `scripts/assertions.sh` y `scripts/freshness.sh` | Humano o Claude |
 | `/as-is <pregunta>` | Responde sobre el estado real del sistema (módulos, quién llama a quién, endpoints) usando el grafo de código indexado + el mapa persistido; advierte si el mapa está desactualizado | Humano o Claude |
 | `/as-is-sync` | Regenera el mapa, resume el cambio en lenguaje de arquitectura y **escala si detecta drift arquitectónico** | Humano o Claude |
 | `/spec-create <nombre>` | Construye una spec por capas (F1–F5) con parada en cada gate | Humano o Claude |
 | `/spec-review <ruta>` | Audita la spec contra la Definition of Ready (13 puntos) | Humano o Claude |
-| `/clarificar <spec\|tema>` | Resuelve ambigüedades con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec | Humano o Claude |
-| `/consistencia <ruta>` | Análisis read-only de consistencia cruzada spec↔reglas↔ADRs↔as-is↔plan (6 pases, severidades); CRITICAL bloquea el gate | Humano o Claude |
-| `/convergir <ruta>` | Compara el código real contra la spec al cerrar F6 y añade las brechas como tareas de convergencia (append-only) | Humano o Claude |
+| `/clarify <spec\|tema>` | Resuelve ambigüedades con preguntas estructuradas (máx. 5) y registra las respuestas en la sección Clarificaciones de la spec | Humano o Claude |
+| `/consistency <ruta>` | Análisis read-only de consistencia cruzada spec↔reglas↔ADRs↔as-is↔plan (6 pases, severidades); CRITICAL bloquea el gate | Humano o Claude |
+| `/converge <ruta>` | Compara el código real contra la spec al cerrar F6 y añade las brechas como tareas de convergencia (append-only) | Humano o Claude |
 | `/implement-task <spec> <T#>` | Una tarea del plan, con TDD estricto, en el repo que indique la etiqueta `[pwa|proxy|backend]` | Humano o Claude |
 | `/harness-init <spec>` | Prepara harness multi-sesión (feature_list, init.sh, bitácora) | Humano o Claude |
-| `/orquestar <spec>` | Ciclo E2E completo con gates registrados | **Solo humano** |
+| `/orchestrate <spec>` | Ciclo E2E completo con gates registrados | **Solo humano** |
 
 Ejemplos de sesión:
 
 ```
 /as-is ¿qué endpoints del backend consume el proxy?
 /spec-create transferencias-3ds
-/orquestar specs/2026-07-transferencias-3ds.md
+/orchestrate specs/2026-07-transferencias-3ds.md
 ```
 
 Una feature que cruza repos = **una sola spec** en el workspace, con tareas
@@ -285,15 +285,15 @@ F1 Requerimiento → F2 Estimación → F3 Refinamiento → F4 Análisis → F5 
 
 | Fase | Agente | Produce | Gate |
 |---|---|---|---|
-| F1 Requerimiento | `requisitos` (INVEST + Gherkin) | Historias en la spec | PO / TL |
-| F2 Estimación | `estimacion` (Fibonacci + WSJF) | Puntos + prioridad | — |
+| F1 Requerimiento | `requirements` (INVEST + Gherkin) | Historias en la spec | PO / TL |
+| F2 Estimación | `estimation` (Fibonacci + WSJF) | Puntos + prioridad | — |
 | F3 Refinamiento | loop `/spec-review` | Spec "aprobada" | DoR |
-| F4 Análisis | `analisis` | Reglas, dependencias, casos límite | — |
-| F5 Diseño | `arquitectura` (C4 + ADR + STRIDE) | Contratos + ADRs | Arquitectura |
+| F4 Análisis | `analysis` | Reglas, dependencias, casos límite | — |
+| F5 Diseño | `architecture` (C4 + ADR + STRIDE) | Contratos + ADRs | Arquitectura |
 | F6 Construcción | `/implement-task` + harness | Commits por tarea | — |
-| F7 Certificación | `calidad` (ISO 25010 + OWASP) | Veredicto trazable | QA / PR |
-| F8 Producción | `publicacion` (ITIL + SBOM) | Expediente de riesgo | Comité CAB |
-| F9 Operación | `operacion` (SRE) | Postmortems + DORA | DevOps / SRE |
+| F7 Certificación | `quality` (ISO 25010 + OWASP) | Veredicto trazable | QA / PR |
+| F8 Producción | `release` (ITIL + SBOM) | Expediente de riesgo | Comité CAB |
+| F9 Operación | `operations` (SRE) | Postmortems + DORA | DevOps / SRE |
 
 Los gates se implementan en tres capas: instrucción al orquestador (prohibido
 saltarlos; registra quién/cuándo/commit), control de invocación
@@ -340,10 +340,10 @@ Arquitectura en vez de normalizarla.
 | Contenido | Dónde | Escribe | Lee |
 |---|---|---|---|
 | Requisitos | `specs/` | F1–F4 | Todas las fases |
-| Decisiones | `knowledge/decisiones/` | F5, F8 | F6, F7, specs futuras |
-| Incidentes | `knowledge/incidentes/` | F9 | F1 y F4 futuras |
-| Uso/DORA | `knowledge/uso.md` | F9 | F1, F2, F8 |
-| Reglas de negocio | `knowledge/reglas-negocio.md` | F4 + gobernanza | Todas |
+| Decisiones | `knowledge/decisions/` | F5, F8 | F6, F7, specs futuras |
+| Incidentes | `knowledge/incidents/` | F9 | F1 y F4 futuras |
+| Uso/DORA | `knowledge/usage.md` | F9 | F1, F2, F8 |
+| Reglas de negocio | `knowledge/business-rules.md` | F4 + gobernanza | Todas |
 | Estado real | `knowledge/as-is/` | Solo el generador | F5 y consultas |
 
 Trazabilidad completa: spec → ADRs → commits (en su repo) → expediente CAB →
@@ -445,7 +445,7 @@ para ver exactamente qué archivos cargaron.
 
 ## 12. Estándares aplicados
 
-Mapa completo estándar → archivo en `knowledge/estandares.md`. Resumen:
+Mapa completo estándar → archivo en `knowledge/standards.md`. Resumen:
 Anthropic (Claude Code, effective harnesses) · NIST SP 800-218/218A y AI RMF ·
 OWASP Top 10/ASVS · Microsoft SDL · BIAN Service Landscape · Google AIP, Style
 Guides, eng-practices y SRE · DORA four keys · INVEST/Gherkin · WSJF ·

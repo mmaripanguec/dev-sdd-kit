@@ -7,7 +7,7 @@ tools: Read, Glob, Grep, Write
 You are the estimation agent. Given a draft spec with stories:
 
 1. Read the spec, the code of the affected modules (read-only) and
-   knowledge/uso.md (historical velocity and past estimates vs. actuals).
+   knowledge/usage.md (historical velocity and past estimates vs. actuals).
 2. For each story estimate:
    - Size in story points (Fibonacci: 1,2,3,5,8,13). A story > 8 points
      is marked "split" and you propose the cut.

@@ -108,7 +108,7 @@ Genera `.claude/skills/<prefijo>-mi-app/SKILL.md`: el pack de contexto que
 los agentes cargarán automáticamente cuando un requerimiento mencione este
 aplicativo (arquitectura, mecanismos centrales, trampas — todo con
 evidencia `archivo:línea`), y siembra sus aserciones en
-`scripts/afirmaciones.d/<sistema>.sh`.
+`scripts/assertions.d/<sistema>.sh`.
 
 Si el sistema tiene **2 o más repos** con pack, genera también las uniones:
 ```
@@ -119,8 +119,8 @@ Si el sistema tiene **2 o más repos** con pack, genera también las uniones:
 
 Verificación mecánica (ambas deben quedar en verde):
 ```bash
-$ ./scripts/afirmaciones.sh          # ¿alguna afirmación de los packs es falsa?
-$ ./scripts/frescura.sh comprobar    # ¿algún pack caducó respecto del código?
+$ ./scripts/assertions.sh          # ¿alguna afirmación de los packs es falsa?
+$ ./scripts/freshness.sh check    # ¿algún pack caducó respecto del código?
 ```
 
 ## Paso 4 · Especificar el requerimiento
@@ -149,21 +149,21 @@ etiquetadas `[mi-app]` y los gates registrados (quién/cuándo).
 /implement-task specs/<AAAA-MM>-mejora-notificaciones.md T1
 ```
 Una tarea = un commit con TDD **dentro de `repos/mi-app`**. Repetir por
-tarea. Luego certificación (agente `calidad`) y gate QA/PR.
+tarea. Luego certificación (agente `quality`) y gate QA/PR.
 
 Para recorrer TODO el ciclo con gates de una vez (solo humanos):
 ```
-/orquestar specs/<AAAA-MM>-mejora-notificaciones.md
+/orchestrate specs/<AAAA-MM>-mejora-notificaciones.md
 ```
 
 ## Paso 6 · Mantener el contexto vivo
 
 - El mapa as-is se regenera solo (hook al editar `repos/` + CI); a mano:
   `/as-is-sync`.
-- Tras cambios estructurales del repo: `$ ./scripts/frescura.sh comprobar`
+- Tras cambios estructurales del repo: `$ ./scripts/freshness.sh check`
   → si un pack sale OBSOLETO, regenerarlo (`/repo-map mi-app`) y re-sellar.
 - Si corriges un error de un pack: la corrección **debe** volverse aserción
-  en `scripts/afirmaciones.d/<sistema>.sh` (así no vuelve).
+  en `scripts/assertions.d/<sistema>.sh` (así no vuelve).
 
 ---
 
@@ -177,4 +177,4 @@ Para recorrer TODO el ciclo con gates de una vez (solo humanos):
 | `ERROR - no existe repos.yaml` | Aún no hay repos: ejecutar el Paso 1 |
 | El grafo cross-repo sale vacío | `/as-is-learn` para escribir extractores exactos por repo |
 | `/as-is` responde con datos viejos | `/as-is-sync` (o `$ ./scripts/generate-as-is.sh`) y commitear |
-| Un pack contradice el código | `$ ./scripts/afirmaciones.sh` para ver qué afirmación es falsa → corregir el pack + actualizar la aserción |
+| Un pack contradice el código | `$ ./scripts/assertions.sh` para ver qué afirmación es falsa → corregir el pack + actualizar la aserción |

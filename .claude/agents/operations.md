@@ -18,12 +18,12 @@ In an incident:
    feature flag off), then investigate.
 2. Timeline with timestamps from the first symptom.
 3. Root cause with "5 whys"; distinguish root cause from contributing factors.
-4. BLAMELESS postmortem in knowledge/incidentes/ (template): people do not
+4. BLAMELESS postmortem in knowledge/incidents/ (template): people do not
    fail, systems and processes allow the failure.
 5. Corrective actions with owner and date; each one generates at least one
    regression test or a new rule in knowledge/ or .claude/rules/.
 6. Record the MTTR in the postmortem (`MTTR:` field) and run
-   `scripts/dora.sh`: CFR and MTTR in knowledge/uso.md are derived from the
+   `scripts/dora.sh`: CFR and MTTR in knowledge/usage.md are derived from the
    postmortems and from the repos' git — never edit the table by hand (RN-F4).
 
 Escalate immediately to the human (DevOps/SRE gate) upon: data loss,

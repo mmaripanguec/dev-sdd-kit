@@ -50,6 +50,20 @@ Spanish specs remain as authentic artifacts of the factory building itself.
 - [x] T5 [workspace] unification pass: English markers everywhere, harness
       echos, agent names in README tree / HTML templates / SVG diagrams /
       ES guides; language notes rewritten (README + EN doc)
+### Convergence (2026-07-20)
+Structure sweep requested at gate ("still see Spanish in knowledge"):
+- [x] TC1 [workspace] knowledge renamed to English (decisions, incidents,
+      standards.md, business-rules.md, usage.md) + 40+ live references
+- [x] TC2 [workspace] scripts renamed with compat aliases (assertions.sh,
+      freshness.sh with check/seal modes, assertions.d); pack templates
+      renamed (pack-system.md, pack-index.md)
+- [x] TC3 [workspace] dora.sh and generate-as-is.sh made language-aware
+      (labels/seals per system.lang, default en; es instance verified)
+- [x] TC4 [workspace] script comments, user-facing messages, emitted
+      skeletons, .env.example and both CI configs translated (agent pass,
+      load-bearing strings preserved; suites aligned where messages moved)
+- [x] TC5 [workspace] registry validator accepts the freshly-instanced
+      bootstrap state (named system, zero repos) — found by clean-clone E2E
 
 ## 11. Certification (F7)
 SC-01..03 verified by grep (no live Spanish command/agent names; markers

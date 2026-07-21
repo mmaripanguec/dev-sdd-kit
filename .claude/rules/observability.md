@@ -11,6 +11,6 @@ paths:
   and reliability is prioritized.
 - Structured logs (JSON) with end-to-end correlation-id; no personal data
   or secrets in logs.
-- The team's DORA metrics are recorded in knowledge/uso.md: deployment
+- The team's DORA metrics are recorded in knowledge/usage.md: deployment
   frequency, lead time, change failure rate, MTTR.
 - Actionable alerts: every alert links to its runbook; an alert without a runbook is not created.

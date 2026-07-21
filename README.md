@@ -124,11 +124,11 @@ dev-sdd-kit/
 │   └── 2026-07-customer-assistant-adk.md   # Example: new-app flow (demo, EN)
 │
 ├── knowledge/                        # The system's memory
-│   ├── reglas-negocio.md             # Business rules in force (RN-xx)
-│   ├── estandares.md                 # Standard → file map
-│   ├── uso.md                        # DORA metrics (derived — do not hand-edit)
-│   ├── decisiones/_template-adr.md   # Architecture Decision Records
-│   ├── incidentes/_template-postmortem.md   # Blameless postmortems
+│   ├── business-rules.md             # Business rules in force (RN-xx)
+│   ├── standards.md                 # Standard → file map
+│   ├── usage.md                        # DORA metrics (derived — do not hand-edit)
+│   ├── decisions/_template-adr.md   # Architecture Decision Records
+│   ├── incidents/_template-postmortem.md   # Blameless postmortems
 │   └── as-is/  INDEX.md · system.md  # Derived as-is map
 │
 ├── docs/
@@ -137,10 +137,13 @@ dev-sdd-kit/
 │   ├── demo-assistant.md             # Demo walkthrough (ADK + Gemini assistant)
 │   ├── guia-operativa.md             # Full operating guide (ES)
 │   ├── instructivo-repo-existente.md # Repo onboarding walkthrough (ES)
-│   └── assets/  banner.svg · demo.svg · architecture.svg
+│   ├── publicacion-github.md         # Publication runbook (ES)
+│   ├── difusion/                     # Launch kit: show-hn.md · devto.md ·
+│   │                                 #   linkedin-en.md · linkedin-es.md · plan-lanzamiento.md
+│   └── assets/  banner.svg · demo.svg
 │
 ├── templates/                        # What the factory instantiates
-│   ├── CLAUDE.repo.md  pack-repo.md  pack-sistema.md  pack-indice.md
+│   ├── CLAUDE.repo.md  pack-repo.md  pack-system.md  pack-index.md
 │   ├── docs-arquitectura.html  docs-architecture.en.html
 │   └── github-actions-as-is.yml
 │

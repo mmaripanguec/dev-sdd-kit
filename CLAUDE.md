@@ -19,8 +19,8 @@ Current example system: homebanking (3 Bitbucket repos; see repos.yaml).
   equivalent script: `./scripts/repo-add.sh <url-or-path>`
 - Deep context (loadable packs): `/repo-map <repo>` generates the repo's
   pack (`.claude/skills/<prefijo>-<repo>`) and `/system-map` the system
-  pack + the `mapa-sistemas` index. Verification: `scripts/afirmaciones.sh`
-  and `scripts/frescura.sh comprobar`
+  pack + the `mapa-sistemas` index. Verification: `scripts/assertions.sh`
+  and `scripts/freshness.sh check`
 - Prepare the workspace on a new machine: `./scripts/setup.sh`
   (clones/updates ALL repos in the registry; credentials: .env.example)
 - System as-is map: `./scripts/generate-as-is.sh` (or /as-is-sync)
@@ -72,9 +72,9 @@ Current example system: homebanking (3 Bitbucket repos; see repos.yaml).
   the specs WHAT SHOULD EXIST.
 
 ## Shared memory (read on demand)
-- Specs: `specs/` · ADRs: `knowledge/decisiones/` · Incidents: `knowledge/incidentes/`
-- Rules: `knowledge/reglas-negocio.md` · DORA: `knowledge/uso.md`
-- Standards: `knowledge/estandares.md`
+- Specs: `specs/` · ADRs: `knowledge/decisions/` · Incidents: `knowledge/incidents/`
+- Rules: `knowledge/business-rules.md` · DORA: `knowledge/usage.md`
+- Standards: `knowledge/standards.md`
 
 ## Conventions
 - Working language of the workspace: the registry's `system.lang`

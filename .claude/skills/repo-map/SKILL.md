@@ -2,7 +2,7 @@
 name: repo-map
 description: Generates or updates a repository's CONTEXT PACK (loadable skill .claude/skills/<prefijo>-<repo>) — architecture, core mechanisms, dependencies and pitfalls with file:line evidence — and seeds its assertions. Use when asked to "map a repo", "generate the repo's context", when /spec-create detects a repo without a pack or with a stale pack, or after /repo-add.
 argument-hint: "<nombre-repo-del-registro> [foco opcional]"
-allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/frescura.sh *) Bash(./scripts/afirmaciones.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
+allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/freshness.sh *) Bash(./scripts/assertions.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
 Generate the context pack for repo $ARGUMENTS as a loadable skill:
@@ -38,10 +38,10 @@ and works with the correct mental model without rereading the repo.
   data into the pack.
 
 ## 3. Assertions and verification
-- Seed/update `scripts/afirmaciones.d/<sistema>.sh` with 3+ assertions
+- Seed/update `scripts/assertions.d/<sistema>.sh` with 3+ assertions
   from the pack's most important claims (format per that folder's README)
-  and run `scripts/afirmaciones.sh <sistema>` — it must end up green.
-- Run `scripts/frescura.sh comprobar <pack>` — it must come out current.
+  and run `scripts/assertions.sh <sistema>` — it must end up green.
+- Run `scripts/freshness.sh check <pack>` — it must come out current.
 - If while verifying you detect an INCONSISTENCY (the code contradicts the
   registry, an ADR or an existing pack): STOP AND ASK the human.
   Do not normalize it silently.

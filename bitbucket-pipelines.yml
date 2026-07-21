@@ -1,26 +1,26 @@
-# Pipeline del workspace: sincroniza el mapa as-is y las metricas DORA.
-# Variables (Repository settings > Repository variables; tokens marcar Secured)
-# segun los proveedores declarados en repos.yaml:
+# Workspace pipeline: syncs the as-is map and the DORA metrics.
+# Variables (Repository settings > Repository variables; mark tokens Secured)
+# according to the providers declared in repos.yaml:
 #   BITBUCKET_USER / BITBUCKET_TOKEN   (App Password / API token / Access token)
 #   GITHUB_TOKEN · GITLAB_TOKEN        (si el registro tiene repos de esos proveedores)
-#   FACTORY_BOT_EMAIL                  (opcional: email del bot para los commits)
+#   FACTORY_BOT_EMAIL                  (optional: bot email for commits)
 image: atlassian/default-image:4
 
 definitions:
   steps:
     - step: &sync-as-is
-        name: Sincronizar mapa as-is del sistema
+        name: Sync system as-is map
         script:
-          # setup.sh detecta BITBUCKET_TOKEN en el entorno y usa modo token
+          # setup.sh detects BITBUCKET_TOKEN in the environment and uses token mode
           - ./scripts/setup.sh
           - ./scripts/generate-as-is.sh
-          # Con los repos clonados, deriva las metricas DORA reales (RN-F4);
-          # dora.sh --check queda para verificar sin escribir (uso local/PRs)
+          # With the repos cloned, derives the real DORA metrics (RN-F4);
+          # dora.sh --check remains for verify-without-write (local/PR use)
           - ./scripts/dora.sh
           - ./scripts/docs.sh
           - |
-            if ! git diff --quiet knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html; then
-              git add knowledge/as-is/ knowledge/uso.md docs/arquitectura.html docs/architecture.en.html
+            if ! git diff --quiet knowledge/as-is/ knowledge/usage.md docs/arquitectura.html docs/architecture.en.html; then
+              git add knowledge/as-is/ knowledge/usage.md docs/arquitectura.html docs/architecture.en.html
               git -c user.email="${FACTORY_BOT_EMAIL:-fabrica-bot@example.com}" -c user.name=fabrica-bot \
                 commit -m "chore(sync): as-is + DORA + documentacion [skip ci]"
               git push origin HEAD
@@ -30,10 +30,10 @@ definitions:
 
 pipelines:
   custom:
-    as-is-sync:            # ejecucion manual desde la UI de Bitbucket
+    as-is-sync:            # manual run from the Bitbucket UI
       - step: *sync-as-is
   branches:
     main:
-      - step: *sync-as-is  # cada merge a main del workspace refresca el mapa
-# Recomendado: Schedule diario sobre `custom: as-is-sync`
-# (Repository > Pipelines > Schedules) para capturar cambios de los 3 repos.
+      - step: *sync-as-is  # every merge to workspace main refreshes the map
+# Recommended: daily Schedule on `custom: as-is-sync`
+# (Repository > Pipelines > Schedules) to capture changes from the system repos.

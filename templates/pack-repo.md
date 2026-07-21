@@ -40,4 +40,4 @@ agent needs to work WITHOUT re-reading the whole repo.>
 
 **This pack does not prove its own completeness.** If you know the repo and
 something feels off, the pack is probably wrong, not you: fix it and turn
-the correction into an assertion (`scripts/afirmaciones.d/{{SISTEMA}}.sh`).
+the correction into an assertion (`scripts/assertions.d/{{SISTEMA}}.sh`).

@@ -39,12 +39,12 @@ best way to understand the template — and the only way changes get merged.
 ## Ground rules
 
 - Derived artifacts (`knowledge/as-is/`, the DORA block in
-  `knowledge/uso.md`, `docs/*.html`) are **never edited by hand** — fix the
+  `knowledge/usage.md`, `docs/*.html`) are **never edited by hand** — fix the
   source or the generator and regenerate.
 - Every published metric declares its source and period, or says "no data".
 - No secrets, credentials or real customer data anywhere — including specs,
   tests and fixtures.
-- New architecture decisions get an ADR in `knowledge/decisiones/`.
+- New architecture decisions get an ADR in `knowledge/decisions/`.
 - Small, self-contained changes review best: one intention per commit.
 
 ## Reporting bugs / proposing features

@@ -106,7 +106,7 @@ sobre qué commit).</p>
 <tr><td>F1</td><td>Requerimiento</td><td>agente <code>requirements</code></td>
     <td>Historias INVEST priorizadas P1–P3 con criterios Gherkin</td><td class="gate">PO/TL</td></tr>
 <tr><td>F2</td><td>Estimación</td><td>agente <code>estimation</code></td>
-    <td>Story points + prioridad WSJF (con datos de uso.md)</td><td>—</td></tr>
+    <td>Story points + prioridad WSJF (con datos de usage.md)</td><td>—</td></tr>
 <tr><td>F3</td><td>Refinamiento</td><td><code>/spec-review</code> + <code>/consistency</code></td>
     <td>Spec que cumple la DoR de 13 puntos, sin hallazgos que bloqueen</td><td class="gate">DoR</td></tr>
 <tr><td>F4</td><td>Análisis</td><td>agente <code>analysis</code></td>
@@ -133,7 +133,7 @@ sistema:</p>
   <div><strong>Packs de contexto</strong> (skills cargables) — <em>CÓMO ESTÁ
       ARMADO</em>: modelo mental por repo y de sistema, con evidencia
       archivo:línea, sello de frescura y aserciones ejecutables.</div>
-  <div><strong>ADRs</strong> (<code>knowledge/decisiones/</code>) — <em>POR
+  <div><strong>ADRs</strong> (<code>knowledge/decisions/</code>) — <em>POR
       QUÉ</em>: decisiones de arquitectura con contexto y consecuencias.</div>
   <div><strong>Specs</strong> (<code>specs/</code>) — <em>QUÉ DEBERÍA
       HABER</em>: el contrato de cada feature, con sus gates registrados.</div>
@@ -177,8 +177,8 @@ prerequisito); derivados de la cabecera de cada <code>scripts/*.sh</code>.</p>
       GitHub Actions): en cada merge a main y en un schedule diario clona los
       repos del registro, regenera as-is + métricas DORA + este documento y
       commitea si hay cambios.</li>
-  <li><strong>Verificación del contexto</strong>: <code>frescura.sh</code>
-      detecta packs viejos por sello de commit; <code>afirmaciones.sh</code>
+  <li><strong>Verificación del contexto</strong>: <code>freshness.sh</code>
+      detecta packs viejos por sello de commit; <code>assertions.sh</code>
       ejecuta las aserciones de cada pack (detecta QUÉ afirmación se volvió
       falsa).</li>
 </ul>
@@ -237,7 +237,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
   <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimación</text>
   <text class="sub" x="540" y="70" text-anchor="middle">agente estimation</text>
-  <text class="sub" x="540" y="84" text-anchor="middle">puntos + WSJF con uso.md</text>
+  <text class="sub" x="540" y="84" text-anchor="middle">puntos + WSJF con usage.md</text>
 
   <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
   <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinamiento</text>
@@ -314,7 +314,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
   <!-- capa de conocimiento: alineada bajo la fase que la escribe -->
   <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
-  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisions</text>
   <text class="sub" x="132" y="429" text-anchor="middle">el porqué de las decisiones</text>
 
   <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
@@ -324,7 +324,7 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 
   <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
   <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
-  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidents · usage.md</text>
   <text class="sub" x="948" y="429" text-anchor="middle">F9 registra sin culpables</text>
 
   <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
@@ -341,11 +341,11 @@ operación produce alimenta la siguiente feature — el ciclo se cierra:</p>
 <p>Cada feature deja una cadena verificable de punta a punta:</p>
 <div class="flujo">
   <span>Spec <code>specs/*.md</code></span><b>→</b>
-  <span>ADRs <code>knowledge/decisiones/</code></span><b>→</b>
+  <span>ADRs <code>knowledge/decisions/</code></span><b>→</b>
   <span>Commits (uno por tarea, en su repo)</span><b>→</b>
   <span>Expediente CAB</span><b>→</b>
-  <span>Postmortems <code>knowledge/incidentes/</code></span><b>→</b>
-  <span>uso.md (DORA) → alimenta F1/F2</span>
+  <span>Postmortems <code>knowledge/incidents/</code></span><b>→</b>
+  <span>usage.md (DORA) → alimenta F1/F2</span>
 </div>
 <p>La spec usa la plantilla de 12 secciones (<code>specs/_template.md</code>):
 problema · objetivo · criterios de éxito SC-xx medibles · fuera de alcance ·
@@ -412,7 +412,7 @@ workspace; los commits de código van dentro de cada repo
 <div class="wide"><table>
 <tr><th>Síntoma</th><th>Causa probable</th><th>Solución</th></tr>
 <tr><td>Un pack «miente» sobre el código</td><td>Pack caduco</td>
-    <td><code>scripts/frescura.sh comprobar</code> y regenerar con <code>/repo-map</code></td></tr>
+    <td><code>scripts/freshness.sh check</code> y regenerar con <code>/repo-map</code></td></tr>
 <tr><td>Tabla DORA «sin datos»</td><td>Repos sin clonar</td>
     <td><code>./scripts/setup.sh</code> con credenciales y <code>./scripts/dora.sh</code></td></tr>
 <tr><td>El grafo cross-repo sale vacío</td><td>Framework no reconocido</td>

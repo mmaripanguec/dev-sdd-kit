@@ -8,7 +8,7 @@ allowed-tools: Read Glob Grep Write
 ## Context
 - Existing specs: !`ls specs/ 2>/dev/null`
 - Registered repos: !`. scripts/repo-lib.sh 2>/dev/null && registry_repos | tr '\n' ' '`
-- Current business rules: see knowledge/reglas-negocio.md
+- Current business rules: see knowledge/business-rules.md
 
 ## STEP 0 — Requirement triage (MANDATORY before F1)
 
@@ -24,8 +24,8 @@ allowed-tools: Read Glob Grep Write
 **0.2 Load context (scenario A)**: for each affected repo, load its
 pack (`<prefijo>-<repo>`) and the system pack (`<prefijo>-sistema`).
 - Pack doesn't exist? → generate it with /repo-map (or /system-map) BEFORE F1.
-- It exists? → validate freshness: `scripts/frescura.sh comprobar <pack>` and
-  `scripts/afirmaciones.sh <sistema>`. Stale → regenerate before continuing.
+- It exists? → validate freshness: `scripts/freshness.sh check <pack>` and
+  `scripts/assertions.sh <sistema>`. Stale → regenerate before continuing.
 
 **0.3 Dependencies — ask, NEVER assume**: if the stories, the as-is
 or the packs reveal that the application depends on another system/service:
