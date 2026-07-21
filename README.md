@@ -83,10 +83,17 @@ the whole lifecycle governed — this is what dev-sdd-kit was built for.
 
 ## Architecture at a glance
 
-A requirement flows through 10 phases with six human gates. Phases F0–F5
-write the spec; construction and certification run *against* it; operations
-feeds knowledge back into the next feature. See the full conceptual diagram
-in the [architecture document](docs/architecture.en.html).
+A requirement flows through 10 phases with six human gates. Phases F0–F4
+write the SPEC — the living contract at the center — which governs design,
+construction and certification; operations feeds knowledge back into the
+next feature:
+
+<p align="center">
+  <img src="docs/assets/architecture.svg" alt="Conceptual model: phases F0 to F4 write the SPEC (living contract at the center), the SPEC governs F5 to F9 with human gates on every arrow, the knowledge layer (ADRs, as-is map, postmortems and DORA metrics) derives below, and a feedback loop feeds the next feature" width="100%">
+</p>
+
+Full detail — every phase, gate, mechanism and the live catalog — in the
+[architecture document](docs/architecture.en.html).
 
 ```
 dev-sdd-kit/
@@ -131,7 +138,7 @@ dev-sdd-kit/
 │   ├── demo-assistant.md             # Demo walkthrough (ADK + Gemini assistant)
 │   ├── guia-operativa.md             # Full operating guide (ES)
 │   ├── instructivo-repo-existente.md # Repo onboarding walkthrough (ES)
-│   └── assets/  banner.svg · demo.svg
+│   └── assets/  banner.svg · demo.svg · architecture.svg
 │
 ├── templates/                        # What the factory instantiates
 │   ├── CLAUDE.repo.md  pack-repo.md  pack-sistema.md  pack-indice.md

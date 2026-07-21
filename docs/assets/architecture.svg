@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 478" role="img" style="width:100%;height:auto" font-family="-apple-system,'Segoe UI',Roboto,sans-serif"
+     aria-label="Conceptual flow: F0 to F4 write the SPEC (living contract at the center), the SPEC governs F5 to F9, knowledge is derived and feeds back into the next feature">
+  <rect x="0" y="0" width="1040" height="478" rx="12" fill="#0d1420"/>
+  <defs>
+    <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+            markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8fa4bd"/>
+    </marker>
+    <marker id="flacc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+            markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#66aef0"/>
+    </marker>
+    <marker id="flok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+            markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5fce96"/>
+    </marker>
+  </defs>
+  <style>
+    .caja{fill:#13253c;stroke:#2c4364;stroke-width:1.2}
+    .spec{fill:#13253c;stroke:#66aef0;stroke-width:2}
+    .kbox{fill:#0d1420;stroke:#2c4364;stroke-width:1.2;stroke-dasharray:3 3}
+    .titulo{fill:#e8eaed;font-size:12.5px;font-weight:600}
+    .spec-t{fill:#66aef0;font-size:14px;font-weight:700}
+    .sub{fill:#8fa4bd;font-size:9.8px}
+    .gate-l{fill:#e0a458;font-size:9.5px;font-weight:700}
+    .linea{stroke:#8fa4bd;stroke-width:1.4;fill:none;marker-end:url(#fl)}
+    .lacc{stroke:#66aef0;stroke-width:1.4;fill:none;marker-end:url(#flacc)}
+    .lcert{stroke:#66aef0;stroke-width:1.3;fill:none;marker-end:url(#flacc);stroke-dasharray:4 3}
+    .lfina{stroke:#8fa4bd;stroke-width:1;fill:none;marker-end:url(#fl);opacity:.75}
+    .retro{stroke:#5fce96;stroke-width:1.6;fill:none;marker-end:url(#flok);stroke-dasharray:6 4}
+    .retro-l{fill:#5fce96;font-size:10.5px;font-weight:600}
+    .acc-l{fill:#66aef0;font-size:10px;font-weight:600}
+  </style>
+
+  <!-- row A: F0 to F4 (the WHAT: they write the spec) -->
+  <rect class="caja" x="48" y="36" width="168" height="64" rx="8"/>
+  <text class="titulo" x="132" y="54" text-anchor="middle">F0 Triage</text>
+  <text class="sub" x="132" y="70" text-anchor="middle">/spec-create · /clarify</text>
+  <text class="sub" x="132" y="84" text-anchor="middle">classifies · loads context</text>
+
+  <rect class="caja" x="252" y="36" width="168" height="64" rx="8"/>
+  <text class="titulo" x="336" y="54" text-anchor="middle">F1 Requirements</text>
+  <text class="sub" x="336" y="70" text-anchor="middle">requirements agent</text>
+  <text class="sub" x="336" y="84" text-anchor="middle">INVEST stories P1–P3</text>
+
+  <rect class="caja" x="456" y="36" width="168" height="64" rx="8"/>
+  <text class="titulo" x="540" y="54" text-anchor="middle">F2 Estimation</text>
+  <text class="sub" x="540" y="70" text-anchor="middle">estimation agent</text>
+  <text class="sub" x="540" y="84" text-anchor="middle">points + WSJF from uso.md</text>
+
+  <rect class="caja" x="660" y="36" width="168" height="64" rx="8"/>
+  <text class="titulo" x="744" y="54" text-anchor="middle">F3 Refinement</text>
+  <text class="sub" x="744" y="70" text-anchor="middle">/spec-review · /consistency</text>
+  <text class="sub" x="744" y="84" text-anchor="middle">13-point DoR</text>
+
+  <rect class="caja" x="864" y="36" width="168" height="64" rx="8"/>
+  <text class="titulo" x="948" y="54" text-anchor="middle">F4 Analysis</text>
+  <text class="sub" x="948" y="70" text-anchor="middle">analysis agent</text>
+  <text class="sub" x="948" y="84" text-anchor="middle">rules · deps · edge cases</text>
+
+  <line class="linea" x1="216" y1="68" x2="248" y2="68"/>
+  <line class="linea" x1="420" y1="68" x2="452" y2="68"/>
+  <text class="gate-l" x="436" y="60" text-anchor="middle">PO/TL</text>
+  <line class="linea" x1="624" y1="68" x2="656" y2="68"/>
+  <line class="linea" x1="828" y1="68" x2="860" y2="68"/>
+  <text class="gate-l" x="844" y="60" text-anchor="middle">DoR</text>
+
+  <!-- F0..F4 write their section (details live inside the band) -->
+  <line class="lacc" x1="132" y1="100" x2="132" y2="146"/>
+  <line class="lacc" x1="336" y1="100" x2="336" y2="146"/>
+  <line class="lacc" x1="540" y1="100" x2="540" y2="146"/>
+  <line class="lacc" x1="744" y1="100" x2="744" y2="146"/>
+  <line class="lacc" x1="948" y1="100" x2="948" y2="146"/>
+
+  <!-- THE SPEC: living contract, center and connector of the model -->
+  <rect class="spec" x="48" y="150" width="984" height="62" rx="10"/>
+  <text class="spec-t" x="540" y="174" text-anchor="middle">SPEC · the living contract — specs/&lt;feature&gt;.md</text>
+  <text class="sub" x="540" y="192" text-anchor="middle">clarifications (F0) · stories &amp; success criteria (F1) · estimation (F2) · DoR (F3) · analysis (F4) · design &amp; task plan (F5)</text>
+  <text class="sub" x="540" y="205" text-anchor="middle">everything below is built and certified AGAINST this document; its gates are recorded in it</text>
+
+  <!-- the spec governs construction; F7 certifies back -->
+  <line class="lacc" x1="132" y1="212" x2="132" y2="264"/>
+  <text class="acc-l" x="140" y="243">completes the design</text>
+  <line class="lacc" x1="336" y1="212" x2="336" y2="264"/>
+  <text class="acc-l" x="344" y="243">the plan governs F6</text>
+  <path class="lcert" d="M 540 264 L 540 216"/>
+  <text class="acc-l" x="548" y="243">certifies against the spec</text>
+
+  <!-- row B: F5 to F9 (the HOW: they obey and verify the spec) -->
+  <rect class="caja" x="48" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="132" y="286" text-anchor="middle">F5 Design</text>
+  <text class="sub" x="132" y="302" text-anchor="middle">architecture agent</text>
+  <text class="sub" x="132" y="316" text-anchor="middle">contracts · C4 · STRIDE</text>
+
+  <rect class="caja" x="252" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="336" y="286" text-anchor="middle">F6 Construction</text>
+  <text class="sub" x="336" y="302" text-anchor="middle">/harness-init · /implement-task</text>
+  <text class="sub" x="336" y="316" text-anchor="middle">TDD · one commit per task</text>
+
+  <rect class="caja" x="456" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="540" y="286" text-anchor="middle">F7 Certification</text>
+  <text class="sub" x="540" y="302" text-anchor="middle">/converge · quality agent</text>
+  <text class="sub" x="540" y="316" text-anchor="middle">verdict against the spec</text>
+
+  <rect class="caja" x="660" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="744" y="286" text-anchor="middle">F8 Release</text>
+  <text class="sub" x="744" y="302" text-anchor="middle">release agent</text>
+  <text class="sub" x="744" y="316" text-anchor="middle">risk dossier</text>
+
+  <rect class="caja" x="864" y="268" width="168" height="64" rx="8"/>
+  <text class="titulo" x="948" y="286" text-anchor="middle">F9 Operations</text>
+  <text class="sub" x="948" y="302" text-anchor="middle">operations agent</text>
+  <text class="sub" x="948" y="316" text-anchor="middle">postmortems · golden signals</text>
+
+  <line class="linea" x1="216" y1="300" x2="248" y2="300"/>
+  <text class="gate-l" x="232" y="292" text-anchor="middle">Arch</text>
+  <line class="linea" x1="420" y1="300" x2="452" y2="300"/>
+  <line class="linea" x1="624" y1="300" x2="656" y2="300"/>
+  <text class="gate-l" x="640" y="292" text-anchor="middle">QA/PR</text>
+  <line class="linea" x1="828" y1="300" x2="860" y2="300"/>
+  <text class="gate-l" x="844" y="292" text-anchor="middle">CAB</text>
+
+  <!-- knowledge layer: aligned under the phase that writes it -->
+  <rect class="kbox" x="48" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="132" y="400" text-anchor="middle">ADRs</text>
+  <text class="sub" x="132" y="416" text-anchor="middle">knowledge/decisiones</text>
+  <text class="sub" x="132" y="429" text-anchor="middle">the why behind decisions</text>
+
+  <rect class="kbox" x="252" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="336" y="400" text-anchor="middle">as-is · packs · graph</text>
+  <text class="sub" x="336" y="416" text-anchor="middle">derived from the code</text>
+  <text class="sub" x="336" y="429" text-anchor="middle">sealed, with assertions</text>
+
+  <rect class="kbox" x="864" y="380" width="168" height="58" rx="8"/>
+  <text class="titulo" x="948" y="400" text-anchor="middle">Postmortems · DORA</text>
+  <text class="sub" x="948" y="416" text-anchor="middle">knowledge/incidentes · uso.md</text>
+  <text class="sub" x="948" y="429" text-anchor="middle">F9 records, blameless</text>
+
+  <line class="lfina" x1="132" y1="332" x2="132" y2="376"/>
+  <line class="lfina" x1="336" y1="332" x2="336" y2="376"/>
+  <line class="lfina" x1="948" y1="332" x2="948" y2="376"/>
+  <text class="gate-l" x="940" y="356" text-anchor="end">SRE gate</text>
+
+  <!-- feedback: the loop closes -->
+  <path class="retro" d="M 948 438 L 948 462 L 20 462 L 20 68 L 44 68"/>
+  <text class="retro-l" x="484" y="455" text-anchor="middle">knowledge feeds the next feature: F1 prioritizes with real usage · F2 estimates with history · F0 loads fresh packs</text>
+</svg>
