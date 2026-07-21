@@ -116,12 +116,7 @@ dev-sdd-kit/
 │
 ├── specs/                            # The contracts (every feature starts here)
 │   ├── _template.md                  # 12-section spec template
-│   ├── 2026-07-generalizacion-workspace.md
-│   ├── 2026-07-mejoras-spec-kit.md
-│   ├── 2026-07-metricas-dora.md
-│   ├── 2026-07-docs-html.md
-│   ├── 2026-07-github-docs.md
-│   └── 2026-07-customer-assistant-adk.md   # Example: new-app flow (demo, EN)
+│   └── 2026-07-customer-assistant-adk.md   # Example spec: the demo's new-app flow
 │
 ├── knowledge/                        # The system's memory
 │   ├── business-rules.md             # Business rules in force (RN-xx)
@@ -166,9 +161,8 @@ dev-sdd-kit/
 > templates and knowledge scaffolding — is fully in English, and command
 > names are always English. Your team picks its *working* language at
 > `init-system.sh` (en/es) and the factory keeps specs and interactions in
-> it. The historical specs under `specs/` come from this project's own
-> Spanish-speaking instance — authentic artifacts of the factory building
-> itself; the demo spec (customer-assistant) is in English.
+> it. The Spanish-language guides under `docs/` are the ES editions of the
+> documentation; the example spec (customer-assistant) is in English.
 
 ## Contributing
 
