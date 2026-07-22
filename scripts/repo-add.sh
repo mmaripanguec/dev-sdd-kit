@@ -151,11 +151,19 @@ else
   seed_repo_claude_md "${NAME}"
 fi
 
+# ---------- Index into the code graph (non-blocking) ----------
+# Fleet/Postgres facade: seeds the repo and wires .mcp.json when configured in
+# .env; direct engine: printed guidance (the /repo-add skill runs the MCP tool).
+if [ "${VCS}" != "none" ] && [ -x scripts/codebase-memory.sh ]; then
+  ./scripts/codebase-memory.sh index "${NAME}" || true
+fi
+
 # ---------- Summary ----------
 echo ""
 echo "OK - '${NAME}' ready (new: ${NUEVO})."
 echo "     System: $(registry_system name) | entrypoint: $(registry_system entrypoint)"
 echo "Next steps:"
-echo "  1) ./scripts/generate-as-is.sh          (as-is map of the system)"
-echo "  2) from Claude Code: /repo-add ${NAME}  fills in CLAUDE.md and indexes"
-echo "     it in codebase-memory; then /spec-create to specify."
+echo "  1) ./scripts/generate-as-is.sh          (as-is map + architecture doc)"
+echo "  2) from Claude Code: /repo-add ${NAME}  fills in CLAUDE.md; direct-engine"
+echo "     indexing runs via MCP. Fleet mode: configure CBM_* in .env"
+echo "     (docs/codebase-memory-setup.md). Then /spec-create to specify."

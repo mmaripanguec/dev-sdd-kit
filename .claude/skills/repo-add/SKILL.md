@@ -33,9 +33,12 @@ THAT repo, not in the workspace.
   - **Fleet / Postgres facade (read-only):** the MCP exposes only read tools;
     `index_repository` is NOT available and returns
     `-32601 ... no equivalent in the fleet graph`. This is EXPECTED — do not
-    treat it as a hard failure. Index through the fleet's own seed workflow
-    (e.g. `run_local.py seed --repo repos/<name>`), then point the workspace
-    `.mcp.json` at the seeded project. Details in `docs/codebase-memory-setup.md`.
+    treat it as a hard failure. When the fleet is configured in `.env`
+    (`CBM_FLEET_SEED`, `CBM_FLEET_URL`, `CBM_FLEET_TOKEN`), `repo-add.sh` already
+    ran `scripts/codebase-memory.sh index <name>`, which **seeds the repo and
+    wires `.mcp.json` automatically** — just confirm its output. Otherwise seed
+    manually (`run_local.py seed --repo repos/<name>`) and point `.mcp.json` at
+    the project. Details in `docs/codebase-memory-setup.md`.
 - If indexing cannot be completed here (MCP down, facade without a seed path):
   do NOT block the onboarding; state it explicitly in the final report
   ("indexing pending: seed via the fleet or run `index_repository` when the

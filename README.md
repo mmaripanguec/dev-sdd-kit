@@ -8,7 +8,7 @@ Human gates backed by permissions · strict TDD · docs and metrics that cannot 
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/tests-119%20passing-brightgreen.svg" alt="119 tests passing">
+  <img src="https://img.shields.io/badge/tests-141%20passing-brightgreen.svg" alt="141 tests passing">
   <img src="https://img.shields.io/badge/lifecycle-F0%E2%86%92F9%20complete-0b5fa5.svg" alt="Complete F0-F9 lifecycle">
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-5fce96.svg" alt="PRs welcome"></a>
 </p>
@@ -155,8 +155,9 @@ dev-sdd-kit/
 │   ├── skill-architecture.md          # <prefix>-architecture context skill
 │   └── github-actions-as-is.yml
 │
-├── scripts/                          # Automation + 4 self-test suites (119 asserts)
-│   └── generate-architecture.sh      # AS-IS architecture doc (.md + .html)
+├── scripts/                          # Automation + 5 self-test suites (141 asserts)
+│   ├── generate-architecture.sh      # AS-IS architecture doc (.md + .html)
+│   └── codebase-memory.sh            # Code-graph indexing: fleet seed + .mcp.json
 ├── harness/  claude-progress.md      # Multi-session agent harness
 └── .github/                          # Issue & PR templates
 ```

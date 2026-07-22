@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-07-22
+
+Automatic code-graph indexing for the fleet/Postgres facade.
+
+### Added
+- `scripts/codebase-memory.sh` — real, configurable code (not just guidance)
+  that handles the read-only fleet/Postgres facade: it **seeds** a repo through
+  the fleet CLI and **wires** a gitignored workspace `.mcp.json` at the seeded
+  project. Subcommands: `index <repo>`, `mcp-config [repo…]`, `mode`.
+- `repo-add.sh` now calls it after registration (non-blocking): with the fleet
+  configured in `.env`, onboarding indexes the repo automatically; otherwise it
+  prints direct-engine guidance. Nothing hardcoded — all fleet specifics
+  (`CBM_MODE`, `CBM_FLEET_SEED`, `CBM_FLEET_URL`, `CBM_FLEET_TOKEN`,
+  `CBM_FLEET_PROJECT`) live in `.env` (see `.env.example`).
+- `scripts/tests/test-codebase-memory.sh` (5th self-test suite; 141 asserts total).
+
+### Changed
+- `docs/codebase-memory-setup.md` documents the automatic path and the `.env`
+  config; `.gitignore` now ignores `.mcp.json`; the `/repo-add` skill notes that
+  the fleet seed + `.mcp.json` wiring happen automatically when configured.
+
 ## [1.1.2] - 2026-07-22
 
 Cleanup release (docs only, no code changes).

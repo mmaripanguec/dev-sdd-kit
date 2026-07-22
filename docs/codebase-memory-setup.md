@@ -43,34 +43,58 @@ built from grep and still work.
 
 ### How to index in fleet mode
 
-1. Seed the repositories into the fleet graph with the fleet tooling, e.g.:
+**Automatic (recommended).** Configure the fleet once in `.env` and
+`repo-add.sh` seeds each repo and writes the workspace `.mcp.json` for you —
+no manual steps. The relevant `.env` variables (see `.env.example`):
 
-   ```bash
-   run_local.py seed --repo repos/<name> [--repo repos/<other> ...]
-   run_local.py list        # confirm the projects are present
-   ```
+```bash
+CBM_MODE=auto                      # auto | fleet | direct | off
+CBM_FLEET_SEED=uv run python /path/to/flota/run_local.py seed --repo {repo}
+CBM_FLEET_URL=http://127.0.0.1:8787
+CBM_FLEET_TOKEN=<your-dev-token>
+# CBM_FLEET_PROJECT={abspath_dashes}   # project-id template; default shown
+```
 
-2. Point the workspace at the seeded project(s). Create/adjust a workspace
-   `.mcp.json` with one HTTP MCP entry per project (the URL selects the project;
-   the token is your fleet dev token):
+With `CBM_FLEET_SEED` set, `auto` resolves to **fleet** mode: on `/repo-add`
+(or `./scripts/repo-add.sh <url>`), the factory runs the seed command with
+`{repo}` → `repos/<name>` and upserts a `cbm-<name>` entry into `.mcp.json`.
+You can also run it directly:
 
-   ```json
-   {
-     "mcpServers": {
-       "cbm-<name>": {
-         "type": "http",
-         "url": "http://127.0.0.1:8787/mcp/<fleet-project-id>",
-         "headers": { "Authorization": "Bearer <token>" }
-       }
-     }
-   }
-   ```
+```bash
+./scripts/codebase-memory.sh index <name>       # seed one repo + wire .mcp.json
+./scripts/codebase-memory.sh mcp-config          # (re)write .mcp.json for all repos
+./scripts/codebase-memory.sh mode                # print the resolved mode
+```
 
-3. Keep `.mcp.json` out of version control — it holds machine-specific paths and
-   a token. Add it to `.gitignore`.
+It never blocks onboarding: if the seed command fails or the fleet is down, it
+prints a warning and continues; the as-is map, packs and architecture document
+are still built from static analysis.
 
-Re-seed after structural code changes (new modules, endpoints, migrations);
-the graph does not refresh itself.
+**Manual.** If you prefer not to configure `.env`, seed and wire by hand:
+
+```bash
+run_local.py seed --repo repos/<name>            # seed the project
+run_local.py list                                # confirm it is present
+```
+
+Then create `.mcp.json` with one HTTP entry per project (URL selects the
+project, token is your fleet dev token):
+
+```json
+{
+  "mcpServers": {
+    "cbm-<name>": {
+      "type": "http",
+      "url": "http://127.0.0.1:8787/mcp/<fleet-project-id>",
+      "headers": { "Authorization": "Bearer <token>" }
+    }
+  }
+}
+```
+
+`.mcp.json` is **gitignored** (machine-specific paths + token). Re-seed after
+structural code changes (new modules, endpoints, migrations); the graph does
+not refresh itself.
 
 ## Which mode am I in?
 
