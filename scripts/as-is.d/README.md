@@ -4,7 +4,7 @@ If the generic extractor in `generate-as-is.sh` does not capture a repo's
 routes (unusual framework, routes in config, gRPC), an EXACT extractor is
 written here:
 
-- Name: `<repo-name>.sh` (e.g. `homebanking-pwa-proxy.sh`), executable.
+- Name: `<repo-name>.sh` (e.g. `my-service.sh`), executable.
 - Contract: it receives the repo path as `$1`; prints one route per line
   in the format `/segment[/...]`.
 - Who writes them: the `/as-is-learn` skill (Claude Code analyzes the real

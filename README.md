@@ -8,7 +8,7 @@ Human gates backed by permissions · strict TDD · docs and metrics that cannot 
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/tests-99%20passing-brightgreen.svg" alt="99 tests passing">
+  <img src="https://img.shields.io/badge/tests-119%20passing-brightgreen.svg" alt="119 tests passing">
   <img src="https://img.shields.io/badge/lifecycle-F0%E2%86%92F9%20complete-0b5fa5.svg" alt="Complete F0-F9 lifecycle">
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-5fce96.svg" alt="PRs welcome"></a>
 </p>
@@ -124,7 +124,8 @@ dev-sdd-kit/
 │   ├── usage.md                        # DORA metrics (derived — do not hand-edit)
 │   ├── decisions/_template-adr.md   # Architecture Decision Records
 │   ├── incidents/_template-postmortem.md   # Blameless postmortems
-│   └── as-is/  INDEX.md · system.md  # Derived as-is map
+│   ├── as-is/  INDEX.md · system.md  # Derived as-is map
+│   └── architecture/  <system>.md · .html   # AS-IS architecture doc (arc42+C4, generated)
 │
 ├── docs/
 │   ├── index.html                    # Landing page (GitHub Pages)
@@ -140,9 +141,12 @@ dev-sdd-kit/
 ├── templates/                        # What the factory instantiates
 │   ├── CLAUDE.repo.md  pack-repo.md  pack-system.md  pack-index.md
 │   ├── docs-arquitectura.html  docs-architecture.en.html
+│   ├── knowledge-architecture.md · .html · .narrative.md  # AS-IS arch templates
+│   ├── skill-architecture.md          # <prefix>-architecture context skill
 │   └── github-actions-as-is.yml
 │
-├── scripts/                          # Automation + 3 self-test suites (99 asserts)
+├── scripts/                          # Automation + 4 self-test suites (119 asserts)
+│   └── generate-architecture.sh      # AS-IS architecture doc (.md + .html)
 ├── harness/  claude-progress.md      # Multi-session agent harness
 └── .github/                          # Issue & PR templates
 ```
@@ -152,6 +156,7 @@ dev-sdd-kit/
 | Document | Language | Purpose |
 |---|---|---|
 | [docs/architecture.en.html](docs/architecture.en.html) | English | Architecture, technical spec, model & usage guide (generated) |
+| [docs/codebase-memory-setup.md](docs/codebase-memory-setup.md) | English | Code-graph MCP setup: direct engine vs fleet/Postgres facade, indexing & troubleshooting |
 | [docs/arquitectura.html](docs/arquitectura.html) | Español | Same document in the factory's working language (generated) |
 | [docs/guia-operativa.md](docs/guia-operativa.md) | Español | Complete operating guide: installation, auth per provider, E2E cycle, governance |
 | [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md) | Español | Step-by-step: onboarding an existing repo up to the first spec |

@@ -27,11 +27,19 @@ visible conventions. Whatever lacks evidence stays marked
 THAT repo, not in the workspace.
 
 ## 3. Index in codebase-memory (code graph)
-- Invoke `index_repository` from the codebase-memory MCP on `repos/<nombre>`
-  and verify with `index_status`/`list_projects`.
-- If the MCP is unavailable or fails: do NOT block the onboarding; state it
-  explicitly in the final report ("indexing pending: run
-  /repo-add again or index_repository when the MCP is up").
+- Two deployment modes exist (see `docs/codebase-memory-setup.md`):
+  - **Direct engine:** invoke `index_repository` from the codebase-memory MCP on
+    `repos/<name>` and verify with `index_status`/`list_projects`.
+  - **Fleet / Postgres facade (read-only):** the MCP exposes only read tools;
+    `index_repository` is NOT available and returns
+    `-32601 ... no equivalent in the fleet graph`. This is EXPECTED — do not
+    treat it as a hard failure. Index through the fleet's own seed workflow
+    (e.g. `run_local.py seed --repo repos/<name>`), then point the workspace
+    `.mcp.json` at the seeded project. Details in `docs/codebase-memory-setup.md`.
+- If indexing cannot be completed here (MCP down, facade without a seed path):
+  do NOT block the onboarding; state it explicitly in the final report
+  ("indexing pending: seed via the fleet or run `index_repository` when the
+  direct engine is available"). The as-is map and packs still work from grep.
 
 ## 4. As-is map
 - Run `./scripts/generate-as-is.sh` and review the result.

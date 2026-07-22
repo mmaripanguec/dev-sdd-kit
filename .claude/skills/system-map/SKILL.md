@@ -2,7 +2,7 @@
 name: system-map
 description: Generates or updates the SYSTEM PACK (<prefijo>-sistema, the junctions and the mental model that live in no repo) and the mapa-sistemas index. Use when the system has ≥2 repos with packs, when asked for "the system map"/"how the repos connect", or when /spec-create detects the system pack is missing.
 argument-hint: "[foco opcional]"
-allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/freshness.sh *) Bash(./scripts/assertions.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
+allowed-tools: Read Glob Grep Write Edit Bash(./scripts/generate-as-is.sh *) Bash(./scripts/generate-architecture.sh *) Bash(./scripts/freshness.sh *) Bash(./scripts/assertions.sh *) Bash(git -C *) Bash(git add *) Bash(git commit *) Bash(git status *) Bash(git diff *) Bash(grep *) Bash(find *) Bash(wc *)
 ---
 
 Generate `.claude/skills/<prefijo>-sistema/SKILL.md` (prefix =
@@ -35,7 +35,21 @@ lives in no repo**: the mental model and the junctions.
   `scripts/freshness.sh check` and `scripts/assertions.sh`), where
   to start, and "What I DON'T know".
 
-## 4. Assertions, verification and closure
+## 4. AS-IS architecture document (knowledge, arc42 + C4)
+- Author/refresh the curated narrative in
+  `knowledge/architecture/<system>.narrative.md` (seed it from
+  `templates/knowledge-architecture.narrative.md` on first run): mental model,
+  seams, endpoints, decisions, risks — the analysis that lives in no repo. The
+  derived data (topology, dependencies, metrics) is injected by the generator.
+- Generate both formats: `./scripts/generate-architecture.sh` writes
+  `knowledge/architecture/<system>.{md,html}`.
+- Create the context skill `<prefix>-architecture` from
+  `templates/skill-architecture.md` (fill `{{PREFIX}}`, `{{SYSTEM}}`,
+  `{{REPO_TRIGGERS}}` = the system's repo names/aliases, `{{SEALS_FRONTMATTER}}`,
+  `{{FECHA}}`) so agents load the document as context on those triggers and do
+  NOT re-index or re-read code for what is already documented.
+
+## 5. Assertions, verification and closure
 - Each important junction → assertion in `scripts/assertions.d/<sistema>.sh`
   (ideally one per end). Run the suite: green is mandatory.
 - `scripts/freshness.sh check` green for the touched packs.

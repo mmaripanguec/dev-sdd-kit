@@ -4,6 +4,34 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-22
+
+Knowledge-as-context architecture documents and clearer code-graph setup.
+
+### Added
+- **AS-IS architecture document as knowledge** (arc42 + C4). New generic
+  templates (`templates/knowledge-architecture.{md,html,narrative.md}`) and
+  generator (`scripts/generate-architecture.sh`) that writes
+  `knowledge/architecture/<system>.md` and a self-contained `.html` twin
+  (Mermaid C4 diagrams), combining a curated per-system narrative with data
+  DERIVED from the code (topology, dependencies, counts, seals).
+- The generator runs automatically at the end of `scripts/generate-as-is.sh`
+  (i.e. after every `/repo-add` indexing), so the document stays current.
+- `/system-map` now authors the narrative, generates the document and creates a
+  `<prefix>-architecture` **context skill** (from `templates/skill-architecture.md`)
+  that agents load on the system's repo-name triggers — encoding a **docs-first
+  policy**: answer from the document; consult code only for undocumented gaps.
+- `docs/codebase-memory-setup.md`: direct-engine vs fleet/Postgres-facade modes,
+  and how each one indexes.
+- `scripts/tests/test-architecture.sh`: self-test suite for the generator.
+
+### Changed
+- `/repo-add` documents both codebase-memory modes and treats the fleet-facade
+  `-32601 (index_repository has no equivalent in the fleet graph)` as EXPECTED,
+  not a hard failure — onboarding no longer looks broken on read-only facades.
+- `CLAUDE.md`, `.env.example` and `init-system.sh` updated for the new
+  `knowledge/architecture/` scaffolding (cleaned on instance init).
+
 ## [1.0.0] - 2026-07-19
 
 First public release of the spec-driven factory template.
