@@ -4,5 +4,6 @@ CLAUDE.local.md
 repos/*/
 node_modules/
 .env
+.mcp.json
 *.log
 .DS_Store
