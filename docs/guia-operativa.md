@@ -95,11 +95,13 @@ cp .env.example .env && chmod 600 .env
 ./scripts/repo-add.sh git@gitlab.com:mi-org/mi-api.git --role "API de negocio" --deploy-order 1
 #    Clona en repos/, registra en repos.yaml y siembra CLAUDE.md en el repo.
 #    Desde Claude Code es aún mejor: `/repo-add <url>` además completa el
-#    CLAUDE.md con datos reales e indexa el repo en codebase-memory.
+#    CLAUDE.md con datos reales e indexa el repo en codebase-memory
+#    (dos modos: motor directo o fachada de flota/Postgres — ver §10 y
+#     docs/codebase-memory-setup.md; el onboarding no se bloquea si falla).
 
-# 4. Generar el mapa as-is y commitear
-./scripts/generate-as-is.sh
-git add repos.yaml knowledge/as-is && git commit -m "chore(repos): sistema inicial"
+# 4. Generar el mapa as-is + el documento de arquitectura, y commitear
+./scripts/generate-as-is.sh   # genera knowledge/as-is/ y knowledge/architecture/
+git add repos.yaml knowledge/as-is knowledge/architecture && git commit -m "chore(repos): sistema inicial"
 
 # 5. Abrir Claude Code SIEMPRE desde la raíz del workspace
 claude          # verificar contexto cargado con /context
@@ -213,10 +215,13 @@ git -c credential.helper= \
 │   ├── usage.md                       # Métricas DORA · estimado vs. real · adopción
 │   ├── decisiones/                  # ADRs (Nygard) + expedientes CAB
 │   ├── incidentes/                  # Postmortems sin culpables (Google SRE)
-│   └── as-is/                       # ══ Estado REAL derivado del código (§7) ══
-│       ├── INDEX.md                 #   Índice con sellos de commit por repo
-│       ├── system.md                #   Inventario + grafo cross-repo
-│       └── <repo>/                  #   modules.md · api-surface.md por repo
+│   ├── as-is/                       # ══ Estado REAL derivado del código (§7) ══
+│   │   ├── INDEX.md                 #   Índice con sellos de commit por repo
+│   │   ├── system.md                #   Inventario + grafo cross-repo
+│   │   └── <repo>/                  #   modules.md · api-surface.md por repo
+│   └── architecture/                # ══ Doc de arquitectura arc42+C4 (§7) ══
+│       ├── <sistema>.md · .html     #   Generado (contexto para agentes)
+│       └── <sistema>.narrative.md   #   Análisis curado (lo escribe /system-map)
 │
 ├── harness/                         # Soporte multi-sesión (init.sh, feature_list, bitácora)
 │
@@ -225,12 +230,15 @@ git -c credential.helper= \
 │   ├── repo-add.sh                  # Alta idempotente de un repo en el sistema
 │   ├── setup.sh                     # Clona/actualiza TODOS los repos del registro
 │   ├── generate-as-is.sh            # Mapa as-is del sistema · --check
+│   ├── generate-architecture.sh     # Doc de arquitectura arc42+C4 (.md + .html)
 │   ├── dora.sh                      # Métricas DORA en knowledge/usage.md · --check
 │   ├── docs.sh                      # docs/arquitectura.html derivado · --check
-│   └── tests/                       # test-repo-lib.sh · test-dora.sh (bash 3.2)
+│   └── tests/                       # 4 suites bash 3.2 (repo-lib · dora · docs · architecture)
 │
 ├── templates/
-│   └── CLAUDE.repo.md               # Plantilla que repo-add/setup siembran por repo
+│   ├── CLAUDE.repo.md               # Plantilla que repo-add/setup siembran por repo
+│   ├── knowledge-architecture.md · .html · .narrative.md  # Doc de arquitectura
+│   └── skill-architecture.md        # Skill de contexto <prefijo>-architecture
 │
 └── repos/                           # ══ Los repos del sistema (gitignorados) ══
     └── <nombre>/                    #    su propio git · su propio CLAUDE.md
@@ -329,6 +337,27 @@ La distinción que gobierna todo: el **as-is** dice *qué hay*; los **ADRs** dic
 trabajo pendiente o drift arquitectónico — y `/as-is-sync` la escala al gate de
 Arquitectura en vez de normalizarla.
 
+### Documento de arquitectura (arc42 + C4) — contexto para agentes
+
+Además del as-is crudo, la fábrica **genera un documento de arquitectura
+consolidado** en `knowledge/architecture/<sistema>.md` (y su gemelo `.html` con
+diagramas C4 en Mermaid). Lo produce `scripts/generate-architecture.sh`, que se
+ejecuta al final de `generate-as-is.sh` — es decir, **tras cada indexación con
+`/repo-add`**. Combina un análisis **curado** por sistema
+(`knowledge/architecture/<sistema>.narrative.md`, que escribe `/system-map`,
+sembrado desde `templates/knowledge-architecture.narrative.md`) con **datos
+derivados** del código (topología, dependencias, conteos, sellos). Los templates
+del documento (`.md`/`.html`) viven en `templates/knowledge-architecture.*`.
+
+`/system-map` además crea el skill de contexto `<prefijo>-architecture`
+(desde `templates/skill-architecture.md`), que los agentes cargan al consultar
+por el sistema o cualquiera de sus repos. Sigue una **política "documentación
+primero"**: se responde desde el documento y los context packs; el **código
+solo se consulta ante dudas no documentadas** que el humano no pueda resolver —
+y entonces se actualiza la narrativa, se regenera el documento y se añade una
+aserción. Así el contexto se mantiene sin re-indexar ni releer el código en cada
+consulta.
+
 > Producción: reemplazar los detectores genéricos (grep) por la herramienta del
 > stack — dependency-cruiser/madge (JS·TS), pydeps (Python), ArchUnit (Java) —
 > y derivar el grafo cross-repo de los contratos OpenAPI cuando existan.
@@ -345,6 +374,7 @@ Arquitectura en vez de normalizarla.
 | Uso/DORA | `knowledge/usage.md` | F9 | F1, F2, F8 |
 | Reglas de negocio | `knowledge/business-rules.md` | F4 + gobernanza | Todas |
 | Estado real | `knowledge/as-is/` | Solo el generador | F5 y consultas |
+| Arquitectura (arc42+C4) | `knowledge/architecture/` | Generador + `/system-map` (narrativa) | Agentes y consultas de arquitectura |
 
 Trazabilidad completa: spec → ADRs → commits (en su repo) → expediente CAB →
 postmortem → de vuelta a la spec. **Si no está en git, no existe.**
@@ -419,6 +449,13 @@ Requiere `python3` en el PATH (viene con los Command Line Tools de macOS:
 `xcode-select --install`). El hook falla en silencio si falta, por diseño: nunca
 bloquea tu sesión.
 
+**Indexar en codebase-memory falla con `-32601 ... no equivalent in the fleet graph`**
+No es un error real: tu MCP es una **fachada de flota/Postgres** de solo lectura
+que no expone `index_repository`. El onboarding no se bloquea (el as-is, los
+packs y el documento de arquitectura se derivan igual). Indexa por el flujo de
+*seed* de la flota y apunta un `.mcp.json` del workspace (gitignored) al
+proyecto sembrado. Guía completa: `docs/codebase-memory-setup.md`.
+
 **`/as-is` responde con datos viejos**
 El sello del mapa ≠ HEAD de los repos. Corre `/as-is-sync` (o
 `./scripts/generate-as-is.sh`) y commitea.
@@ -440,6 +477,10 @@ para ver exactamente qué archivos cargaron.
 4. **Verificación**: `/context` (qué cargó) y `/doctor` (recortes sugeridos).
 5. **Escala**: para más sistemas, empaquetar `.claude/` como plugin interno;
    para toda la organización, CLAUDE.md gestionado por IT (managed policy).
+6. **Documentación primero (arquitectura)**: `knowledge/architecture/<sistema>.md`
+   y los context packs son la fuente de contexto de los agentes; no se re-indexa
+   ni relee el código para lo ya documentado. El código se consulta solo ante
+   vacíos no documentados, y el hallazgo se devuelve al documento + una aserción.
 
 ---
 
