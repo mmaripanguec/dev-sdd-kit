@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-07-22
+
+Documentation follow-up for the architecture-as-context capability (no code
+changes).
+
+### Changed
+- **Operating guide (ES)** — documents the generated arc42+C4 architecture
+  document as agent context, the docs-first policy and the
+  `<prefix>-architecture` skill, the codebase-memory fleet/Postgres facade
+  troubleshooting (`-32601`), and structure/shared-memory/governance updates.
+- **README** — front-page highlight of the AS-IS architecture as agent context,
+  plus updated comparison-table rows (brownfield grounding, derived docs).
+
 ## [1.1.0] - 2026-07-22
 
 Knowledge-as-context architecture documents and clearer code-graph setup.
