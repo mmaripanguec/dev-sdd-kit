@@ -19,8 +19,9 @@ requerimientos vía specs.
 sistema vive aquí. Ningún repo individual puede contener el contexto del
 conjunto — la arquitectura real solo es visible desde arriba.
 
-Sistema de ejemplo preconfigurado en `repos.yaml`: **homebanking**
-(PWA → proxy/BFF → backend, en Bitbucket).
+El sistema (repos, proveedores, roles, orden de deploy) se declara en
+`repos.yaml`, creado al instanciar la plantilla con
+`./scripts/init-system.sh` y poblado con `/repo-add`.
 
 ---
 
