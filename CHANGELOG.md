@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-07-22
+
+Cleanup release (docs only, no code changes).
+
+### Removed
+- The last example-system reference from the public tree; the operating guide
+  now describes `repos.yaml` generically (created at instantiation via
+  `init-system.sh`, populated with `/repo-add`), which also fixes a stale note.
+
 ## [1.1.1] - 2026-07-22
 
 Documentation follow-up for the architecture-as-context capability (no code
