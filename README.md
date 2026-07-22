@@ -38,6 +38,16 @@ claude                                                 # launch from the root
 **[Documento de arquitectura (ES)](docs/arquitectura.html)** — generated
 from the live workspace, always current.
 
+🧭 **Living AS-IS architecture as agent context** *(new)* — after every
+`/repo-add` indexing, the factory generates an **arc42 + C4** architecture
+document (Markdown **and** a self-contained HTML twin with Mermaid diagrams)
+into `knowledge/architecture/`. Agents load it through the
+`<prefix>-architecture` skill and answer **from the docs**; the code is
+consulted only for undocumented gaps — so context is kept without re-indexing
+or re-reading the codebase on every question. Setup & modes (direct engine vs
+fleet/Postgres facade) in
+**[docs/codebase-memory-setup.md](docs/codebase-memory-setup.md)**.
+
 > ⭐ If this approach resonates, a star helps other teams find it.
 
 ## Why this exists
@@ -70,10 +80,10 @@ Honest differences — each of these tools is good at what it targets:
 |---|---|---|---|---|
 | Lifecycle coverage | **F0–F9: triage → operations** (CAB, postmortems, DORA) | spec → implement | spec → implement (IDE) | change proposals |
 | Multi-repo systems | **Core design** (`repos.yaml` registry, deploy order, cross-repo specs) | single-repo focus | single-repo focus | single-repo focus |
-| Brownfield grounding | **Derived as-is map + code graph + context packs with executable assertions** | limited | limited | delta-based (good) |
+| Brownfield grounding | **Derived as-is map + code graph + arc42/C4 architecture doc (agent context) + context packs with executable assertions** | limited | limited | delta-based (good) |
 | Human gates | **Permission-backed** (agents lack credentials; approvals recorded per commit) | constitution self-checked by the LLM | agent hooks | review-based |
 | TDD | **Mandatory, tests untouchable** | optional ("only if requested") | optional | optional |
-| Derived docs & metrics | **Architecture doc (EN/ES), as-is, DORA — generated, sealed, CI-checked** | — | — | — |
+| Derived docs & metrics | **arc42+C4 architecture (MD+HTML) as agent context, architecture guide (EN/ES), as-is, DORA — generated, sealed, CI-checked** | — | — | — |
 | Agent ecosystem | Claude Code | **30+ agents** | Kiro IDE | several |
 | Maturity / community | Young | **122k★, huge ecosystem** | AWS-backed | growing |
 
