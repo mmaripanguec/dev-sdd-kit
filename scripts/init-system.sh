@@ -84,6 +84,7 @@ find knowledge/decisions -type f ! -name "_template-adr.md" -exec rm -f {} \; 2>
 find knowledge/incidents -type f ! -name "_template-postmortem.md" -exec rm -f {} \; 2>/dev/null || true
 # generated as-is
 rm -rf knowledge/as-is
+rm -rf knowledge/architecture
 mkdir -p knowledge/as-is
 { echo "# AS-IS map of system ${SISTEMA}"
   echo "> No repos registered yet. Generated with ./scripts/generate-as-is.sh"

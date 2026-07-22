@@ -409,3 +409,9 @@ done
 } > "${OUT}/INDEX.md"
 
 echo "OK - system as-is regenerated in ${OUT}/"
+
+# Architecture doc (arc42 + C4) as consumable knowledge context (.md + .html).
+# Runs after indexing; never blocks the as-is if it fails.
+if [ -f scripts/generate-architecture.sh ] && [ -f templates/knowledge-architecture.md ]; then
+  ./scripts/generate-architecture.sh || echo "WARN: generate-architecture.sh failed (as-is is OK)"
+fi
