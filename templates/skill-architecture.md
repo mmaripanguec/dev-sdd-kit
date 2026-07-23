@@ -15,6 +15,9 @@ verificado: {{FECHA}}
 
 # {{PREFIX}}-architecture — architecture context for {{SYSTEM}}
 
+It follows the factory's architecture documentation standard
+(`docs/architecture-documentation-standard.md`).
+
 **The authoritative document is `knowledge/architecture/{{SYSTEM}}.md`**
 (human twin: `knowledge/architecture/{{SYSTEM}}.html`). It follows the
 **arc42 + C4** standard, is derived from the code and validated by assertions.

@@ -25,11 +25,31 @@
 <!-- C4 Level 2 (```mermaid C4Container```) and Level 3 (```mermaid C4Component```)
      diagrams, plus any routing/seam maps and per-container component notes. -->
 
+<!-- @@ INFORMATION -->
+<!-- Information viewpoint (Rozanski & Woods): key entities/data objects, stores,
+     data flows, ownership and retention. A ```mermaid erDiagram``` if useful. -->
+
+<!-- @@ INTEGRATION -->
+<!-- Integration & APIs: exposed and consumed contracts (OpenAPI/gRPC/events),
+     providers/consumers, versioning. Point to the endpoint inventory (Annex A). -->
+
+<!-- @@ MATRICES -->
+<!-- Traceability matrices (TOGAF Phase C): Application/Function and
+     Role/Application as tables — which component serves which capability/role. -->
+
 <!-- @@ RUNTIME -->
 <!-- Reference runtime flows (e.g. a ```mermaid sequenceDiagram``` for login). -->
 
 <!-- @@ DEPLOYMENT -->
 <!-- Deployment topology, environments, ports, CI/CD, deploy order. -->
+
+<!-- @@ OPERATIONAL -->
+<!-- Operational viewpoint / SRE: service overview, critical request flows,
+     production setup, runbooks, monitoring/on-call. -->
+
+<!-- @@ TRACEABILITY -->
+<!-- Traceability matrix: requirement ↔ ADR ↔ building block ↔ file:line ↔
+     assertion. One row per architecturally significant requirement. -->
 
 <!-- @@ CROSSCUTTING -->
 <!-- Cross-component seams verified at BOTH ends, security, config, observability. -->
