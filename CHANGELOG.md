@@ -4,6 +4,32 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-07-22
+
+AI-consumable architecture documentation standard, synthesized from the major
+frameworks and consultancies (adversarially fact-checked).
+
+### Added
+- **`docs/architecture-documentation-standard.md`** — the standard the factory
+  follows to produce maximum-detail, AI-consumable application architecture
+  docs. Layers arc42 + C4 + ISO/IEC/IEEE 42010 with TOGAF (traceability matrices,
+  ADD/ARS), Zachman (W5H coverage), Rozanski & Woods (Information/Operational
+  viewpoints + quality perspectives), DDD/Context Mapper, 4+1 (Kruchten),
+  Google Design Docs & SRE, AWS/Azure Well-Architected, and Gartner Pace-Layering
+  — each cited.
+- The knowledge-architecture templates now realize the standard: front-matter
+  metadata (`standard`, `viewpoints`, `quality_attributes`, `zachman_coverage`),
+  new **Information view** (data), **Integration & APIs view**, TOGAF
+  **traceability matrices**, **Operational view** (SRE), an enriched **§9 ADR**
+  format (Nygard + Google: goals/non-goals, alternatives, confidence,
+  append-only), and an **Annex D traceability matrix** (requirement ↔ ADR ↔
+  building block ↔ file:line ↔ assertion). The generator needs no change (the
+  new curated sections are narrative-driven).
+
+### Changed
+- `CLAUDE.md`, README and the `<prefix>-architecture` skill point at the
+  standard; `test-architecture.sh` covers the new sections (147 asserts total).
+
 ## [1.2.0] - 2026-07-22
 
 Automatic code-graph indexing for the fleet/Postgres facade.

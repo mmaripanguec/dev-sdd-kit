@@ -8,7 +8,7 @@ Human gates backed by permissions · strict TDD · docs and metrics that cannot 
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/tests-141%20passing-brightgreen.svg" alt="141 tests passing">
+  <img src="https://img.shields.io/badge/tests-147%20passing-brightgreen.svg" alt="147 tests passing">
   <img src="https://img.shields.io/badge/lifecycle-F0%E2%86%92F9%20complete-0b5fa5.svg" alt="Complete F0-F9 lifecycle">
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-5fce96.svg" alt="PRs welcome"></a>
 </p>
@@ -155,7 +155,7 @@ dev-sdd-kit/
 │   ├── skill-architecture.md          # <prefix>-architecture context skill
 │   └── github-actions-as-is.yml
 │
-├── scripts/                          # Automation + 5 self-test suites (141 asserts)
+├── scripts/                          # Automation + 5 self-test suites (147 asserts)
 │   ├── generate-architecture.sh      # AS-IS architecture doc (.md + .html)
 │   └── codebase-memory.sh            # Code-graph indexing: fleet seed + .mcp.json
 ├── harness/  claude-progress.md      # Multi-session agent harness
@@ -168,6 +168,7 @@ dev-sdd-kit/
 |---|---|---|
 | [docs/architecture.en.html](docs/architecture.en.html) | English | Architecture, technical spec, model & usage guide (generated) |
 | [docs/codebase-memory-setup.md](docs/codebase-memory-setup.md) | English | Code-graph MCP setup: direct engine vs fleet/Postgres facade, indexing & troubleshooting |
+| [docs/architecture-documentation-standard.md](docs/architecture-documentation-standard.md) | English | The AI-consumable architecture documentation standard (arc42 + C4 + 42010 + TOGAF/DDD/SRE): sections, views, ADR format, traceability, metadata |
 | [docs/arquitectura.html](docs/arquitectura.html) | Español | Same document in the factory's working language (generated) |
 | [docs/guia-operativa.md](docs/guia-operativa.md) | Español | Complete operating guide: installation, auth per provider, E2E cycle, governance |
 | [docs/instructivo-repo-existente.md](docs/instructivo-repo-existente.md) | Español | Step-by-step: onboarding an existing repo up to the first spec |
