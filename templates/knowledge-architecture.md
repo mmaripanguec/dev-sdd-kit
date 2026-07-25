@@ -53,6 +53,13 @@ verificado: {{FECHA}}
 ### 5.2 Code metrics (derived at indexing time)
 {{METRICS_TABLE}}
 
+### 5.2.1 Repository file structure (derived)
+> Development-view complement (Rozanski & Woods): the real on-disk code
+> organization, generated with `scripts/repo-tree.sh` on every regeneration —
+> do not edit by hand.
+
+{{FILE_TREES}}
+
 <!-- NARRATIVE: BUILDING_BLOCKS -->
 
 ### 5.3 Information view (data)

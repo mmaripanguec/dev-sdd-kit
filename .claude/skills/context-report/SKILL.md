@@ -55,8 +55,30 @@ deployment (anchor who serves the build) · operational view · crosscutting ·
 append-only) · **numbered verifiable quality scenarios** (failing ones are
 declared RED/AMBER, never hidden) · risks with TOGAF gap analysis and
 pace-layer · glossary · annexes A (full inventories), B (dependencies + EOL
-with sources), C (method + committee record), D (traceability matrix).
-Close with the Zachman W5H checklist.
+with sources), C (method + committee record), D (traceability matrix),
+**E (repository file structure)**. Close with the Zachman W5H checklist.
+
+**Annex E — repository file structure** (proven format):
+- E.1: repo-root tree via `scripts/repo-tree.sh <repo> 2` (tracked files
+  only, recursive per-directory counts).
+- E.2: first level of the source directory
+  (`scripts/repo-tree.sh <repo>/src... 1`) — do NOT go deeper: at depth 2 a
+  source tree explodes into hundreds of lines.
+- E.3: **annotation table** `| Directory | Files | Role | Section |` mapping
+  every relevant directory to the document's building blocks.
+- Mine the structure for findings: it exposes debt no other view shows
+  (loose SQL migration scripts with no migration engine, deprecated k8s
+  trees living next to current ones, tracked tool residues) — each finding
+  gets recorded toward the risks section.
+- **System-doc counterpart**: derived trees are injected only by the
+  generator (`{{FILE_TREES}}` → §5.2.1); curated annotations for sibling
+  repos belong in the system narrative
+  (`knowledge/architecture/<system>.narrative.md`, BUILDING_BLOCKS section).
+- **E.4 (sibling repos)**: when the application report is consumed as a
+  standalone document, also include an E.4 section with the tree +
+  annotation table of the sibling repos in the end-to-end flow, explicitly
+  marking the system doc as the canonical source — standalone completeness
+  at the cost of that declared copy.
 
 **Business-flow matrix (§5.6)** — one row per functional flow:
 UI route(s) → front module/directory → service (anchor) → consumed
@@ -88,6 +110,10 @@ into Annex C. Final approval: the human gate.
    `python3 scripts/app-architecture-html.py <repo>` (uses
    `templates/knowledge-architecture-app.html` — palette, typography, header
    with provenance box, figure styling).
+1b. If the system narrative changed (structure annotations, cross-doc
+   corrections): regenerate the system document with
+   `./scripts/generate-architecture.sh` (rebuilds md+html and injects fresh
+   §5.2.1 trees).
 2. If the diagram baseline changed: sync the YAML source + derived
    projections and validate their syntax.
 3. `scripts/assertions.sh <system>` · `scripts/freshness.sh check` · one

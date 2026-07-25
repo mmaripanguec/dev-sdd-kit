@@ -65,6 +65,7 @@ The factory adopts arc42 as the operative skeleton and layers the rest onto it.
 | B | Dependencies | derived per repo |
 | C | Validation & regeneration | how it is generated/verified |
 | D | **Traceability matrix** | requirement ↔ ADR ↔ building block ↔ `file:line` ↔ assertion |
+| E | **Repository file structure** | derived tree (tracked files, per-dir counts) + curated annotations directory → role → section (development view complement) |
 
 ## 4. Viewpoints (Rozanski & Woods → arc42)
 
