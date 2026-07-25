@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.0] - 2026-07-25
+
+### Changed — /context-report skill & documentation standard
+- `/context-report`: added the *committee-recurring findings* the reports keep
+  tripping on, so future runs pre-empt them — valid CML (declare every context
+  used in a relation, correct upstream/downstream direction, one strategy per
+  upstream), ADRs as decision atoms with Options considered, Given/When/Then
+  quality scenarios, cross-document count reconciliation, complete Annex A
+  inventories, and honest severity calibration (a parametrized query with a
+  constant-bounded table name is a *mitigated* smell, not a critical
+  injection — reward calibration, reject both alarmism and omission).
+- Documentation standard (§5 ADR): added a *Common pitfalls* note (outcome-only
+  ADRs, terse quality assertions, and invalid/inverted CML are the three most
+  frequent failures).
+
 ## [1.5.0] - 2026-07-25
 
 ### Added — repository file structure as derived documentation

@@ -138,3 +138,27 @@ re-run the committee only if substantive sections changed; always bump
 - Graph labels lie at cluster level: a top node inside a vendored
   plugin/dependency is NOT an app component — verify component claims in the
   app's own source before drawing them.
+
+Committee-recurring findings (pre-empt them — every report so far tripped on
+these before the review):
+
+- **Valid CML, not sketch CML**: every context named in a relation must be
+  declared with `contains` (including external systems); keep the direction
+  right (`Upstream [U] -> [D, ACL/CF] Downstream`) and pick ONE downstream
+  strategy per upstream (ACL *or* Conformist, never both).
+- **ADRs are decision atoms, not prose**: each needs Context, **Options
+  considered with trade-offs**, Decision, and Consequences — a paragraph that
+  only states the outcome fails the standard.
+- **Quality scenarios are Given/When/Then**, verifiable, with the anchor and
+  a RED/AMBER/green verdict — never a terse assertion.
+- **Reconcile counts across documents**: when a sibling or the system doc
+  states a different number for the same thing on the same seal (routes,
+  writers, upstreams), add an explicit reconciliation note or fix the other
+  doc — never leave two authoritative documents contradicting each other.
+- **Annex A is a COMPLETE inventory**: if the heading promises N items, list
+  N — do not promise-then-summarize-elsewhere.
+- **Calibrate severity honestly — do not inflate**: a parametrized query with
+  a concatenated *table name* bounded to compile-time constants is a
+  *mitigated* smell, not a critical SQL-injection; the committee rewards
+  honest calibration and rejects alarmism as much as omission. State the
+  mitigation and its residual condition.
