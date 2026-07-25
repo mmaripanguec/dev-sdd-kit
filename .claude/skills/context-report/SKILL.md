@@ -27,7 +27,7 @@ first, which also indexes it into the codebase-memory graph).
      live, exact dependency versions, native plugins/extensions from ALL
      sources (in-repo, manifest, package manager, git refs), auth/crypto
      implementation, HTTP interceptors/middleware.
-   - *Structure/navigation*: full routing (routes + lazy modules + guards),
+   - *Structure/navigation*: full routing (routes + lazily loaded modules + access guards/middleware, or the framework's equivalents),
      module counts by folder, guard taxonomy, the REALITY of local storage
      (key by key), step-by-step traces of the critical flows (entry/login +
      one main business flow) ready for sequence diagrams, analytics and
@@ -48,7 +48,7 @@ table · C4 L1 + **valid CML context map** (every consumed domain assigned to
 a bounded context; be honest about ACL violations) · strategy with
 trade-offs · C4 **L2 and L3** · Information view (complete key-by-key storage
 inventory, data-at-rest verdict) · Integration view · TOGAF matrices
-(function ↔ role from the real guards) · **business-flow matrix** (below) ·
+(function ↔ role from the real access-control code — guards, middleware or policies) · **business-flow matrix** (below) ·
 **end-to-end view** (below) · ≥2 **sequence diagrams** anchored per step ·
 deployment (anchor who serves the build) · operational view · crosscutting ·
 **enriched ADRs** (Status/Confidence/Traces/Options/Decision/Consequences;
@@ -62,7 +62,7 @@ with sources), C (method + committee record), D (traceability matrix),
 - E.1: repo-root tree via `scripts/repo-tree.sh <repo> 2` (tracked files
   only, recursive per-directory counts).
 - E.2: first level of the source directory
-  (`scripts/repo-tree.sh <repo>/src... 1`) — do NOT go deeper: at depth 2 a
+  (`scripts/repo-tree.sh <repo>/<source-dir> 1`) — do NOT go deeper: at depth 2 a
   source tree explodes into hundreds of lines.
 - E.3: **annotation table** `| Directory | Files | Role | Section |` mapping
   every relevant directory to the document's building blocks.
