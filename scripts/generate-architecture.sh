@@ -158,6 +158,23 @@ def deps_tables():
         out.append("")
     return "\n".join(out)
 
+# ---------- repository file structure (derived) ----------
+def file_trees():
+    import subprocess
+    out = []
+    for r in repos:
+        path = os.path.join("repos", r["name"])
+        try:
+            res = subprocess.run(["bash", "scripts/repo-tree.sh", path, "2"],
+                                 capture_output=True, text=True, timeout=120)
+            tree = res.stdout.strip() if res.returncode == 0 else res.stderr.strip()
+        except Exception as e:
+            tree = "(tree unavailable: %s)" % e
+        out.append("**`%s`** (depth 2 · tracked files only · recursive "
+                   "per-directory count):\n" % r["name"])
+        out.append("```\n%s\n```\n" % tree)
+    return "\n".join(out)
+
 # ---------- narrative ----------
 sections = {}
 if os.path.exists(NARRATIVE):
@@ -186,6 +203,7 @@ repl = {
     "{{FECHA}}": FECHA, "{{GEN_TAG}}": gen_tag,
     "{{SEALS_FRONTMATTER}}": seals_fm, "{{SEALS_INLINE}}": seals_inline,
     "{{REPOS_TABLE}}": repos_table(), "{{METRICS_TABLE}}": metrics_table(),
+    "{{FILE_TREES}}": file_trees(),
     "{{DEPS_TABLES}}": deps_tables(), "{{NARRATIVE_FILE}}": NARRATIVE,
 }
 for k, v in repl.items(): md = md.replace(k, v)

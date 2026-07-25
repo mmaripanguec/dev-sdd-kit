@@ -4,6 +4,25 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-07-25
+
+### Added — repository file structure as derived documentation
+- `scripts/repo-tree.sh <path> [depth]`: deterministic file-structure tree
+  (tracked files only — respects .gitignore — recursive per-directory
+  counts, root files listed, `find` fallback for non-git dirs). Suite
+  `scripts/tests/test-repo-tree.sh` (17 asserts, committed red first).
+- System architecture document: new derived section **5.2.1 Repository file
+  structure** — `generate-architecture.sh` injects a depth-2 tree per
+  registered repo on every regeneration (`{{FILE_TREES}}` placeholder in
+  `templates/knowledge-architecture.md`).
+- Documentation standard: new required **Annex E — repository file
+  structure** (derived tree + curated directory → role → section
+  annotations) in the section checklist.
+- `/context-report` skill: Annex E requirements encoded (root depth 2,
+  source first level only, annotation table, structure-driven finding
+  mining) plus the **E.4 sibling-repos** pattern for standalone reports and
+  the system-doc regeneration step.
+
 ## [1.4.0] - 2026-07-25
 
 ### Added — application context reports (/context-report)
