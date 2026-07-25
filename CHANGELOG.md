@@ -4,6 +4,35 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-07-25
+
+### Added — application context reports (/context-report)
+- New skill `/context-report <repo> [--update]`: generates the maximum-detail
+  **application** architecture & context report (arc42 + C4 + 42010) —
+  parallel file:line mining, graph queries, obsolescence research with
+  sources, a business-flow traceability matrix (UI route → front module →
+  service → consumed domains → upstream route), an end-to-end view with a
+  per-hop table, sequence diagrams, enriched ADRs, numbered verifiable
+  quality scenarios, and a mandatory **adversarial review committee**
+  (architecture + quality agents) before the human gate. Hard-won
+  non-negotiables encoded (re-derive inherited numbers, adversarial
+  refutation of security claims, cluster-label skepticism).
+- Corporate HTML twin for application reports:
+  `templates/knowledge-architecture-app.html` (light/dark palette with
+  semantic category colors, provenance-box header) +
+  `scripts/app-architecture-html.py` (reuses the md→html converter embedded
+  in `generate-architecture.sh` — single source of truth). Test suite:
+  `scripts/tests/test-app-architecture-html.sh` (14 asserts, committed red
+  before the implementation).
+
+### Added — remote fleet support (codebase-memory-pg)
+- `docs/codebase-memory-setup.md`: new "Remote fleet — Cloud Run deployment"
+  section — client configuration for a cloud-deployed fleet facade,
+  including the `X-Flota-Authorization` header contract (Cloud Run strips
+  the `Authorization` token signature after its IAM check), audience and
+  identity (`sub`) rules, project-naming requirement, and the remote seeding
+  flow (`/admin/apply` → staging upload → audited `/publish`).
+
 ## [1.3.0] - 2026-07-22
 
 AI-consumable architecture documentation standard, synthesized from the major

@@ -96,6 +96,61 @@ project, token is your fleet dev token):
 structural code changes (new modules, endpoints, migrations); the graph does
 not refresh itself.
 
+### Remote fleet — Cloud Run deployment (codebase-memory-pg)
+
+The fleet facade can also run as a **managed cloud service** (the
+`codebase-memory-pg` service: MCP facade + central Postgres graph with
+per-project row-level security + audited `/publish` ingestion; it ships with
+Terraform for Cloud Run, a private Cloud SQL instance and an optional
+LB/WAF edge — see that repository's README/RUNBOOK to deploy it).
+Client-side configuration:
+
+```json
+{
+  "mcpServers": {
+    "cbm-<name>": {
+      "type": "http",
+      "url": "https://<your-service-url>/mcp/<fleet-project-id>",
+      "headers": {
+        "X-Serverless-Authorization": "Bearer <google-id-token>",
+        "X-Flota-Authorization": "Bearer <google-id-token>"
+      }
+    }
+  }
+}
+```
+
+Things that WILL bite you if skipped:
+
+- **Do not put the application token in `Authorization`.** When the service
+  sits behind Cloud Run IAM, the platform consumes the `Authorization`
+  header for its own access check and **strips the token signature** before
+  the request reaches the container — the facade would then reject it
+  ("could not verify token signature"). Send the platform token in
+  `X-Serverless-Authorization` and the application token in
+  `X-Flota-Authorization` (the facade gives it precedence; plain
+  `Authorization` still works for deployments without a platform auth hop,
+  e.g. the local gateway).
+- **Audience matters.** Mint the Google ID token with `audience` equal to
+  the configured `FLOTA_AUDIENCE` (normally the service URL); the facade
+  verifies signature, issuer and audience — fail-closed.
+- **Identities are the token's `sub`.** Fleet memberships and publishers
+  (declared via `/admin/apply`) match the ID token's subject; the admin
+  allowlist matches subject **or** verified email.
+- **Project naming.** The fleet project name must equal the project name
+  INSIDE the published artifact (the engine resolves by that internal name);
+  a prettier alias will route but resolve to "project not found".
+
+**Remote seeding** (no direct DB access — the instance is private):
+1. `POST /admin/apply` (admin identity) declaring tenant, project,
+   memberships (readers) and publishers.
+2. Build the sync bundle (graph artifact + source blobs + git context; the
+   bundle builder runs a secret scan and excludes findings) and upload it to
+   the service's staging bucket.
+3. `POST /publish` with `{project, bundle_uri, cbm_version, sha256}` —
+   transactional, idempotent and audited (metadata-only) in the fleet's
+   audit log.
+
 ## Which mode am I in?
 
 - `list_projects()` works and `index_repository` is offered → **Mode A**.
