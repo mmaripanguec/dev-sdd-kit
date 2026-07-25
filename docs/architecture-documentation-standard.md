@@ -102,6 +102,8 @@ Traces: <requirement id> · <file:line>
 ## Consequences  (positive, negative, follow-ups)
 ```
 
+> **Common pitfalls** (seen across generated reports): an ADR that only states the outcome without *Options considered* is not an ADR; a quality requirement written as a terse assertion instead of a Given/When/Then scenario fails axis 3; and a context map that references contexts it never declares (or inverts the upstream/downstream direction) is not valid CML.
+
 Rules: **append-only and immutable** — never edit an accepted record; a changed
 decision is a **new ADR that supersedes** the original and links to it,
 preserving the history of reasoning (Azure Well-Architected).
