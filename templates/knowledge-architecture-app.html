@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture · {{SYSTEM}} · arc42 + C4</title>
+<style>
+  /* Application architecture document — neutral corporate palette with
+     semantic category colors (accent/front · gw · core · bus · seg) reused
+     by the diagrams of the /context-report skill. */
+  :root {
+    --bg: #ffffff; --bg-soft: #f6f7f9; --bg-inset: #eef0f3;
+    --fg: #1a1d21; --fg-soft: #5c6470; --fg-faint: #878e99;
+    --line: #d9dee5; --line-soft: #e8ecf1;
+    --accent: #1e40af; --accent-soft: #e8edfb;
+    --danger: #b42318; --danger-soft: #fdeceb;
+    --warn: #92400e; --warn-soft: #fdf3e3;
+    --ok: #15803d;
+    --core: #7c2d12; --core-soft: #fbeee7;
+    --gw: #0f766e; --gw-soft: #e2f3f1;
+    --bus: #6d28d9; --bus-soft: #efe9fd;
+    --seg: #be185d; --seg-soft: #fce7f3;
+    --neutral: #334155;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171c; --bg-soft: #1b1f26; --bg-inset: #22272f;
+      --fg: #e7eaee; --fg-soft: #a3acb9; --fg-faint: #7b8492;
+      --line: #333a45; --line-soft: #272d36;
+      --accent: #7ea2ff; --accent-soft: #1d2740;
+      --danger: #ff9b91; --danger-soft: #3a1f1d;
+      --warn: #f0c07a; --warn-soft: #37291542;
+      --ok: #6ee7a0;
+      --core: #f0a882; --core-soft: #3a241a;
+      --gw: #5eddcd; --gw-soft: #10312e;
+      --bus: #c4b0f5; --bus-soft: #241a3a;
+      --seg: #f9a8d4; --seg-soft: #3a1a2f;
+      --neutral: #94a3b8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+         font-family: var(--sans); font-size: 15px; line-height: 1.65;
+         -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 96px; }
+  header.doc { border-bottom: 2px solid var(--fg); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 30px; line-height: 1.25; margin: 0 0 10px; letter-spacing: -0.02em; }
+  .sub { color: var(--fg-soft); font-size: 14px; margin: 0; }
+  .provenance { background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px; margin: 24px 0 40px;
+    font-size: 13px; color: var(--fg-soft); }
+  .provenance b { color: var(--fg); }
+  .provenance code { font-size: 12px; }
+  h2 { font-size: 21px; margin: 52px 0 14px; padding-top: 20px;
+       border-top: 1px solid var(--line-soft); letter-spacing: -0.01em; }
+  h3 { font-size: 16px; margin: 28px 0 10px; }
+  h4 { font-size: 14.5px; margin: 22px 0 8px; color: var(--fg-soft); }
+  p { margin: 12px 0; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  code { font-family: var(--mono); font-size: 0.87em; background: var(--bg-inset);
+         padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line-soft); }
+  pre { margin: 18px 0; }
+  pre > code { display: block; padding: 14px 16px; overflow-x: auto;
+               border-radius: 8px; line-height: 1.5; white-space: pre; }
+  .scroll { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; background: var(--bg); }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+       color: var(--fg-soft); border-bottom: 1px solid var(--line); }
+  tbody tr:last-child td { border-bottom: none; }
+  blockquote { margin: 20px 0; padding: 18px 20px; background: var(--accent-soft);
+    border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0;
+    font-size: 14.5px; line-height: 1.6; }
+  blockquote b, blockquote strong { color: var(--fg); }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  ul, ol { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--accent); }
+  figure.diagram, pre.mermaid { margin: 26px 0; background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px; padding: 18px;
+    overflow-x: auto; text-align: center; }
+  figcaption, p em:only-child { font-size: 12.5px; color: var(--fg-faint); }
+</style>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+</script>
+</head>
+<body>
+<main class="wrap">
+<header class="doc">
+  <h1>{{TITLE}}</h1>
+  <p class="sub">{{SUBTITLE}}</p>
+</header>
+<div class="provenance">{{PROVENANCE}}</div>
+{{CONTENT}}
+</main>
+</body>
+</html>

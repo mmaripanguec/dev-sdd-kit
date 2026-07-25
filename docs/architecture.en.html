@@ -59,7 +59,7 @@
   <h1>Digital Software Factory · dev-sdd-kit</h1>
   <p class="muted">A spec-driven development (SDD) workspace for systems made
   of one or more repositories, operated with Claude Code.</p>
-  <p class="sello">[GENERATED v1] 2026-07-22 · scripts/docs.sh — do not edit by hand</p>
+  <p class="sello">[GENERATED v1] 2026-07-25 · scripts/docs.sh — do not edit by hand</p>
 </header>
 
 <nav>
@@ -170,6 +170,7 @@ description is the auto-load trigger.</p>
 <tr><td><code>/as-is</code></td><td>Query the repository&#x27;s real as-is map (modules, dependencies, APIs, data). Use when asked how the application is structured, what depends on what, which APIs exist, or before designing (F5).</td></tr>
 <tr><td><code>/clarify</code></td><td>Resolves the ambiguities of a requirement or spec with structured questions (max. 5) and records the answers in the spec&#x27;s Clarifications section. Use between the F0 triage and F1, when asked to &quot;clarify the requirement&quot;, or when a spec has [NEEDS CLARIFICATION] markers.</td></tr>
 <tr><td><code>/consistency</code></td><td>Read-only cross-consistency analysis between a spec and the rest of the factory&#x27;s artifacts (business rules, ADRs, as-is, .claude/rules rules, task plan). Use before the DoR gate and the Architecture gate, or when asked to &quot;analyze consistency&quot; of a spec.</td></tr>
+<tr><td><code>/context-report</code></td><td>Generates the CONTEXT DOCUMENTATION of a repository — the maximum-detail application architecture &amp; context report (arc42 + C4 + 42010 per docs/architecture-documentation-standard.md) that lets agents and humans work on the repo without re-reading its code. Use when asked to &quot;generate the context/architecture documentation of &lt;repo&gt;&quot;, to onboard a new repo after /repo-add, or to refresh an existing report (--update). Output: knowledge/architecture/&lt;repo&gt;.md + .html, committee-reviewed, with file:line evidence and a business-flow traceability matrix.</td></tr>
 <tr><td><code>/converge</code></td><td>Closes the functional code↔spec gap at the end of construction (F6/F7) — evaluates the real code against the spec&#x27;s stories and criteria and ADDS the remaining work as convergence tasks. Use before F7 certification or when asked to &quot;converge the spec&quot; / &quot;what is missing from the spec&quot;.</td></tr>
 <tr><td><code>/harness-init</code></td><td>Prepares the harness for a large or multi-session feature, derived from its approved spec (Anthropic&#x27;s initializer pattern).</td></tr>
 <tr><td><code>/implement-task</code></td><td>Executes ONE task from a spec&#x27;s plan with strict TDD protocol (F6 Construction). Use to implement tasks one at a time.</td></tr>
@@ -501,7 +502,7 @@ knowledge commits go here.</p>
 </main>
 
 <footer>
-  [GENERATED v1] 2026-07-22 · scripts/docs.sh — do not edit by hand · Derived document — edit <code>templates/docs-architecture.en.html</code>
+  [GENERATED v1] 2026-07-25 · scripts/docs.sh — do not edit by hand · Derived document — edit <code>templates/docs-architecture.en.html</code>
   and regenerate with <code>scripts/docs.sh</code>; catalog blocks come from
   the workspace's real sources.
 </footer>
