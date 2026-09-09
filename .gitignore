@@ -7,3 +7,4 @@ node_modules/
 .mcp.json
 *.log
 .DS_Store
+harness/.venv/

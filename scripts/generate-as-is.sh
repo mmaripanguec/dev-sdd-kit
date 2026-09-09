@@ -259,7 +259,7 @@ for name in ${REPO_LIST}; do
       echo "code in a language not listed, or configuration/artifacts only."
     fi
     echo; echo "## ${T_STRUCT}"; echo '```'
-    find "${repo}" -maxdepth 3 -path "*/node_modules" -prune -o -path "*/.git" -prune -o -type d -print 2>/dev/null | sed "s|^${repo}||" | grep -v '^$' | sort | head -60
+    find "${repo}" -maxdepth 3 -path "*/node_modules" -prune -o -path "*/.git" -prune -o -type d -print 2>/dev/null | sed "s|^${repo}||" | { grep -v '^$' || true; } | sort | head -60
     echo '```'
     echo; echo "## ${T_EXT}"
     if [ -n "${SERVICES}" ]; then
@@ -374,7 +374,8 @@ done
         # Anti-false-positive: if rt is a substring of a route EXPOSED by the
         # consumer, the match is its own definition, not consumption.
         if grep -qF -- "${rt}" "${RDIR}/${cname}" 2>/dev/null; then continue; fi
-        if grep -rq --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www -F "${rt}" "repos/${cname}/" 2>/dev/null; then
+        # contracts/ vendorizados describen al PROVEEDOR, no consumo real
+        if grep -rq --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=www --exclude-dir=contracts -F "${rt}" "repos/${cname}/" 2>/dev/null; then
           hits="${hits:+${hits},}${rt}"
           n=$((n+1)); if [ "${n}" -ge 3 ]; then break; fi
         fi
