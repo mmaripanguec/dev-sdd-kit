@@ -156,16 +156,18 @@ sed -i.bak 's/demo-skill/skill-tocada/' "${WS}/docs/arquitectura.html" && rm -f 
 ./scripts/docs.sh --root "${WS}" --check >/dev/null 2>&1
 assert_eq "check con drift devuelve 1" "1" "$?"
 
-echo "== humo sobre el workspace real (no escribe: solo --check o genera a tmp) =="
-cp docs/arquitectura.html "${TMP}/real-antes.html" 2>/dev/null || true
-./scripts/docs.sh >/dev/null 2>&1
-REAL=$(cat docs/arquitectura.html 2>/dev/null || echo "")
+echo "== humo sobre el workspace real (copia en tmp: no toca docs/ rastreados) =="
+REALWS="${TMP}/real"; mkdir -p "${REALWS}"
+cp -R .claude templates scripts knowledge specs "${REALWS}/"
+[ -f repos.yaml ] && cp repos.yaml "${REALWS}/"
+./scripts/docs.sh --root "${REALWS}" >/dev/null 2>&1
+REAL=$(cat "${REALWS}/docs/arquitectura.html" 2>/dev/null || echo "")
 assert_contains "workspace real: skill spec-create presente" "spec-create" "$REAL"
 assert_contains "workspace real: agente quality presente"    "quality"     "$REAL"
 assert_contains "workspace real: RN-F4 presente"             "RN-F4"       "$REAL"
 
 echo "== CA3.1-CA3.2: versión EN generada junto a la ES (workspace real) =="
-REAL_EN=$(cat docs/architecture.en.html 2>/dev/null || echo "")
+REAL_EN=$(cat "${REALWS}/docs/architecture.en.html" 2>/dev/null || echo "")
 assert_contains "architecture.en.html con prosa EN"   "Usage guide"      "$REAL_EN"
 assert_contains "diagrama EN: F3 Refinement"          "F3 Refinement"    "$REAL_EN"
 assert_contains "rotulos generados en ingles"         "What it does"     "$REAL_EN"

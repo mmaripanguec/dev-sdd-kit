@@ -29,7 +29,7 @@
   <text x="72" y="192" font-family="-apple-system,'Segoe UI',Roboto,sans-serif"
         font-size="25" font-weight="500" fill="#c3d2e4">The spec-driven factory for multi-repo systems</text>
   <text x="72" y="228" font-family="-apple-system,'Segoe UI',Roboto,sans-serif"
-        font-size="17" fill="#8fa4bd">Human gates backed by permissions · strict TDD · docs and metrics that cannot lie</text>
+        font-size="17" fill="#8fa4bd">Human gates backed by permissions · strict TDD · docs and metrics derived from real sources</text>
   <text x="72" y="266" font-family="ui-monospace,Menlo,monospace"
         font-size="15" fill="#5fce96">$ /spec-create my-feature → gates → TDD → certify → operate</text>
 

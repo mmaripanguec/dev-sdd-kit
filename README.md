@@ -4,11 +4,11 @@
 
 <h1 align="center">dev-sdd-kit</h1>
 <p align="center"><strong>The spec-driven factory for multi-repo systems.</strong><br>
-Human gates backed by permissions · strict TDD · docs and metrics that cannot lie.</p>
+Human gates backed by permissions · strict TDD · docs and metrics derived from real sources, with provenance seals.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/tests-147%20passing-brightgreen.svg" alt="147 tests passing">
+  <img src="https://img.shields.io/badge/self--tests-7%20suites%20%C2%B7%20178%20asserts-brightgreen.svg" alt="7 self-test suites, 178 asserts">
   <img src="https://img.shields.io/badge/lifecycle-F0%E2%86%92F9%20complete-0b5fa5.svg" alt="Complete F0-F9 lifecycle">
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-5fce96.svg" alt="PRs welcome"></a>
 </p>
@@ -80,7 +80,7 @@ Honest differences — each of these tools is good at what it targets:
 |---|---|---|---|---|
 | Lifecycle coverage | **F0–F9: triage → operations** (CAB, postmortems, DORA) | spec → implement | spec → implement (IDE) | change proposals |
 | Multi-repo systems | **Core design** (`repos.yaml` registry, deploy order, cross-repo specs) | single-repo focus | single-repo focus | single-repo focus |
-| Brownfield grounding | **Derived as-is map + code graph + arc42/C4 architecture doc (agent context) + context packs with executable assertions** | limited | limited | delta-based (good) |
+| Brownfield grounding | **Derived as-is map + code graph + arc42/C4 architecture doc (agent context) + context packs with executable assertions** | greenfield-first; existing code is context you supply | IDE-side codebase context (steering files); no derived as-is artifact | delta-based (good) |
 | Human gates | **Permission-backed** (agents lack credentials; approvals recorded per commit) | constitution self-checked by the LLM | agent hooks | review-based |
 | TDD | **Mandatory, tests untouchable** | optional ("only if requested") | optional | optional |
 | Derived docs & metrics | **arc42+C4 architecture (MD+HTML) as agent context, architecture guide (EN/ES), as-is, DORA — generated, sealed, CI-checked** | — | — | — |
@@ -112,10 +112,10 @@ dev-sdd-kit/
 ├── repos.yaml                        # System topology (created by ./scripts/init-system.sh)
 │
 ├── .claude/
-│   ├── skills/                       # 14 slash commands (one SKILL.md each)
+│   ├── skills/                       # 15 slash commands (one SKILL.md each)
 │   │   ├── spec-create/  spec-review/  clarify/  consistency/
 │   │   ├── implement-task/  converge/  harness-init/  orchestrate/
-│   │   ├── repo-add/  repo-map/  system-map/
+│   │   ├── repo-add/  repo-map/  system-map/  context-report/
 │   │   └── as-is/  as-is-sync/  as-is-learn/
 │   ├── agents/                       # 7 phase agents
 │   │   ├── requirements.md  estimation.md  analysis.md  architecture.md
@@ -143,10 +143,9 @@ dev-sdd-kit/
 │   ├── demo-assistant.md             # Demo walkthrough (ADK + Gemini assistant)
 │   ├── guia-operativa.md             # Full operating guide (ES)
 │   ├── instructivo-repo-existente.md # Repo onboarding walkthrough (ES)
-│   ├── publicacion-github.md         # Publication runbook (ES)
-│   ├── difusion/                     # Launch kit: show-hn.md · devto.md ·
-│   │                                 #   linkedin-en.md · linkedin-es.md · plan-lanzamiento.md
-│   └── assets/  banner.svg · demo.svg
+│   ├── codebase-memory-setup.md      # Code-graph MCP setup
+│   ├── architecture-documentation-standard.md   # AI-consumable architecture doc standard
+│   └── assets/  banner.svg · demo.svg · architecture.svg
 │
 ├── templates/                        # What the factory instantiates
 │   ├── CLAUDE.repo.md  pack-repo.md  pack-system.md  pack-index.md
@@ -155,9 +154,10 @@ dev-sdd-kit/
 │   ├── skill-architecture.md          # <prefix>-architecture context skill
 │   └── github-actions-as-is.yml
 │
-├── scripts/                          # Automation + 5 self-test suites (147 asserts)
+├── scripts/                          # Automation + 7 self-test suites (178 asserts) in scripts/tests/
 │   ├── generate-architecture.sh      # AS-IS architecture doc (.md + .html)
-│   └── codebase-memory.sh            # Code-graph indexing: fleet seed + .mcp.json
+│   ├── codebase-memory.sh            # Code-graph indexing: fleet seed + .mcp.json
+│   └── afirmaciones.sh · frescura.sh · init-sistema.sh   # ES aliases (exec the EN script)
 ├── harness/  claude-progress.md      # Multi-session agent harness
 └── .github/                          # Issue & PR templates
 ```
@@ -185,7 +185,7 @@ dev-sdd-kit/
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) — every change follows the factory's
 own process: spec first, human gates, failing tests before code, one commit
-per task, three suites green. Issues and PRs come with templates.
+per task, all seven self-test suites green. Issues and PRs come with templates.
 
 ## License
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="dev-sdd-kit — the spec-driven development factory for multi-repo systems. Human gates backed by permissions, strict TDD, and docs and metrics that cannot lie. Built for Claude Code.">
+<meta name="description" content="dev-sdd-kit — the spec-driven development factory for multi-repo systems. Human gates backed by permissions, strict TDD, and docs and metrics derived from real sources with provenance seals. Built for Claude Code.">
 <title>dev-sdd-kit · The spec-driven factory for multi-repo systems</title>
 <style>
   :root{
@@ -51,10 +51,11 @@
     <p class="sub">A workspace template for Claude Code where every change starts
     as a spec, humans approve at six permission-backed gates, tests are written
     first and cannot be edited to pass, and documentation and metrics are
-    derived from the real sources — so they cannot lie.</p>
+    derived from the real sources, each one carrying a provenance seal.</p>
 
     <pre>git clone https://github.com/mmaripanguec/dev-sdd-kit.git my-system && cd my-system
 ./scripts/init-system.sh my-system
+claude
 /repo-add https://github.com/your-org/your-repo.git</pre>
 
     <a class="cta pri" href="architecture.en.html">Architecture &amp; guide (EN)</a>
@@ -81,7 +82,7 @@
       agents grounded in code that already exists.</p>
     </div>
     <div class="card">
-      <h3>📊 Docs and metrics that cannot lie</h3>
+      <h3>📊 Docs and metrics derived from real sources</h3>
       <p>The architecture document, the as-is map and the DORA metrics are
       generated from live sources with provenance seals. No source? The cell
       says "no data" — never a made-up number.</p>
@@ -104,7 +105,7 @@
 <footer>
   MIT licensed · <a href="architecture.en.html">Documentation</a> ·
   <a href="guia-operativa.md">Guía operativa (ES)</a> ·
-  Internal working language is Spanish by design — see the docs for details.
+  The factory itself is in English; your team picks its working language (en/es) at init.
 </footer>
 
 </body>
