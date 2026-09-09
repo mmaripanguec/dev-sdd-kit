@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.1] - 2026-09-08
+
+### Fixed
+- README: the directory tree listed files that do not exist
+  (`docs/publicacion-github.md`, `docs/difusion/`); skill count (15), suite
+  count (7) and assert count (178) now match the tree; ES script aliases
+  documented; test badge derived from the real suites.
+- Landing (`docs/index.html`): language note aligned with the README (factory
+  in English, working language chosen at init); `claude` step added between
+  `init-system.sh` and `/repo-add`.
+- Comparison table: replaced the vague "limited" cells with what each tool
+  actually offers for brownfield; tagline softened from "cannot lie" to
+  "derived from real sources, with provenance seals" (README, landing, banner).
+- `test-dora.sh`: fixture commits carry an explicit git identity, so the suite
+  passes on clean runners without `user.name`/`user.email`.
+- `test-docs.sh`: the smoke run over the real workspace now writes to a temp
+  copy; running the suite no longer modifies tracked `docs/*.html`.
+- `generate-as-is.sh`: structure step no longer aborts on empty repos under
+  `pipefail`; vendored `contracts/` are excluded from consumption detection.
+- `.gitignore`: `harness/.venv/`.
+
 ## [1.6.0] - 2026-07-25
 
 ### Changed — /context-report skill & documentation standard

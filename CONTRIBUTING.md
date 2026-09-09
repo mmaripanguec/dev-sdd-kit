@@ -22,12 +22,10 @@ best way to understand the template — and the only way changes get merged.
    it pass.**
 4. **One commit per task**, Conventional Commits, referencing the spec:
    `feat(scope): what and why` + `Spec: specs/<file>.md`.
-5. **Before opening a PR**, all three suites must pass:
+5. **Before opening a PR**, all seven self-test suites must pass:
 
    ```bash
-   ./scripts/tests/test-repo-lib.sh
-   ./scripts/tests/test-dora.sh
-   ./scripts/tests/test-docs.sh
+   for t in ./scripts/tests/test-*.sh; do "$t" || exit 1; done
    ```
 
    If you touched documentation sources, regenerate the derived docs

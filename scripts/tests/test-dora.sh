@@ -32,7 +32,9 @@ commit_at() { # dias-atras mensaje
   local d; d=$(days_ago "$1")
   echo "$1-$2" >> archivo.txt
   git add archivo.txt
-  GIT_AUTHOR_DATE="$d" GIT_COMMITTER_DATE="$d" git commit -qm "$2"
+  # Identidad explicita: el fixture no depende de user.name/user.email globales (runners limpios)
+  GIT_AUTHOR_DATE="$d" GIT_COMMITTER_DATE="$d" \
+    git -c user.name=test-dora -c user.email=test-dora@example.com commit -qm "$2"
 }
 
 # ---------- fixture: workspace sintetico con 1 repo clonado ----------
